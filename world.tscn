@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://n62f3tl150r0"]
+
+[ext_resource type="PackedScene" uid="uid://bqu44ul337erb" path="res://room.tscn" id="1_6tnus"]
+[ext_resource type="PackedScene" uid="uid://bbycv2d86pfv8" path="res://player.tscn" id="2_4b5vs"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Node3D" parent="." instance=ExtResource("1_6tnus")]
+
+[node name="CharacterBody3D" parent="." instance=ExtResource("2_4b5vs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00826931, 1.47657, -0.306024)
