@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://n62f3tl150r0"]
+[gd_scene load_steps=7 format=3 uid="uid://n62f3tl150r0"]
 
 [ext_resource type="PackedScene" uid="uid://bqu44ul337erb" path="res://room.tscn" id="1_6tnus"]
 [ext_resource type="PackedScene" uid="uid://bbycv2d86pfv8" path="res://player.tscn" id="2_4b5vs"]
+[ext_resource type="PackedScene" uid="uid://uf5ny732gmq5" path="res://table_and_computers.tscn" id="3_lhvq1"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7o4bf"]
 
@@ -24,3 +25,27 @@ environment = SubResource("Environment_5nbtb")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.510258, 0, 0.860022, 0, 1, 0, -0.860022, 0, 0.510258, 0, 3.30203, -0.535959)
+
+[node name="table_and_computers" parent="." instance=ExtResource("3_lhvq1")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 4.34845, 0, -5.8451)
+
+[node name="table_and_computers2" parent="." instance=ExtResource("3_lhvq1")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 4.34845, 0, -2.60477)
+
+[node name="table_and_computers3" parent="." instance=ExtResource("3_lhvq1")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 4.34845, 0, 0.645031)
+
+[node name="table_and_computers4" parent="." instance=ExtResource("3_lhvq1")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 4.34845, 0, 3.88537)
+
+[node name="table_and_computers5" parent="." instance=ExtResource("3_lhvq1")]
+transform = Transform3D(1, 0, -1.74846e-07, 0, 1, 0, 1.74846e-07, 0, 1, -4.5916, 0, 3.88537)
+
+[node name="table_and_computers6" parent="." instance=ExtResource("3_lhvq1")]
+transform = Transform3D(1, 0, -1.74846e-07, 0, 1, 0, 1.74846e-07, 0, 1, -4.5916, 0, 0.645032)
+
+[node name="table_and_computers7" parent="." instance=ExtResource("3_lhvq1")]
+transform = Transform3D(1, 0, -1.74846e-07, 0, 1, 0, 1.74846e-07, 0, 1, -4.5916, 0, -2.60476)
+
+[node name="table_and_computers8" parent="." instance=ExtResource("3_lhvq1")]
+transform = Transform3D(1, 0, -1.74846e-07, 0, 1, 0, 1.74846e-07, 0, 1, -4.5916, 0, -5.8451)
