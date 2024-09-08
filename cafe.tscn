@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://fsvjs14lf13h"]
+
+[ext_resource type="PackedScene" uid="uid://qn1qt651m8io" path="res://assets/cafe_outside.glb" id="1_bw2lu"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="cafe_outside" parent="." instance=ExtResource("1_bw2lu")]
