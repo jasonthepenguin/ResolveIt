@@ -4,6 +4,11 @@
 [ext_resource type="PackedScene" uid="uid://bbycv2d86pfv8" path="res://player.tscn" id="2_4b5vs"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7o4bf"]
+sky_top_color = Color(0.815649, 0.306945, 0.479011, 1)
+sky_horizon_color = Color(0.760504, 0.649708, 0.143563, 1)
+ground_bottom_color = Color(0.112496, 0.328163, 1, 1)
+ground_horizon_color = Color(0.648927, 0.643117, 0.743517, 1)
+sun_angle_max = 43.33
 
 [sub_resource type="Sky" id="Sky_410ox"]
 sky_material = SubResource("ProceduralSkyMaterial_7o4bf")
