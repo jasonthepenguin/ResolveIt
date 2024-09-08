@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://n62f3tl150r0"]
+[gd_scene load_steps=7 format=3 uid="uid://n62f3tl150r0"]
 
 [ext_resource type="PackedScene" uid="uid://bqu44ul337erb" path="res://room.tscn" id="1_6tnus"]
 [ext_resource type="PackedScene" uid="uid://bbycv2d86pfv8" path="res://player.tscn" id="2_4b5vs"]
+[ext_resource type="PackedScene" uid="uid://bwkhk2iahiriw" path="res://beach_sand.tscn" id="3_b8h1r"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7o4bf"]
 sky_top_color = Color(0.815649, 0.306945, 0.479011, 1)
@@ -19,13 +20,17 @@ sky = SubResource("Sky_410ox")
 
 [node name="Node3D" type="Node3D"]
 
-[node name="Node3D" parent="." instance=ExtResource("1_6tnus")]
+[node name="room" parent="." instance=ExtResource("1_6tnus")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.78668, 4.07967, 14.2787)
 
 [node name="CharacterBody3D" parent="." instance=ExtResource("2_4b5vs")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00826931, 1.47657, -0.306024)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.97373, 5.77096, 17.9229)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_5nbtb")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.510258, 0, 0.860022, 0, 1, 0, -0.860022, 0, 0.510258, 0, 3.30203, -0.535959)
+
+[node name="sand" parent="." instance=ExtResource("3_b8h1r")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 2.08165e-12, 0.454, -1.374)
