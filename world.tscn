@@ -33,6 +33,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.79279, 3.69052, 14.3113)
 [node name="CharacterBody3D" type="CharacterBody3D" parent="."]
 transform = Transform3D(0.67, 0, 0, 0, 0.67, 0, 0, 0, 0.67, -2.70788, 3.69609, 14.5514)
 script = ExtResource("2_iwlwb")
+SPEED = 3.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
