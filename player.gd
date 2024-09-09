@@ -13,7 +13,7 @@ var holding_object = false
 var looked_object = null
 var detect_distance: float = 20.0
 var target_layer: int = 1
-var throw_force = 10.0
+var throw_force = 7.0
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -66,6 +66,11 @@ func grab_object(object):
 	looked_object.freeze_mode = RigidBody3D.FREEZE_MODE_KINEMATIC
 	looked_object.freeze = true
 	#------
+	
+	
+	
+	
+
 
 func release_object():
 	holding_object = false
