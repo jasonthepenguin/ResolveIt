@@ -1,10 +1,15 @@
-[gd_scene load_steps=9 format=3 uid="uid://n62f3tl150r0"]
+[gd_scene load_steps=12 format=3 uid="uid://n62f3tl150r0"]
 
 [ext_resource type="PackedScene" uid="uid://bqu44ul337erb" path="res://room.tscn" id="1_6tnus"]
-[ext_resource type="PackedScene" uid="uid://bbycv2d86pfv8" path="res://player.tscn" id="2_4b5vs"]
+[ext_resource type="Script" path="res://player.gd" id="2_iwlwb"]
+[ext_resource type="Script" path="res://camholder.gd" id="3_8vfo1"]
 [ext_resource type="PackedScene" uid="uid://bwkhk2iahiriw" path="res://beach_sand.tscn" id="3_b8h1r"]
 [ext_resource type="PackedScene" uid="uid://d2ncr3nome2xn" path="res://water_plane.tscn" id="4_v5a5n"]
 [ext_resource type="PackedScene" uid="uid://fsvjs14lf13h" path="res://cafe.tscn" id="5_qjf3j"]
+[ext_resource type="PackedScene" uid="uid://uf5ny732gmq5" path="res://table_and_computers.tscn" id="6_rebbm"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_54cet"]
+radius = 0.25
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7o4bf"]
 sky_top_color = Color(0.815649, 0.306945, 0.479011, 1)
@@ -25,14 +30,27 @@ sky = SubResource("Sky_410ox")
 [node name="room" parent="." instance=ExtResource("1_6tnus")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.79279, 3.69052, 14.3113)
 
-[node name="CharacterBody3D" parent="." instance=ExtResource("2_4b5vs")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.97373, 5.77096, 17.9229)
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+transform = Transform3D(0.67, 0, 0, 0, 0.67, 0, 0, 0, 0.67, -2.70788, 3.69609, 14.5514)
+script = ExtResource("2_iwlwb")
+SPEED = 3.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_54cet")
+
+[node name="camholder" type="Node3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000118017, 1.76171, -4.00543e-05)
+script = ExtResource("3_8vfo1")
+
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D/camholder"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_5nbtb")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.510258, 0, 0.860022, 0, 1, 0, -0.860022, 0, 0.510258, 0, 3.30203, -0.535959)
+shadow_enabled = true
 
 [node name="sand" parent="." instance=ExtResource("3_b8h1r")]
 transform = Transform3D(2, 0, 0, 0, 1, 0, 0, 0, 2, -0.00906372, 1.88131, -1.36072)
@@ -42,3 +60,27 @@ transform = Transform3D(4000, 0, 0, 0, 1, 0, 0, 0, 4000, -0.00306177, 2.28428, 0
 
 [node name="Node3D" parent="." instance=ExtResource("5_qjf3j")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.79129, 3.71638, 0)
+
+[node name="table_and_computers" parent="." instance=ExtResource("6_rebbm")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 1.45834, 3.69094, 8.47153)
+
+[node name="table_and_computers2" parent="." instance=ExtResource("6_rebbm")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 1.45834, 3.69094, 11.6681)
+
+[node name="table_and_computers3" parent="." instance=ExtResource("6_rebbm")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 1.45834, 3.69094, 14.9051)
+
+[node name="table_and_computers4" parent="." instance=ExtResource("6_rebbm")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 1.45834, 3.69094, 18.1016)
+
+[node name="table_and_computers5" parent="." instance=ExtResource("6_rebbm")]
+transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, -7.40578, 3.69094, 18.1017)
+
+[node name="table_and_computers6" parent="." instance=ExtResource("6_rebbm")]
+transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, -7.40578, 3.69094, 14.9051)
+
+[node name="table_and_computers7" parent="." instance=ExtResource("6_rebbm")]
+transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, -7.40578, 3.69094, 11.6681)
+
+[node name="table_and_computers8" parent="." instance=ExtResource("6_rebbm")]
+transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, -7.40578, 3.69094, 8.47153)
