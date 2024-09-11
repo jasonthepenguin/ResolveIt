@@ -13,3 +13,27 @@ export_presets.cfg
 .mono/
 data_*/
 mono_crash.*.json
+
+# Ignore compiled libraries and binaries
+/bin/
+*.a
+*.so
+*.dll
+*.dylib
+
+# Ignore godot-cpp binary folder
+/godot-cpp/bin/
+godot-cpp/*.a
+godot-cpp/*.so
+godot-cpp/*.dll
+godot-cpp/*.dylib
+
+# Ignore OS-generated files (macOS)
+/.DS_Store
+
+# Ignore Godot-specific files
+.import/
+.export/
+
+# If Godot cache or build-related files exist
+.cache/
