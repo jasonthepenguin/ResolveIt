@@ -15,7 +15,9 @@ data_*/
 mono_crash.*.json
 
 # Ignore compiled libraries and binaries
-/bin/
+/bin/*
+# But do not ignore the .gdextension file
+!/bin/*.gdextension
 *.a
 *.so
 *.dll
