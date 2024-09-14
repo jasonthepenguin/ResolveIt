@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://7tado41ix8lw"]
+
+[ext_resource type="Script" path="res://proto_rigid.gd" id="1_reryi"]
+
+[node name="proto_rigid" type="Node3D"]
+script = ExtResource("1_reryi")
