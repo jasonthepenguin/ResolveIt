@@ -13,11 +13,11 @@ radius = 0.25
 
 [node name="Node3D" type="Node3D"]
 
-[node name="room" parent="." instance=ExtResource("1_6tnus")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.79279, 3.69052, 14.3113)
+[node name="OceanMap" parent="." instance=ExtResource("7_54gfs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.68975, 0)
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="."]
-transform = Transform3D(0.67, 0, 0, 0, 0.67, 0, 0, 0, 0.67, -2.70788, 3.69609, 14.5514)
+transform = Transform3D(0.354342, 0, -0.568632, 0, 0.67, 0, 0.568632, 0, 0.354342, -14.7131, 3.69609, 5.9018)
 script = ExtResource("2_iwlwb")
 SPEED = 3.0
 
@@ -31,37 +31,40 @@ script = ExtResource("3_8vfo1")
 
 [node name="Camera3D" type="Camera3D" parent="CharacterBody3D/camholder"]
 
-[node name="sand" parent="." instance=ExtResource("3_b8h1r")]
+[node name="Geometry" type="Node3D" parent="."]
+transform = Transform3D(0.563814, 0, -0.825902, 0, 1, 0, 0.825902, 0, 0.563814, 0, 0, 0)
+
+[node name="room" parent="Geometry" instance=ExtResource("1_6tnus")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.79279, 3.69052, 14.3113)
+
+[node name="sand" parent="Geometry" instance=ExtResource("3_b8h1r")]
 transform = Transform3D(2, 0, 0, 0, 1, 0, 0, 0, 2, -0.00906372, 1.88131, -1.36072)
 
-[node name="cafe" parent="." instance=ExtResource("5_qjf3j")]
+[node name="cafe" parent="Geometry" instance=ExtResource("5_qjf3j")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.79129, 3.71638, 0)
 
-[node name="table_and_computers_collection" type="Node3D" parent="."]
+[node name="table_and_computers_collection" type="Node3D" parent="Geometry"]
 
-[node name="table_and_computers" parent="table_and_computers_collection" instance=ExtResource("6_rebbm")]
+[node name="table_and_computers" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 1.45834, 3.69094, 8.47153)
 
-[node name="table_and_computers2" parent="table_and_computers_collection" instance=ExtResource("6_rebbm")]
+[node name="table_and_computers2" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 1.45834, 3.69094, 11.6681)
 
-[node name="table_and_computers3" parent="table_and_computers_collection" instance=ExtResource("6_rebbm")]
+[node name="table_and_computers3" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 1.45834, 3.69094, 14.9051)
 
-[node name="table_and_computers4" parent="table_and_computers_collection" instance=ExtResource("6_rebbm")]
+[node name="table_and_computers4" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 1.45834, 3.69094, 18.1016)
 
-[node name="table_and_computers5" parent="table_and_computers_collection" instance=ExtResource("6_rebbm")]
+[node name="table_and_computers5" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
 transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, -7.40578, 3.69094, 18.1017)
 
-[node name="table_and_computers6" parent="table_and_computers_collection" instance=ExtResource("6_rebbm")]
+[node name="table_and_computers6" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
 transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, -7.40578, 3.69094, 14.9051)
 
-[node name="table_and_computers7" parent="table_and_computers_collection" instance=ExtResource("6_rebbm")]
+[node name="table_and_computers7" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
 transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, -7.40578, 3.69094, 11.6681)
 
-[node name="table_and_computers8" parent="table_and_computers_collection" instance=ExtResource("6_rebbm")]
+[node name="table_and_computers8" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
 transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, -7.40578, 3.69094, 8.47153)
-
-[node name="OceanMap" parent="." instance=ExtResource("7_54gfs")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.68975, 0)
