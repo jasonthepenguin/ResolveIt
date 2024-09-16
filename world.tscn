@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://n62f3tl150r0"]
+[gd_scene load_steps=13 format=3 uid="uid://n62f3tl150r0"]
 
 [ext_resource type="PackedScene" uid="uid://bqu44ul337erb" path="res://room.tscn" id="1_6tnus"]
 [ext_resource type="Script" path="res://player.gd" id="2_iwlwb"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://bfui2hjydd0i0" path="res://scenes/OceanMap.tscn" id="7_54gfs"]
 [ext_resource type="PackedScene" path="res://video.tscn" id="8_8ats0"]
 [ext_resource type="PackedScene" uid="uid://fflxac0t1yer" path="res://glass_door.tscn" id="8_k4dga"]
+[ext_resource type="PackedScene" path="res://chair.tscn" id="9_5vil0"]
 [ext_resource type="PackedScene" path="res://splash_screen.tscn" id="9_64qiw"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_54cet"]
@@ -77,6 +78,12 @@ transform = Transform3D(0.99925, 0, 0.0387365, 0, 1, 0, -0.0387366, 0, 0.999251,
 
 [node name="glass_door2" parent="Geometry" instance=ExtResource("8_k4dga")]
 transform = Transform3D(0.999252, 0, 0.0387367, 0, 1, 0, -0.0387366, 0, 0.999253, -1.21935, 3.7042, 6.11366)
+
+[node name="beach_chair" parent="Geometry" instance=ExtResource("9_5vil0")]
+transform = Transform3D(0.185027, 0, 0.464505, 0, 0.5, 0, -0.464505, 0, 0.185027, 7.90824, 3.64405, 10.1963)
+
+[node name="beach_chair2" parent="Geometry" instance=ExtResource("9_5vil0")]
+transform = Transform3D(0.0374894, 1.60827e-16, 0.498593, 1.74393e-16, 0.5, -1.74394e-16, -0.498593, 1.86978e-16, 0.0374894, 7.5012, 3.57709, 11.7105)
 
 [node name="Intro_Vid" parent="." instance=ExtResource("8_8ats0")]
 
