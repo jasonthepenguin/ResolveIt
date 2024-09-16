@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://n62f3tl150r0"]
+[gd_scene load_steps=12 format=3 uid="uid://n62f3tl150r0"]
 
 [ext_resource type="PackedScene" uid="uid://bqu44ul337erb" path="res://room.tscn" id="1_6tnus"]
 [ext_resource type="Script" path="res://player.gd" id="2_iwlwb"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://uf5ny732gmq5" path="res://table_and_computers.tscn" id="6_rebbm"]
 [ext_resource type="PackedScene" uid="uid://bfui2hjydd0i0" path="res://scenes/OceanMap.tscn" id="7_54gfs"]
 [ext_resource type="PackedScene" path="res://video.tscn" id="8_8ats0"]
+[ext_resource type="PackedScene" uid="uid://fflxac0t1yer" path="res://glass_door.tscn" id="8_k4dga"]
 [ext_resource type="PackedScene" path="res://splash_screen.tscn" id="9_64qiw"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_54cet"]
@@ -70,6 +71,12 @@ transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, -7.40578
 
 [node name="table_and_computers8" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
 transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, -7.40578, 3.69094, 8.47153)
+
+[node name="glass_door" parent="Geometry" instance=ExtResource("8_k4dga")]
+transform = Transform3D(0.99925, 0, 0.0387365, 0, 1, 0, -0.0387366, 0, 0.999251, -4.44796, 3.70144, 6.20087)
+
+[node name="glass_door2" parent="Geometry" instance=ExtResource("8_k4dga")]
+transform = Transform3D(0.999252, 0, 0.0387367, 0, 1, 0, -0.0387366, 0, 0.999253, -1.21935, 3.7042, 6.11366)
 
 [node name="Intro_Vid" parent="." instance=ExtResource("8_8ats0")]
 
