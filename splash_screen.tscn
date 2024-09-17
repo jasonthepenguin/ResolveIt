@@ -1,9 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://1hx0awn7u6lk"]
+[gd_scene load_steps=6 format=3 uid="uid://bl3dfk47isg6s"]
 
 [ext_resource type="Script" path="res://splash_screen.gd" id="1_74pmm"]
-[ext_resource type="Texture2D" uid="uid://dlnfak3a5k1v4" path="res://assets/face_photos/lane.jpg" id="2_gj5o0"]
-[ext_resource type="Texture2D" uid="uid://dsrrg2avajo3v" path="res://assets/face_photos/will.jpg" id="3_bxvxc"]
-[ext_resource type="Texture2D" uid="uid://clwrpi44r1c1g" path="res://assets/face_photos/jason.jpg" id="4_igphc"]
+[ext_resource type="Texture2D" uid="uid://7mc7frmsk5vh" path="res://assets/face_photos/Lane_2.jpg" id="2_4nykj"]
+[ext_resource type="Texture2D" uid="uid://c1fsf5egv8o4r" path="res://assets/face_photos/Will_2.jpg" id="3_fvg45"]
+[ext_resource type="Texture2D" uid="uid://qtmnj8tevx4k" path="res://assets/face_photos/jason_2.jpg" id="4_57iq6"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_2tc4a"]
 font_size = 25
@@ -65,7 +65,7 @@ layout_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="Credits_UI/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-texture = ExtResource("2_gj5o0")
+texture = ExtResource("2_4nykj")
 
 [node name="Label" type="Label" parent="Credits_UI/HBoxContainer/VBoxContainer"]
 layout_mode = 2
@@ -77,7 +77,7 @@ layout_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="Credits_UI/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
-texture = ExtResource("3_bxvxc")
+texture = ExtResource("3_fvg45")
 
 [node name="Label" type="Label" parent="Credits_UI/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
@@ -89,7 +89,7 @@ layout_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="Credits_UI/HBoxContainer/VBoxContainer3"]
 layout_mode = 2
-texture = ExtResource("4_igphc")
+texture = ExtResource("4_57iq6")
 
 [node name="Label" type="Label" parent="Credits_UI/HBoxContainer/VBoxContainer3"]
 layout_mode = 2
