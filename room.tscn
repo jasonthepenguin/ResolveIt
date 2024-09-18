@@ -1,4 +1,4 @@
-[gd_scene load_steps=173 format=3 uid="uid://bqu44ul337erb"]
+[gd_scene load_steps=174 format=3 uid="uid://bqu44ul337erb"]
 
 [ext_resource type="Texture2D" uid="uid://dlwgtdihy62ms" path="res://assets/room_gray_carpet.png" id="1_2ampo"]
 [ext_resource type="Texture2D" uid="uid://dm2gxfub6jlsr" path="res://assets/room_gray_carpet_normal.png" id="2_41hws"]
@@ -1415,6 +1415,9 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_l7oeq")
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_m1han"]
+size = Vector3(4, 2.25, 0.5)
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lr781"]
 resource_name = "holewall"
 cull_mode = 2
@@ -2536,6 +2539,16 @@ skeleton = NodePath("")
 [node name="WindowFrameEntrance_007" type="MeshInstance3D" parent="room/WindowFrameEntrance"]
 mesh = SubResource("ArrayMesh_e8umx")
 skeleton = NodePath("")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="room/WindowFrameEntrance"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="room/WindowFrameEntrance/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.27335, 1.63915, -8.35715)
+shape = SubResource("BoxShape3D_m1han")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="room/WindowFrameEntrance/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.35207, 1.63915, -8.35715)
+shape = SubResource("BoxShape3D_m1han")
 
 [node name="Empty" type="Node3D" parent="room"]
 

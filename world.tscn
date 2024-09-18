@@ -1,26 +1,90 @@
-[gd_scene load_steps=6 format=3 uid="uid://n62f3tl150r0"]
+[gd_scene load_steps=13 format=3 uid="uid://n62f3tl150r0"]
 
 [ext_resource type="PackedScene" uid="uid://bqu44ul337erb" path="res://room.tscn" id="1_6tnus"]
-[ext_resource type="PackedScene" uid="uid://bbycv2d86pfv8" path="res://player.tscn" id="2_4b5vs"]
+[ext_resource type="Script" path="res://player.gd" id="2_iwlwb"]
+[ext_resource type="Script" path="res://camholder.gd" id="3_8vfo1"]
+[ext_resource type="PackedScene" uid="uid://bwkhk2iahiriw" path="res://beach_sand.tscn" id="3_b8h1r"]
+[ext_resource type="PackedScene" uid="uid://fsvjs14lf13h" path="res://cafe.tscn" id="5_qjf3j"]
+[ext_resource type="PackedScene" uid="uid://uf5ny732gmq5" path="res://table_and_computers.tscn" id="6_rebbm"]
+[ext_resource type="PackedScene" uid="uid://bfui2hjydd0i0" path="res://scenes/OceanMap.tscn" id="7_54gfs"]
+[ext_resource type="PackedScene" uid="uid://cp04u3ni34ip8" path="res://video.tscn" id="8_8ats0"]
+[ext_resource type="PackedScene" uid="uid://fflxac0t1yer" path="res://glass_door.tscn" id="8_k4dga"]
+[ext_resource type="PackedScene" uid="uid://dbg61kthivd70" path="res://chair.tscn" id="9_5vil0"]
+[ext_resource type="PackedScene" uid="uid://bl3dfk47isg6s" path="res://splash_screen.tscn" id="9_64qiw"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7o4bf"]
-
-[sub_resource type="Sky" id="Sky_410ox"]
-sky_material = SubResource("ProceduralSkyMaterial_7o4bf")
-
-[sub_resource type="Environment" id="Environment_5nbtb"]
-background_mode = 2
-sky = SubResource("Sky_410ox")
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_54cet"]
+radius = 0.25
 
 [node name="Node3D" type="Node3D"]
 
-[node name="Node3D" parent="." instance=ExtResource("1_6tnus")]
+[node name="OceanMap" parent="." instance=ExtResource("7_54gfs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.68975, 0)
 
-[node name="CharacterBody3D" parent="." instance=ExtResource("2_4b5vs")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00826931, 1.47657, -0.306024)
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+transform = Transform3D(0.354342, 0, -0.568632, 0, 0.67, 0, 0.568632, 0, 0.354342, -14.7131, 3.69609, 5.9018)
+script = ExtResource("2_iwlwb")
+SPEED = 3.0
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_5nbtb")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_54cet")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.510258, 0, 0.860022, 0, 1, 0, -0.860022, 0, 0.510258, 0, 3.30203, -0.535959)
+[node name="camholder" type="Node3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000118017, 1.76171, -4.00543e-05)
+script = ExtResource("3_8vfo1")
+
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D/camholder"]
+
+[node name="Geometry" type="Node3D" parent="."]
+transform = Transform3D(0.563814, 0, -0.825902, 0, 1, 0, 0.825902, 0, 0.563814, 0, 0, 0)
+
+[node name="room" parent="Geometry" instance=ExtResource("1_6tnus")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.79279, 3.69052, 14.3113)
+
+[node name="sand" parent="Geometry" instance=ExtResource("3_b8h1r")]
+transform = Transform3D(2, 0, 0, 0, 1, 0, 0, 0, 2, -0.00906372, 1.88131, -1.36072)
+
+[node name="cafe" parent="Geometry" instance=ExtResource("5_qjf3j")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.79129, 3.71638, 0)
+
+[node name="table_and_computers_collection" type="Node3D" parent="Geometry"]
+
+[node name="table_and_computers" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 1.45834, 3.69094, 8.47153)
+
+[node name="table_and_computers2" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 1.45834, 3.69094, 11.6681)
+
+[node name="table_and_computers3" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 1.45834, 3.69094, 14.9051)
+
+[node name="table_and_computers4" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 1.45834, 3.69094, 18.1016)
+
+[node name="table_and_computers5" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
+transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, -7.40578, 3.69094, 18.1017)
+
+[node name="table_and_computers6" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
+transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, -7.40578, 3.69094, 14.9051)
+
+[node name="table_and_computers7" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
+transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, -7.40578, 3.69094, 11.6681)
+
+[node name="table_and_computers8" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
+transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, -7.40578, 3.69094, 8.47153)
+
+[node name="glass_door" parent="Geometry" instance=ExtResource("8_k4dga")]
+transform = Transform3D(0.99925, 0, 0.0387365, 0, 1, 0, -0.0387366, 0, 0.999251, -4.44796, 3.70144, 6.20087)
+
+[node name="glass_door2" parent="Geometry" instance=ExtResource("8_k4dga")]
+transform = Transform3D(0.999252, 0, 0.0387367, 0, 1, 0, -0.0387366, 0, 0.999253, -1.21935, 3.7042, 6.11366)
+
+[node name="beach_chair" parent="Geometry" instance=ExtResource("9_5vil0")]
+transform = Transform3D(0.185027, 0, 0.464505, 0, 0.5, 0, -0.464505, 0, 0.185027, 7.90824, 3.64405, 10.1963)
+
+[node name="beach_chair2" parent="Geometry" instance=ExtResource("9_5vil0")]
+transform = Transform3D(0.0374894, 1.60827e-16, 0.498593, 1.74393e-16, 0.5, -1.74394e-16, -0.498593, 1.86978e-16, 0.0374894, 7.5012, 3.57709, 11.7105)
+
+[node name="Intro_Vid" parent="." instance=ExtResource("8_8ats0")]
+
+[node name="Exit_Screen" parent="." instance=ExtResource("9_64qiw")]
