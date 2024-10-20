@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://dwd34xr52ca2h"]
+
+[ext_resource type="Script" path="res://AI_Movement.gd" id="1_4mvsx"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_wmvc6"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5mtu6"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[node name="CharacterBody3D" type="CharacterBody3D"]
+transform = Transform3D(1, 0.000336087, -0.00022588, -0.000336028, 1, 0.000241059, 0.000225967, -0.000240978, 1, 0, 0, 0)
+motion_mode = 1
+script = ExtResource("1_4mvsx")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_wmvc6")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_5mtu6")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
