@@ -2,9 +2,14 @@
 
 #include "gdexample.h"
 
+
+#include "rigid_body_custom.h"
+#include "physics_handler.h"
+
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
 #include <godot_cpp/godot.hpp>
+#include <godot_cpp/classes/engine.hpp>
 
 using namespace godot;
 
@@ -14,6 +19,8 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 	}
 
 	GDREGISTER_CLASS(GDExample);
+	GDREGISTER_CLASS(RigidBodyCustom);
+	GDREGISTER_CLASS(PhysicsHandler);
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {
