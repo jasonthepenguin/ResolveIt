@@ -306,5 +306,7 @@ void RigidBodyCustom::apply_impulse_off_centre(const Vector3& impulse, const Vec
 
     // Apply angular impulse
     Vector3 angular_impulse = rel_pos.cross(impulse);
-    angular_velocity += inverse_inertia_tensor.xform(angular_impulse);
+    angular_velocity += inverse_inertia_tensor.xform(angular_impulse); 
+    // .xform method seems to just be the transform method, in this case its allowing us matrix-vector multiplication
+    
 }

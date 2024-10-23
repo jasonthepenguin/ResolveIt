@@ -57,13 +57,6 @@ void PhysicsHandler::_physics_process(double delta) {
     std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash> manifold_map;
     find_manifolds(manifold_map); // builds our manifolds ( so all our collding bodies are paired)
 
-    // apply forces for each body to accumlate (eg gravity)
-    /*
-    for (auto * rigid_body : rigid_bodies){
-        rigid_body->apply_force(rigid_body->get_gravity() * rigid_body->get_mass());
-    }
-    */
-
     
     // impulse iteration solving 
     int impulse_iteration = 5;
@@ -193,6 +186,7 @@ void PhysicsHandler::resolve_collision(Manifold& manifold, double delta) {
     }
 
     // Process each contact point independently
+    //UtilityFunctions::print("---");
     for (size_t i = 0; i < manifold.contact_points.size(); ++i) {
         Vector3 collision_normal = manifold.collision_normals[i];
         
@@ -222,12 +216,13 @@ void PhysicsHandler::resolve_collision(Manifold& manifold, double delta) {
         
         // Debug output
         /*
+        UtilityFunctions::print("---");
         UtilityFunctions::print("Collision Normal: ", collision_normal);
         UtilityFunctions::print("Relative Velocity: ", relative_velocity);
         UtilityFunctions::print("Impulse Magnitude: ", j);
         UtilityFunctions::print("Body A Velocity Before: ", body_a->get_velocity());
+        UtilityFunctions::print("---");
         */
-        
         body_a->set_velocity(body_a->get_velocity() + impulse * body_a->get_inv_mass());
         if (body_b && !manifold.body_b_is_static) {
             body_b->set_velocity(body_b->get_velocity() - impulse * body_b_inv_mass);
@@ -236,6 +231,7 @@ void PhysicsHandler::resolve_collision(Manifold& manifold, double delta) {
         //UtilityFunctions::print("Body A Velocity After: ", body_a->get_velocity());
         //UtilityFunctions::print("-------------------");
     }
+    //UtilityFunctions::print("---");
 }
 
 void PhysicsHandler::apply_positional_corrections(std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash>& manifold_map) {
@@ -256,10 +252,8 @@ void PhysicsHandler::apply_positional_corrections(std::unordered_map<ManifoldKey
 
         for (size_t i = 0; i < manifold.contact_points.size(); ++i) {
             float penetration = manifold.penetrations[i];
-            //penetration = abs(penetration);
-            //penetration = -penetration;
-            //if (penetration > slop) {
-            if(penetration < POSITION_SLOP) {
+            UtilityFunctions::print(penetration);
+            if (std::abs(penetration) > POSITION_SLOP ) {
                 Vector3 correction = manifold.collision_normals[i] * (penetration - POSITION_SLOP) * CORRECTION_PERCENT;
 
                 if (body_b_mass == INFINITY)
