@@ -137,9 +137,24 @@ void RigidBodyCustom::update_inertia_tensor()
         inertia = Vector3(i,i,i);
     }
     else if(shape_class == "BoxShape3D"){
-
+        Ref<BoxShape3D> box = collision_shape->get_shape();
+        Vector3 extents = box->get_size() * 0.5f; // half-extents
+        // For a box: I_x = 1/12 * m * (y² + z²), etc.
+        inertia.x = (1.0f/12.0f) * mass * (extents.y * extents.y + extents.z * extents.z);
+        inertia.y = (1.0f/12.0f) * mass * (extents.x * extents.x + extents.z * extents.z);
+        inertia.z = (1.0f/12.0f) * mass * (extents.x * extents.x + extents.y * extents.y);
     }
     // other shapes when get the chance and inertia. 
+
+
+     // For debugging ( print calculated inertia values to be certain )
+    UtilityFunctions::print("Calculated inertia tensor for shape: ", shape_class);
+    UtilityFunctions::print("Inertia values: ", inertia);
+
+    inertia_tensor = Basis().scaled(inertia);
+    UtilityFunctions::print("Inertia tensor values : ");
+    UtilityFunctions::print(inertia_tensor);
+    inverse_inertia_tensor = inertia_tensor.inverse();
     
 
     //UtilityFunctions::print("the shape class is : ");
@@ -199,45 +214,55 @@ void RigidBodyCustom::apply_impulse(const Vector3& impulse){
 }
 
 void RigidBodyCustom::integrate_forces(double delta_time) {
-    // Integrate forces
-    //forces += gravity * mass;
-    //const float damping = 0.99f;
-
-
-    Vector3 acceleration = forces * (1.0f / mass);
-    acceleration += gravity;
-    
+    // Store old state
     old_position = position;
     old_velocity = velocity;
 
-    // Update velocity and position
-    // (Explicit Euler) at the moment, but perhaps find integration method thats better and keeps dimensional analysis and keeps my teacher)
+    // Calculate accelerations
+    Vector3 acceleration = (forces * inverse_mass) + gravity;
+    // Calculate angular acceleration in world space
+    Vector3 angular_acceleration = inverse_inertia_tensor.xform(torque);
 
+    // Semi-implicit Euler integration
+    // Update velocities first
     velocity += acceleration * delta_time;
+    angular_velocity += angular_acceleration * delta_time;
+
+    // Update position using new velocity
     position += velocity * delta_time;
 
-    //velocity = velocity * friction + acceleration * delta_time;
-
-    // attempt at sleep threshold to prevent jitter while still keeping "physics simulation"
-    // based on kinetic energy
-
-    float energy = 0.5f * mass * velocity.length_squared();
-    const float SLEEP_THRESHOLD = 0.01f; // i should fine a better scientific reason for this lmao
-    if (energy < SLEEP_THRESHOLD)
-    {
-        velocity = Vector3();
+    // Update orientation
+    // Use quaternion integration for better stability
+    float angle = angular_velocity.length() * delta_time;
+    if (angle > 0.0f) {
+        Vector3 axis = angular_velocity.normalized();
+        // Create rotation quaternion
+        Quaternion rotation(axis, angle);
+        // Convert current basis to quaternion, rotate, and convert back
+        Quaternion current_orientation = Quaternion(body_trans.basis);
+        Quaternion new_orientation = rotation * current_orientation;
+        // Normalize to prevent drift
+        new_orientation.normalize();
+        body_trans.basis = Basis(new_orientation);
     }
 
-    //position = position + ( (old_velocity + velocity) * 0.5f) * delta_time;
-    //body_trans.origin += velocity * static_cast<float>(delta_time);
-
-    // update transform of rigidbody ( just the class right now, server transform happens later)
+    // Update transform
     body_trans.origin = position;
     set_trans(body_trans);
 
-    //forces = Vector3(0, 0, 0);
-    // clear forces for next update
+    // Energy-based sleeping
+    float linear_energy = 0.5f * mass * velocity.length_squared();
+    float angular_energy = 0.5f * angular_velocity.dot(inertia_tensor.xform(angular_velocity));
+    const float SLEEP_THRESHOLD = 0.01f;
+
+    if (linear_energy + angular_energy < SLEEP_THRESHOLD) {
+        velocity = Vector3();
+        angular_velocity = Vector3();
+    }
+
+    // Clear forces and torques for next frame
     forces = Vector3();
+    torque = Vector3();
 }
 
 void RigidBodyCustom::set_velocity(const Vector3 &new_velocity) {

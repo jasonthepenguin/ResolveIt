@@ -3,9 +3,9 @@
 [ext_resource type="PackedScene" uid="uid://bbycv2d86pfv8" path="res://player.tscn" id="1_i62dg"]
 [ext_resource type="PackedScene" uid="uid://bqu44ul337erb" path="res://room.tscn" id="2_7ic85"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_wsene"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_hd6ig"]
 
-[sub_resource type="SphereMesh" id="SphereMesh_pvh8c"]
+[sub_resource type="SphereMesh" id="SphereMesh_gxwad"]
 
 [node name="test_world" type="Node3D"]
 
@@ -21,7 +21,7 @@ velocity = Vector3(8, 2.08165e-12, 2.08165e-12)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.76289, -4.15799)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsHandler/RigidBodyCustom"]
-shape = SubResource("SphereShape3D_wsene")
+shape = SubResource("SphereShape3D_hd6ig")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="PhysicsHandler/RigidBodyCustom"]
-mesh = SubResource("SphereMesh_pvh8c")
+mesh = SubResource("SphereMesh_gxwad")
