@@ -185,40 +185,43 @@ void RigidBodyCustom::apply_impulse(const Vector3& impulse){
 void RigidBodyCustom::integrate_forces(double delta_time) {
     // Integrate forces
     //forces += gravity * mass;
+    //const float damping = 0.99f;
 
-    const float damping = 0.99f;
-
-    old_position = position;
 
     Vector3 acceleration = forces * (1.0f / mass);
-
+    acceleration += gravity;
+    
+    old_position = position;
     old_velocity = velocity;
 
-    velocity = velocity * friction + acceleration * delta_time;
-    // damping
-    velocity = velocity * damping;
+    // Update velocity and position
+    // (Explicit Euler) at the moment, but perhaps find integration method thats better and keeps dimensional analysis and keeps my teacher)
 
-    if (fabsf(velocity.x) < 0.001f) {
-		velocity.x = 0.0f;
-	}
-   // UtilityFunctions::print("---");
-    //UtilityFunctions::print("VELOCITY y value : ");
-   // UtilityFunctions::print(velocity.y);
-   // UtilityFunctions::print("---");
-	if (fabsf(velocity.y) < 0.001f) {
-		velocity.y = 0.0f;
-	}
-	if (fabsf(velocity.z) < 0.001f) {
-		velocity.z = 0.0f;
-	}
+    velocity += acceleration * delta_time;
+    position += velocity * delta_time;
 
-    position = position + ( (old_velocity + velocity) * 0.5f) * delta_time;
+    //velocity = velocity * friction + acceleration * delta_time;
+
+    // attempt at sleep threshold to prevent jitter while still keeping "physics simulation"
+    // based on kinetic energy
+
+    float energy = 0.5f * mass * velocity.length_squared();
+    const float SLEEP_THRESHOLD = 0.01f; // i should fine a better scientific reason for this lmao
+    if (energy < SLEEP_THRESHOLD)
+    {
+        velocity = Vector3();
+    }
+
+    //position = position + ( (old_velocity + velocity) * 0.5f) * delta_time;
     //body_trans.origin += velocity * static_cast<float>(delta_time);
-    body_trans.origin = position;
 
+    // update transform of rigidbody ( just the class right now, server transform happens later)
+    body_trans.origin = position;
     set_trans(body_trans);
 
-    forces = Vector3(0, 0, 0);
+    //forces = Vector3(0, 0, 0);
+    // clear forces for next update
+    forces = Vector3();
 }
 
 void RigidBodyCustom::set_velocity(const Vector3 &new_velocity) {

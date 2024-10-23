@@ -17,7 +17,7 @@
 process_priority = 1
 
 [node name="RigidBodyCustom" type="RigidBodyCustom" parent="PhysicsHandler"]
-velocity = Vector3(15, 2.08165e-12, 2.08165e-12)
+velocity = Vector3(8, 2.08165e-12, 2.08165e-12)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.76289, -4.15799)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsHandler/RigidBodyCustom"]

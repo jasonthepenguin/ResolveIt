@@ -58,9 +58,11 @@ void PhysicsHandler::_physics_process(double delta) {
     find_manifolds(manifold_map); // builds our manifolds ( so all our collding bodies are paired)
 
     // apply forces for each body to accumlate (eg gravity)
+    /*
     for (auto * rigid_body : rigid_bodies){
         rigid_body->apply_force(rigid_body->get_gravity() * rigid_body->get_mass());
     }
+    */
 
     
     // impulse iteration solving 
@@ -232,8 +234,8 @@ void PhysicsHandler::resolve_collision(Manifold& manifold, double delta) {
             continue;
         }
 
-        // average impulse by number of contacts
-        j /= static_cast<float>(contact_count);
+        // average impulse by number of contacts ( REMOVING PERHAPS SHOULDN'T BE AVERAGING)
+        //j /= static_cast<float>(contact_count);
 
         // Friction
         // tangent vector direction friction will act
@@ -247,7 +249,7 @@ void PhysicsHandler::resolve_collision(Manifold& manifold, double delta) {
             // friction impulse scalar
             float j_tangent = -relative_velocity.dot(tangent);
             j_tangent = j_tangent / mass_term;
-            j_tangent /= static_cast<float>(contact_count);
+            //j_tangent /= static_cast<float>(contact_count);   removing this as i shouldn't be averaging
 
             // friction coefficient
             float friction = sqrtf(body_a->friction * body_b_friction);
