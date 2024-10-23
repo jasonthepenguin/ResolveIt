@@ -8,7 +8,7 @@ size = Vector3(0.3, 0.55, 0.3)
 [sub_resource type="BoxShape3D" id="BoxShape3D_5mtu6"]
 size = Vector3(0.3, 0.55, 0.3)
 
-[node name="CharacterBody3D" type="CharacterBody3D"]
+[node name="CharacterBody3D" type="CharacterBody3D" groups=["AI_NPC"]]
 transform = Transform3D(1, 0.000336087, -0.00022588, -0.000336028, 1, 0.000241059, 0.000225967, -0.000240978, 1, 0, 0, 0)
 script = ExtResource("1_4mvsx")
 

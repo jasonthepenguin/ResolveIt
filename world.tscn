@@ -97,7 +97,7 @@ transform = Transform3D(1, 2.55568e-10, 1.74856e-07, -4.4929e-10, 1, 0, -1.74856
 [node name="NavigationObstacle3D" type="NavigationObstacle3D" parent="NavigationRegion3D/table_and_computers8"]
 transform = Transform3D(1.735, 0, 0, 0, 2.1, 0, 0, 0, 0.835, 0, 0.5, 0)
 
-[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." groups=["Player"]]
 transform = Transform3D(0.67, 0, 0, 0, 0.67, 0, 0, 0, 0.67, -2.70788, 3.69609, 14.5514)
 script = ExtResource("2_iwlwb")
 SPEED = 3.0
