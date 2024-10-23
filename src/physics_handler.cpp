@@ -175,123 +175,67 @@ void PhysicsHandler::find_manifolds(std::unordered_map<ManifoldKey, Manifold, Ma
 }
 
 
-
 void PhysicsHandler::resolve_collision(Manifold& manifold, double delta) {
     RigidBodyCustom* body_a = manifold.body_a;
     RigidBodyCustom* body_b = nullptr;
 
     Vector3 body_b_velocity = Vector3();
-    float body_b_mass = INFINITY;
     float body_b_inv_mass = 0.0f;
     float body_b_restitution = 1.0f;
-    float body_b_friction = 0.05f; // some default until have better solution
 
-    // may have to do types checking in the future if (body_b_node->is_class("StaticBody3D"))
-
-    // if body is NOT static (eg rigid)
-    if(!manifold.body_b_is_static){
+    if(!manifold.body_b_is_static) {
         body_b = Object::cast_to<RigidBodyCustom>(manifold.body_b_node);
-        if (body_b){
+        if (body_b) {
             body_b_velocity = body_b->get_velocity();
-            body_b_mass = body_b->get_mass();
             body_b_inv_mass = body_b->get_inv_mass();
             body_b_restitution = body_b->get_restitution();
         }
     }
 
-    size_t contact_count = manifold.contact_points.size();
-    if(contact_count == 0){
-        return;
-    }
-
-    // Accumulators for impulses
-    Vector3 total_impulse_body_a = Vector3();
-    Vector3 total_impulse_body_b = Vector3();
-
+    // Process each contact point independently
     for (size_t i = 0; i < manifold.contact_points.size(); ++i) {
         Vector3 collision_normal = manifold.collision_normals[i];
-        Vector3 contact_point = manifold.contact_points[i];
-
-        // Compute relative velocity at contact point
+        
+        // Compute relative velocity
         Vector3 relative_velocity = body_a->get_velocity() - body_b_velocity;
-
         float velocity_along_normal = relative_velocity.dot(collision_normal);
 
-        // If velocities are separating, skip this contact
-        if (velocity_along_normal > 0)
+        // Skip if objects are separating
+        if (velocity_along_normal > 0) {
             continue;
+        }
 
         // Calculate restitution
         float restitution = MIN(body_a->get_restitution(), body_b_restitution);
 
         // Compute impulse scalar
-        float numerator = -(1 + restitution) * velocity_along_normal;
-        //float mass_term = (1 / body_a->get_mass()) + (1 / body_b_mass);
+        float j = -(1.0f + restitution) * velocity_along_normal;
         float mass_term = body_a->get_inv_mass() + body_b_inv_mass;
-        float j = numerator / mass_term;
-
-        if ( j == 0.0f){
+        if (mass_term == 0.0f) {
             continue;
         }
+        
+        j /= mass_term;
 
-        // average impulse by number of contacts ( REMOVING PERHAPS SHOULDN'T BE AVERAGING)
-        //j /= static_cast<float>(contact_count);
-
-        // Friction
-        // tangent vector direction friction will act
-        Vector3 tangent = relative_velocity - (collision_normal * velocity_along_normal);
-        //UtilityFunctions::print(tangent);
-        float tangent_length = tangent.length();
-        //UtilityFunctions::print(tangent_length);
-        if(tangent.length() > 0.0001f) // prevent division by 0
-        {
-            tangent = tangent / tangent_length; // normalize tangent
-            // friction impulse scalar
-            float j_tangent = -relative_velocity.dot(tangent);
-            j_tangent = j_tangent / mass_term;
-            //j_tangent /= static_cast<float>(contact_count);   removing this as i shouldn't be averaging
-
-            // friction coefficient
-            float friction = sqrtf(body_a->friction * body_b_friction);
-
-            // clamp friction impulse
-            Vector3 friction_impulse;
-            float max_friction = friction * fabsf(j); // Friction should be proportional to normal force
-
-            if (j_tangent > max_friction) {
-                j_tangent = max_friction;
-            } else if (j_tangent < -max_friction) {
-                j_tangent = -max_friction;
-            }
-
-            friction_impulse = tangent * j_tangent;
-            // Apply normal and friction impulses
-            Vector3 total_impulse = (collision_normal * j) + friction_impulse;
-            total_impulse_body_a += total_impulse;
-            total_impulse_body_b -= total_impulse;
-                        
-
-        }
-        else{
-            // Apply impulse
-            // average impulse from all contact points
-            Vector3 impulse = j * collision_normal;
-            total_impulse_body_a += impulse;
-            total_impulse_body_b -= impulse;
-
+        // Apply impulse
+        Vector3 impulse = collision_normal * j;
+        
+        // Debug output
+        /*
+        UtilityFunctions::print("Collision Normal: ", collision_normal);
+        UtilityFunctions::print("Relative Velocity: ", relative_velocity);
+        UtilityFunctions::print("Impulse Magnitude: ", j);
+        UtilityFunctions::print("Body A Velocity Before: ", body_a->get_velocity());
+        */
+        
+        body_a->set_velocity(body_a->get_velocity() + impulse * body_a->get_inv_mass());
+        if (body_b && !manifold.body_b_is_static) {
+            body_b->set_velocity(body_b->get_velocity() - impulse * body_b_inv_mass);
         }
 
-    
+        //UtilityFunctions::print("Body A Velocity After: ", body_a->get_velocity());
+        //UtilityFunctions::print("-------------------");
     }
-    // Update velocities
-    //body_a->set_velocity(body_a->get_velocity() + total_impulse_body_a / body_a->get_mass());
-    body_a->set_velocity(body_a->get_velocity() + total_impulse_body_a * body_a->get_inv_mass());
-    if (body_b && !manifold.body_b_is_static) {
-        //body_b->set_velocity(body_b->get_velocity() + total_impulse_body_b / body_b->get_mass());
-        body_b->set_velocity(body_b->get_velocity() + total_impulse_body_b * body_b->get_inv_mass());
-    } 
-
-    
 }
 
 void PhysicsHandler::apply_positional_corrections(std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash>& manifold_map) {

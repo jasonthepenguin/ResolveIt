@@ -218,50 +218,22 @@ void RigidBodyCustom::integrate_forces(double delta_time) {
     old_position = position;
     old_velocity = velocity;
 
-    // Calculate accelerations
+    // Calculate linear acceleration only
     Vector3 acceleration = (forces * inverse_mass) + gravity;
-    // Calculate angular acceleration in world space
-    Vector3 angular_acceleration = inverse_inertia_tensor.xform(torque);
 
-    // Semi-implicit Euler integration
-    // Update velocities first
+    // Semi-implicit Euler integration for linear motion only
     velocity += acceleration * delta_time;
-    angular_velocity += angular_acceleration * delta_time;
-
-    // Update position using new velocity
     position += velocity * delta_time;
 
-    // Update orientation
-    // Use quaternion integration for better stability
-    float angle = angular_velocity.length() * delta_time;
-    if (angle > 0.0f) {
-        Vector3 axis = angular_velocity.normalized();
-        // Create rotation quaternion
-        Quaternion rotation(axis, angle);
-        // Convert current basis to quaternion, rotate, and convert back
-        Quaternion current_orientation = Quaternion(body_trans.basis);
-        Quaternion new_orientation = rotation * current_orientation;
-        // Normalize to prevent drift
-        new_orientation.normalize();
-        body_trans.basis = Basis(new_orientation);
-    }
-
-    // Update transform
+    // Update transform (position only, keep original rotation)
     body_trans.origin = position;
     set_trans(body_trans);
 
-    // Energy-based sleeping
-    float linear_energy = 0.5f * mass * velocity.length_squared();
-    float angular_energy = 0.5f * angular_velocity.dot(inertia_tensor.xform(angular_velocity));
-    const float SLEEP_THRESHOLD = 0.01f;
-
-    if (linear_energy + angular_energy < SLEEP_THRESHOLD) {
-        velocity = Vector3();
-        angular_velocity = Vector3();
-    }
-
-    // Clear forces and torques for next frame
+    // Clear forces
     forces = Vector3();
+    
+    // Zero out any angular quantities
+    angular_velocity = Vector3();
     torque = Vector3();
 }
 
