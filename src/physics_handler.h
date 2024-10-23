@@ -39,6 +39,11 @@ namespace godot {
 
             PhysicsServer3D *physics_server;
 
+            // constants
+            // pos correction consts
+            const float CORRECTION_PERCENT = 0.8f;
+            const float POSITION_SLOP = 0.01f;
+            
 
 
         protected:

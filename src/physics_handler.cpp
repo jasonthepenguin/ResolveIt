@@ -37,7 +37,7 @@ void PhysicsHandler::_ready() {
     // print my current process priority
     //UtilityFunctions::print("my process priority is : ");
     set_process_priority(1); // im testing this to see if updates to my rigid bodies are done before physics handler
-    UtilityFunctions::print(get_process_priority());
+    //UtilityFunctions::print(get_process_priority());
 
     if(Engine::get_singleton()->is_editor_hint()){
         set_physics_process(false);
@@ -295,8 +295,7 @@ void PhysicsHandler::resolve_collision(Manifold& manifold, double delta) {
 }
 
 void PhysicsHandler::apply_positional_corrections(std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash>& manifold_map) {
-    const float correction_percent = 0.8f;
-    const float slop = 0.01f;
+ 
 
     for (const auto& pair : manifold_map) {
         const Manifold& manifold = pair.second;
@@ -316,8 +315,8 @@ void PhysicsHandler::apply_positional_corrections(std::unordered_map<ManifoldKey
             //penetration = abs(penetration);
             //penetration = -penetration;
             //if (penetration > slop) {
-            if(penetration < slop) {
-                Vector3 correction = manifold.collision_normals[i] * (penetration - slop) * correction_percent;
+            if(penetration < POSITION_SLOP) {
+                Vector3 correction = manifold.collision_normals[i] * (penetration - POSITION_SLOP) * CORRECTION_PERCENT;
 
                 if (body_b_mass == INFINITY)
                 {

@@ -124,10 +124,26 @@ void RigidBodyCustom::update_inertia_tensor()
     // so far just work with the primitives we assume are being used eg SphereShape3D etc
 
     Vector3 inertia;
-    Vector3 shape_extents;
+    String shape_class = collision_shape->get_shape()->get_class();
 
-    UtilityFunctions::print("the shape class is : ");
-    UtilityFunctions::print(collision_shape->get_shape()->get_class());
+    if(shape_class == "SphereShape3D"){
+        //UtilityFunctions::print("we have a SphereShape3D");
+        Ref<SphereShape3D> sphere = Object::cast_to<SphereShape3D>(collision_shape->get_shape().ptr());
+        float radius = sphere->get_radius();
+        //UtilityFunctions::print("our radius from calling ref of sphere : ");
+        //UtilityFunctions::print(sphere->get_radius());
+        // Inertia calculation for a sphere I = 2/5 * m * r^2 for solid sphere
+        float i = (2.0f/5.0f) * mass * radius * radius;
+        inertia = Vector3(i,i,i);
+    }
+    else if(shape_class == "BoxShape3D"){
+
+    }
+    // other shapes when get the chance and inertia. 
+    
+
+    //UtilityFunctions::print("the shape class is : ");
+    //UtilityFunctions::print(collision_shape->get_shape()->get_class());
     
 
     // determine shape to use correct primitive shape inertia alogirthm calc
