@@ -26,3 +26,7 @@ func updateAI(delta):
 		if ai.has_method("updateAI"):  ## Check if the AI has the method before calling it
 			
 			ai.updateAI(delta)
+			
+			
+			
+			

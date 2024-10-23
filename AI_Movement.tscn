@@ -3,14 +3,13 @@
 [ext_resource type="Script" path="res://AI_Movement.gd" id="1_4mvsx"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_wmvc6"]
-size = Vector3(0.5, 0.5, 0.5)
+size = Vector3(0.3, 0.55, 0.3)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5mtu6"]
-size = Vector3(0.5, 0.5, 0.5)
+size = Vector3(0.3, 0.55, 0.3)
 
 [node name="CharacterBody3D" type="CharacterBody3D"]
 transform = Transform3D(1, 0.000336087, -0.00022588, -0.000336028, 1, 0.000241059, 0.000225967, -0.000240978, 1, 0, 0, 0)
-motion_mode = 1
 script = ExtResource("1_4mvsx")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
@@ -21,3 +20,6 @@ skeleton = NodePath("../..")
 shape = SubResource("BoxShape3D_5mtu6")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+
+[node name="Marker3D" type="Marker3D" parent="."]
+transform = Transform3D(1, -5.65663e-11, 0, 5.7252e-11, 1, -2.91038e-11, 2.91038e-11, 0, 1, -6.00723e-05, 0.178769, 4.30931e-05)
