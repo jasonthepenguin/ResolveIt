@@ -177,6 +177,7 @@ void PhysicsHandler::resolve_collision(Manifold& manifold, double delta) {
     float body_b_inv_mass = 0.0f;
     float body_b_restitution = 1.0f;
 
+    // Check if body_b is a RigidBodyCustom
     if (!manifold.body_b_is_static) {
         body_b = Object::cast_to<RigidBodyCustom>(manifold.body_b_node);
         if (body_b) {
@@ -184,6 +185,11 @@ void PhysicsHandler::resolve_collision(Manifold& manifold, double delta) {
             body_b_angular_velocity = body_b->get_angular_velocity();
             body_b_inv_mass = body_b->get_inv_mass();
             body_b_restitution = body_b->get_restitution();
+        } else {
+            // If body_b is not a RigidBodyCustom, treat it as static or handle appropriately
+            manifold.body_b_is_static = true;
+            // Optionally, you can set body_b_inv_mass = 0.0f;
+            // And use default restitution or set it based on your needs
         }
     }
 
@@ -239,12 +245,13 @@ void PhysicsHandler::resolve_collision(Manifold& manifold, double delta) {
         // Apply Linear and Angular impulse to body A
         body_a->apply_impulse_off_centre(impulse, ra);
 
-        // Apply impulse to body B if it's not static
+        // Apply impulse to body B if it's not static and not null
         if (!manifold.body_b_is_static && body_b) {
             body_b->apply_impulse_off_centre(-impulse, rb);
         }
     }
 }
+
 
 
 void PhysicsHandler::apply_positional_corrections(std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash>& manifold_map) {

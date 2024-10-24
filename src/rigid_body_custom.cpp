@@ -281,6 +281,7 @@ void RigidBodyCustom::integrate_forces(double delta_time) {
     set_trans(body_trans);
 
     // Print debug information
+    /*
     UtilityFunctions::print("\n=== Physics Update ===");
     UtilityFunctions::print("Position: ", position);
     UtilityFunctions::print("Velocity: ", velocity);
@@ -288,6 +289,7 @@ void RigidBodyCustom::integrate_forces(double delta_time) {
     UtilityFunctions::print("Angular Velocity: ", angular_velocity);
     UtilityFunctions::print("Forces: ", forces);
     UtilityFunctions::print("Torque: ", torque);
+    */
 
     // Clear forces and torque for the next frame
     forces = Vector3();
