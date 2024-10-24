@@ -249,10 +249,10 @@ void PhysicsHandler::apply_positional_corrections(std::unordered_map<ManifoldKey
                 body_b_mass = body_b->get_mass();
             }
         }
-
+        
         for (size_t i = 0; i < manifold.contact_points.size(); ++i) {
             float penetration = manifold.penetrations[i];
-            UtilityFunctions::print(penetration);
+            //UtilityFunctions::print(penetration);
             if (std::abs(penetration) > POSITION_SLOP ) {
                 Vector3 correction = manifold.collision_normals[i] * (penetration - POSITION_SLOP) * CORRECTION_PERCENT;
 

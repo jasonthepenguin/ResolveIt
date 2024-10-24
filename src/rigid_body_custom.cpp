@@ -35,6 +35,8 @@ void RigidBodyCustom::_bind_methods() {
     ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::VECTOR3, "velocity"), "set_velocity", "get_velocity");
 }
 
+
+
 RigidBodyCustom::RigidBodyCustom()
     : physics_server(nullptr),
       body_rid(),
@@ -111,6 +113,8 @@ void RigidBodyCustom::_ready() {
         // calculate our inertia tensor based on collision shape
         update_inertia_tensor();
 
+        
+
     }
 
     UtilityFunctions::print("Initialization complete.");
@@ -171,7 +175,7 @@ void RigidBodyCustom::update_inertia_tensor()
     }
     // other shapes when get the chance and inertia. 
 
-    
+
      // For debugging ( print calculated inertia values to be certain )
     UtilityFunctions::print("Calculated inertia tensor for shape: ", shape_class);
     UtilityFunctions::print("Inertia values: ", inertia);
@@ -274,6 +278,15 @@ void RigidBodyCustom::integrate_forces(double delta_time) {
     // Update transform (position)
     body_trans.origin = position;
     set_trans(body_trans);
+
+    // Print debug information
+    UtilityFunctions::print("\n=== Physics Update ===");
+    UtilityFunctions::print("Position: ", position);
+    UtilityFunctions::print("Velocity: ", velocity);
+    UtilityFunctions::print("Acceleration: ", acceleration);
+    UtilityFunctions::print("Angular Velocity: ", angular_velocity);
+    UtilityFunctions::print("Forces: ", forces);
+    UtilityFunctions::print("Torque: ", torque);
 
     // Clear forces
     forces = Vector3();

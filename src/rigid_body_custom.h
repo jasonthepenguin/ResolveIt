@@ -23,6 +23,8 @@
 #include <godot_cpp/classes/physics_body3d.hpp>
 #include <godot_cpp/classes/physics_direct_body_state3d.hpp>
 #include <godot_cpp/classes/rigid_body3d.hpp>
+#include <godot_cpp/classes/viewport.hpp>
+#include <godot_cpp/classes/engine.hpp>
 
 namespace godot {
 
@@ -61,6 +63,7 @@ private:
 
 
 
+
 protected:
     static void _bind_methods();
 
@@ -78,6 +81,9 @@ public:
 
     void set_trans(const Transform3D &new_trans);
     Transform3D get_trans() const;
+
+    // DEBUG DRAWING
+    
 
     // angular 
     void set_angular_velocity(const Vector3& p_angular_velocity);
