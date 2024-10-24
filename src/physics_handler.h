@@ -41,8 +41,8 @@ namespace godot {
 
             // constants
             // pos correction consts
-            const float CORRECTION_PERCENT = 0.8f;
-            const float POSITION_SLOP = 0.01f;
+            const float CORRECTION_PERCENT = 0.2f; //= 0.8f;
+            const float POSITION_SLOP = 0.001f; //= 0.01f;
             
 
 

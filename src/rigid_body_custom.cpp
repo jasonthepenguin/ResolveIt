@@ -53,7 +53,7 @@ RigidBodyCustom::RigidBodyCustom()
       forces(Vector3(0, 0, 0)),
       mass(1.0f),
       inverse_mass(1.0f),
-      restitution(0.95f),
+      restitution(0.30f),
       friction(1.0f),
       gravity(Vector3(0, -9.8, 0)),
       position(),
@@ -276,8 +276,18 @@ void RigidBodyCustom::integrate_forces(double delta_time) {
 
     // Update transform
     body_trans.origin = position;
-    
+
     set_trans(body_trans);
+
+        /*
+    UtilityFunctions::print("\n=== Physics Update ===");
+    UtilityFunctions::print("Position: ", position);
+    UtilityFunctions::print("Velocity: ", velocity);
+    UtilityFunctions::print("Acceleration: ", acceleration);
+    UtilityFunctions::print("Angular Velocity: ", angular_velocity);
+    UtilityFunctions::print("Forces: ", forces);
+    UtilityFunctions::print("Torque: ", torque);
+    */
 
     // Clear forces and torque for next frame
     forces = Vector3();
@@ -360,9 +370,9 @@ void RigidBodyCustom::apply_impulse_off_centre(const Vector3& impulse, const Vec
     // .xform method seems to just be the transform method, in this case its allowing us matrix-vector multiplication
 
 
-    UtilityFunctions::print("Applied impulse: ", impulse);
-    UtilityFunctions::print("At relative position: ", rel_pos);
-    UtilityFunctions::print("Resulting angular impulse: ", rel_pos.cross(impulse));
+   // UtilityFunctions::print("Applied impulse: ", impulse);
+   // UtilityFunctions::print("At relative position: ", rel_pos);
+   // UtilityFunctions::print("Resulting angular impulse: ", rel_pos.cross(impulse));
     
     
 }
