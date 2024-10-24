@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://dwd34xr52ca2h"]
+[gd_scene load_steps=6 format=3 uid="uid://dwd34xr52ca2h"]
 
 [ext_resource type="Script" path="res://AI_Movement.gd" id="1_4mvsx"]
 [ext_resource type="Texture2D" uid="uid://0yv2hc7ong8i" path="res://Neutral.png" id="2_860cb"]
+[ext_resource type="Script" path="res://EmojiManager.gd" id="3_4rdp4"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_wmvc6"]
 size = Vector3(0.3, 0.55, 0.3)
@@ -26,7 +27,10 @@ shape = SubResource("BoxShape3D_5mtu6")
 transform = Transform3D(1, -5.65663e-11, 0, 5.7252e-11, 1, -2.91038e-11, 2.91038e-11, 0, 1, -6.00723e-05, 0.178769, 4.30931e-05)
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
-transform = Transform3D(0.25, -5.77973e-11, -2.18279e-11, 5.79634e-11, 0.25, -7.27596e-12, 2.91038e-11, 0, 0.25, -0.000269897, 0.803186, 0.000193611)
+transform = Transform3D(0.25, -7.23492e-11, -2.18279e-11, 7.25136e-11, 0.25, -1.45519e-11, 3.63798e-11, 0, 0.25, -0.000227598, 0.677309, 0.000163268)
 texture = ExtResource("2_860cb")
+script = ExtResource("3_4rdp4")
 
 [node name="Camera3D" type="Camera3D" parent="."]
+
+[node name="EmojiManager" type="Node" parent="."]
