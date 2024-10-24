@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://caexqsrol5okt"]
+
+[ext_resource type="Script" path="res://kb_agent/scripts/knowledge_base.gd" id="1_e3jdh"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3dalu"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_v8xpi"]
+
+[node name="KbAgent" type="CharacterBody3D"]
+
+[node name="AgentKnowledgeBase" type="Node" parent="."]
+script = ExtResource("1_e3jdh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_3dalu")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_v8xpi")

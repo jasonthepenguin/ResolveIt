@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://63qrt8r3tgvc" path="res://scenes/Ocean.tscn" id="1_gd7la"]
 [ext_resource type="Texture2D" uid="uid://csgkmtkowgdj8" path="res://resources/AllSkyFree_Sky_EpicBlueSunset_Equirect.png" id="2_jgmo4"]
 
+
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_n8ust"]
 panorama = ExtResource("2_jgmo4")
 
