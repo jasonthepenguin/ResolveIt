@@ -3,9 +3,9 @@
 [ext_resource type="PackedScene" uid="uid://bbycv2d86pfv8" path="res://player.tscn" id="1_i62dg"]
 [ext_resource type="PackedScene" uid="uid://bqu44ul337erb" path="res://room.tscn" id="2_7ic85"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_84ibh"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_xbkfi"]
 
-[sub_resource type="SphereMesh" id="SphereMesh_2fw4w"]
+[sub_resource type="BoxMesh" id="BoxMesh_gj82e"]
 
 [node name="test_world" type="Node3D"]
 
@@ -18,10 +18,10 @@ process_priority = 1
 
 [node name="RigidBodyCustom" type="RigidBodyCustom" parent="PhysicsHandler"]
 velocity = Vector3(2.08165e-12, 2.08165e-12, 2.08165e-12)
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.644324, -4.15799)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.06718, -4.15799)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsHandler/RigidBodyCustom"]
-shape = SubResource("SphereShape3D_84ibh")
+shape = SubResource("BoxShape3D_xbkfi")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="PhysicsHandler/RigidBodyCustom"]
-mesh = SubResource("SphereMesh_2fw4w")
+mesh = SubResource("BoxMesh_gj82e")

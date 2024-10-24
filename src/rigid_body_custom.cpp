@@ -114,6 +114,28 @@ void RigidBodyCustom::_ready() {
     }
 
     UtilityFunctions::print("Initialization complete.");
+
+
+       // Test impulse application
+    UtilityFunctions::print("\n=== Test Impulse Setup ===");
+    Vector3 impulse(10.0, 0.0, 0.0);
+    Vector3 rel_pos(0.0, 1.0, 0.0);
+    
+    UtilityFunctions::print("Impulse Vector: ", impulse);
+    UtilityFunctions::print("Application Point: ", rel_pos);
+    UtilityFunctions::print("Initial velocity: ", get_velocity());
+    UtilityFunctions::print("Initial angular velocity: ", get_angular_velocity());
+    
+    apply_impulse_off_centre(impulse, rel_pos);
+    
+    UtilityFunctions::print("\n=== After Impulse Application ===");
+    UtilityFunctions::print("New linear velocity: ", get_velocity());
+    UtilityFunctions::print("New angular velocity: ", get_angular_velocity());
+    UtilityFunctions::print("Expected rotation axis: Z (should rotate backwards)");
+
+
+    //apply_torque(Vector3(10,0,0));
+    //apply_impulse_off_centre(Vector3(60, 0, 0), Vector3(0, 1, 0));  // Force applied away from center
 }
 
 void RigidBodyCustom::update_inertia_tensor()
@@ -125,6 +147,8 @@ void RigidBodyCustom::update_inertia_tensor()
 
     Vector3 inertia;
     String shape_class = collision_shape->get_shape()->get_class();
+
+    Vector3 size;
 
     if(shape_class == "SphereShape3D"){
         //UtilityFunctions::print("we have a SphereShape3D");
@@ -138,15 +162,16 @@ void RigidBodyCustom::update_inertia_tensor()
     }
     else if(shape_class == "BoxShape3D"){
         Ref<BoxShape3D> box = collision_shape->get_shape();
-        Vector3 extents = box->get_size() * 0.5f; // half-extents
-        // For a box: I_x = 1/12 * m * (y² + z²), etc.
-        inertia.x = (1.0f/12.0f) * mass * (extents.y * extents.y + extents.z * extents.z);
-        inertia.y = (1.0f/12.0f) * mass * (extents.x * extents.x + extents.z * extents.z);
-        inertia.z = (1.0f/12.0f) * mass * (extents.x * extents.x + extents.y * extents.y);
+        size = box->get_size();  // full size
+
+        // For a box: I = (1/12) * mass * (width² + height²)
+        inertia.x = (1.0f/12.0f) * mass * (size.y * size.y + size.z * size.z);
+        inertia.y = (1.0f/12.0f) * mass * (size.x * size.x + size.z * size.z);
+        inertia.z = (1.0f/12.0f) * mass * (size.x * size.x + size.y * size.y);
     }
     // other shapes when get the chance and inertia. 
 
-
+    
      // For debugging ( print calculated inertia values to be certain )
     UtilityFunctions::print("Calculated inertia tensor for shape: ", shape_class);
     UtilityFunctions::print("Inertia values: ", inertia);
@@ -155,6 +180,10 @@ void RigidBodyCustom::update_inertia_tensor()
     UtilityFunctions::print("Inertia tensor values : ");
     UtilityFunctions::print(inertia_tensor);
     inverse_inertia_tensor = inertia_tensor.inverse();
+
+    // Debug prints
+    UtilityFunctions::print("Box size: ", size);
+    UtilityFunctions::print("Mass: ", mass);
     
 
     //UtilityFunctions::print("the shape class is : ");
@@ -218,22 +247,36 @@ void RigidBodyCustom::integrate_forces(double delta_time) {
     old_position = position;
     old_velocity = velocity;
 
-    // Calculate linear acceleration only
+    // Calculate linear acceleration 
     Vector3 acceleration = (forces * inverse_mass) + gravity;
-
-    // Semi-implicit Euler integration for linear motion only
+    // Semi-implicit Euler integration for linear motion
     velocity += acceleration * delta_time;
     position += velocity * delta_time;
 
-    // Update transform (position only, keep original rotation)
+    // Angular motion
+    Vector3 angular_acceleration = inverse_inertia_tensor.xform(torque);
+    angular_velocity += angular_acceleration * delta_time;
+
+    // Update orientation using angular velocity
+    // for now creating a rotation matrix from angular velocity * dt
+    Vector3 rotation_amount = angular_velocity;
+    float angle = rotation_amount.length();
+
+    if(angle > 0.0f) {
+        Vector3 rotation_axis = rotation_amount.normalized(); 
+        Basis rotation = Basis(rotation_axis, angle);
+        body_trans.basis = rotation * body_trans.basis;
+        body_trans.basis = body_trans.basis.orthogonalized(); // prevent errors by restoring their lengths to 1
+
+
+    }
+
+    // Update transform (position)
     body_trans.origin = position;
     set_trans(body_trans);
 
     // Clear forces
     forces = Vector3();
-    
-    // Zero out any angular quantities
-    angular_velocity = Vector3();
     torque = Vector3();
 }
 
@@ -308,5 +351,11 @@ void RigidBodyCustom::apply_impulse_off_centre(const Vector3& impulse, const Vec
     Vector3 angular_impulse = rel_pos.cross(impulse);
     angular_velocity += inverse_inertia_tensor.xform(angular_impulse); 
     // .xform method seems to just be the transform method, in this case its allowing us matrix-vector multiplication
+
+
+    UtilityFunctions::print("Applied impulse: ", impulse);
+    UtilityFunctions::print("At relative position: ", rel_pos);
+    UtilityFunctions::print("Resulting angular impulse: ", rel_pos.cross(impulse));
+    
     
 }
