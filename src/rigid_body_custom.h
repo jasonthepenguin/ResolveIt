@@ -118,6 +118,9 @@ public:
     float get_mass() const;
     // get inverse mass 
     float get_inv_mass() const;
+
+    // Add to public section:
+    const Basis& get_inverse_inertia_tensor() const { return inverse_inertia_tensor; }
 };
 
 } // namespace godot

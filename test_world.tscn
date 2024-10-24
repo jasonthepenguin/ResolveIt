@@ -17,8 +17,8 @@
 process_priority = 1
 
 [node name="RigidBodyCustom" type="RigidBodyCustom" parent="PhysicsHandler"]
-velocity = Vector3(2.08165e-12, 2.08165e-12, 2.08165e-12)
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.43469, 2.06718, -4.15799)
+velocity = Vector3(5, 2.08165e-12, 2.08165e-12)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.49224, 3.31606, -4.15799)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsHandler/RigidBodyCustom"]
 shape = SubResource("BoxShape3D_xbkfi")

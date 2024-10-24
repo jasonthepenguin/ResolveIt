@@ -27,6 +27,8 @@ void RigidBodyCustom::_bind_methods() {
     ClassDB::bind_method(D_METHOD("apply_torque", "p_torque"), &RigidBodyCustom::apply_torque);
     ClassDB::bind_method(D_METHOD("apply_impulse_off_centre", "impulse", "rel_pos"), &RigidBodyCustom::apply_impulse_off_centre);
 
+    // Add to _bind_methods():
+    ClassDB::bind_method(D_METHOD("get_inverse_inertia_tensor"), &RigidBodyCustom::get_inverse_inertia_tensor);
     //void update_inertia_tensor();
 
     ClassDB::bind_method(D_METHOD("update_inertia_tensor"), &RigidBodyCustom::update_inertia_tensor);
@@ -130,7 +132,7 @@ void RigidBodyCustom::_ready() {
     UtilityFunctions::print("Initial velocity: ", get_velocity());
     UtilityFunctions::print("Initial angular velocity: ", get_angular_velocity());
     
-    apply_impulse_off_centre(impulse, rel_pos);
+    //apply_impulse_off_centre(impulse, rel_pos);
     
     UtilityFunctions::print("\n=== After Impulse Application ===");
     UtilityFunctions::print("New linear velocity: ", get_velocity());
@@ -251,8 +253,9 @@ void RigidBodyCustom::integrate_forces(double delta_time) {
     old_position = position;
     old_velocity = velocity;
 
-    // Calculate linear acceleration 
+    // Calculate linear acceleration
     Vector3 acceleration = (forces * inverse_mass) + gravity;
+
     // Semi-implicit Euler integration for linear motion
     velocity += acceleration * delta_time;
     position += velocity * delta_time;
@@ -262,17 +265,15 @@ void RigidBodyCustom::integrate_forces(double delta_time) {
     angular_velocity += angular_acceleration * delta_time;
 
     // Update orientation using angular velocity
-    // for now creating a rotation matrix from angular velocity * dt
-    Vector3 rotation_amount = angular_velocity;
+    // Multiply angular velocity by delta_time to get rotation amount
+    Vector3 rotation_amount = angular_velocity * delta_time;
     float angle = rotation_amount.length();
 
-    if(angle > 0.0f) {
-        Vector3 rotation_axis = rotation_amount.normalized(); 
+    if (angle > 0.0f) {
+        Vector3 rotation_axis = rotation_amount.normalized();
         Basis rotation = Basis(rotation_axis, angle);
         body_trans.basis = rotation * body_trans.basis;
-        body_trans.basis = body_trans.basis.orthogonalized(); // prevent errors by restoring their lengths to 1
-
-
+        body_trans.basis = body_trans.basis.orthogonalized(); // Ensure orthogonality
     }
 
     // Update transform (position)
@@ -288,10 +289,11 @@ void RigidBodyCustom::integrate_forces(double delta_time) {
     UtilityFunctions::print("Forces: ", forces);
     UtilityFunctions::print("Torque: ", torque);
 
-    // Clear forces
+    // Clear forces and torque for the next frame
     forces = Vector3();
     torque = Vector3();
 }
+
 
 void RigidBodyCustom::set_velocity(const Vector3 &new_velocity) {
     velocity = new_velocity;

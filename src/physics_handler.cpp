@@ -173,25 +173,36 @@ void PhysicsHandler::resolve_collision(Manifold& manifold, double delta) {
     RigidBodyCustom* body_b = nullptr;
 
     Vector3 body_b_velocity = Vector3();
+    Vector3 body_b_angular_velocity = Vector3();
     float body_b_inv_mass = 0.0f;
     float body_b_restitution = 1.0f;
 
-    if(!manifold.body_b_is_static) {
+    if (!manifold.body_b_is_static) {
         body_b = Object::cast_to<RigidBodyCustom>(manifold.body_b_node);
         if (body_b) {
             body_b_velocity = body_b->get_velocity();
+            body_b_angular_velocity = body_b->get_angular_velocity();
             body_b_inv_mass = body_b->get_inv_mass();
             body_b_restitution = body_b->get_restitution();
         }
     }
 
     // Process each contact point independently
-    //UtilityFunctions::print("---");
     for (size_t i = 0; i < manifold.contact_points.size(); ++i) {
         Vector3 collision_normal = manifold.collision_normals[i];
-        
-        // Compute relative velocity
-        Vector3 relative_velocity = body_a->get_velocity() - body_b_velocity;
+        Vector3 contact_point = manifold.contact_points[i];
+
+        // Calculate relative contact points
+        Vector3 ra = contact_point - body_a->get_position();
+        Vector3 rb = manifold.body_b_is_static ? Vector3() : contact_point - body_b->get_position();
+
+        // Compute velocities at contact points
+        Vector3 vel_a = body_a->get_velocity() + body_a->get_angular_velocity().cross(ra);
+        Vector3 vel_b = manifold.body_b_is_static ? Vector3() : body_b->get_velocity() + body_b->get_angular_velocity().cross(rb);
+
+        // Compute relative velocity at contact point
+        Vector3 relative_velocity = vel_a - vel_b;
+
         float velocity_along_normal = relative_velocity.dot(collision_normal);
 
         // Skip if objects are separating
@@ -199,40 +210,42 @@ void PhysicsHandler::resolve_collision(Manifold& manifold, double delta) {
             continue;
         }
 
-        // Calculate restitution
+        // Calculate restitution (coefficient of restitution)
         float restitution = MIN(body_a->get_restitution(), body_b_restitution);
+
+        // Calculate angular contribution terms
+        Vector3 raxn = ra.cross(collision_normal);
+        Vector3 angular_term_a = body_a->get_inverse_inertia_tensor().xform(raxn).cross(ra);
+
+        Vector3 angular_term_b = Vector3();
+        if (!manifold.body_b_is_static && body_b) {
+            Vector3 rbxn = rb.cross(collision_normal);
+            angular_term_b = body_b->get_inverse_inertia_tensor().xform(rbxn).cross(rb);
+        }
 
         // Compute impulse scalar
         float j = -(1.0f + restitution) * velocity_along_normal;
-        float mass_term = body_a->get_inv_mass() + body_b_inv_mass;
-        if (mass_term == 0.0f) {
+        float denominator = body_a->get_inv_mass() + body_b_inv_mass + collision_normal.dot(angular_term_a + angular_term_b);
+
+        if (denominator == 0.0f) {
             continue;
         }
-        
-        j /= mass_term;
+
+        j /= denominator;
 
         // Apply impulse
         Vector3 impulse = collision_normal * j;
-        
-        // Debug output
-        /*
-        UtilityFunctions::print("---");
-        UtilityFunctions::print("Collision Normal: ", collision_normal);
-        UtilityFunctions::print("Relative Velocity: ", relative_velocity);
-        UtilityFunctions::print("Impulse Magnitude: ", j);
-        UtilityFunctions::print("Body A Velocity Before: ", body_a->get_velocity());
-        UtilityFunctions::print("---");
-        */
-        body_a->set_velocity(body_a->get_velocity() + impulse * body_a->get_inv_mass());
-        if (body_b && !manifold.body_b_is_static) {
-            body_b->set_velocity(body_b->get_velocity() - impulse * body_b_inv_mass);
-        }
 
-        //UtilityFunctions::print("Body A Velocity After: ", body_a->get_velocity());
-        //UtilityFunctions::print("-------------------");
+        // Apply Linear and Angular impulse to body A
+        body_a->apply_impulse_off_centre(impulse, ra);
+
+        // Apply impulse to body B if it's not static
+        if (!manifold.body_b_is_static && body_b) {
+            body_b->apply_impulse_off_centre(-impulse, rb);
+        }
     }
-    //UtilityFunctions::print("---");
 }
+
 
 void PhysicsHandler::apply_positional_corrections(std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash>& manifold_map) {
  
@@ -249,7 +262,7 @@ void PhysicsHandler::apply_positional_corrections(std::unordered_map<ManifoldKey
                 body_b_mass = body_b->get_mass();
             }
         }
-        
+
         for (size_t i = 0; i < manifold.contact_points.size(); ++i) {
             float penetration = manifold.penetrations[i];
             //UtilityFunctions::print(penetration);
