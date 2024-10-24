@@ -24,9 +24,9 @@ func _input(event):
 		rotate_y(deg_to_rad(event.relative.x * -0.04))
 		
 		
-	if event.is_action_pressed("ui_cancel"):
-		get_tree().quit()
-		
+	#if event.is_action_pressed("ui_cancel"):
+		#get_tree().quit()
+		#
 	
 	if event.is_action_pressed("use"):
 		var look_test = is_looking_at_object()
@@ -90,7 +90,6 @@ func throw_grabbed_box():
 		# clear velocity or such caused by sudden mouse movement
 		looked_object.linear_velocity = Vector3(0,0,0)
 		looked_object.angular_velocity = Vector3(0,0,0)
-		
 		
 		looked_object.apply_central_impulse(throw_direction * throw_force)
 		looked_object = null
