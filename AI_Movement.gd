@@ -34,13 +34,7 @@ func _ready():
 	move_to_random_location()
 
 	emoji_sprite.texture = neutral_Emoji
-	
-		## Debugging: Confirm that the NavigationAgent3D is active
-	if agent:
-		print("Navigation Agent Ready!")
-		
-	else:
-		print("Navigation Agent Not Found!")
+
 
 
 
