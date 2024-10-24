@@ -21,8 +21,8 @@
 process_priority = 1
 
 [node name="RigidBodyCustom" type="RigidBodyCustom" parent="PhysicsHandler"]
-velocity = Vector3(3, 2.08165e-12, 2.08165e-12)
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.65569, 2.30399, -4.15799)
+velocity = Vector3(2.08165e-12, 2.08165e-12, 2.08165e-12)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.65569, 0.644533, -4.15799)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsHandler/RigidBodyCustom"]
 shape = SubResource("BoxShape3D_eaiq6")
@@ -31,8 +31,8 @@ shape = SubResource("BoxShape3D_eaiq6")
 mesh = SubResource("BoxMesh_1tvi0")
 
 [node name="RigidBodyCustom2" type="RigidBodyCustom" parent="PhysicsHandler"]
-velocity = Vector3(-3, 2.08165e-12, 2.08165e-12)
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.51873, 3.18102, -4.14943)
+velocity = Vector3(2.08165e-12, 2.08165e-12, 2.08165e-12)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.51873, 0.555011, -4.14943)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsHandler/RigidBodyCustom2"]
 shape = SubResource("BoxShape3D_8qtfv")

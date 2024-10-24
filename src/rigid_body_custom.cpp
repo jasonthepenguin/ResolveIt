@@ -254,35 +254,17 @@ void RigidBodyCustom::integrate_forces(double delta_time) {
     old_position = position;
     old_velocity = velocity;
 
-    // Step 1: Calculate initial derivatives (k1)
-    Vector3 acceleration1 = (forces * inverse_mass) + gravity;
-    Vector3 angular_acceleration1 = inverse_inertia_tensor.xform(torque);
+    // Step 1: Update velocities first (semi-implicit Euler)
+    Vector3 acceleration = (forces * inverse_mass) + gravity;
+    Vector3 angular_acceleration = inverse_inertia_tensor.xform(torque);
     
-    Vector3 k1_vel = acceleration1 * delta_time;
-    Vector3 k1_pos = velocity * delta_time;
-    Vector3 k1_angular = angular_acceleration1 * delta_time;
-    
-    // Step 2: Calculate predicted state
-    Vector3 predicted_pos = position + k1_pos;
-    Vector3 predicted_vel = velocity + k1_vel;
-    Vector3 predicted_angular_vel = angular_velocity + k1_angular;
-    
-    // Step 3: Calculate derivatives at predicted state (k2)
-    // Note: In this case acceleration is constant, but in general it might depend
-    // on position/velocity
-    Vector3 acceleration2 = (forces * inverse_mass) + gravity;
-    Vector3 angular_acceleration2 = inverse_inertia_tensor.xform(torque);
-    
-    Vector3 k2_vel = acceleration2 * delta_time;
-    Vector3 k2_pos = predicted_vel * delta_time;
-    Vector3 k2_angular = angular_acceleration2 * delta_time;
-    
-    // Step 4: Final update using average of k1 and k2
-    velocity += (k1_vel + k2_vel) * 0.5f;
-    position += (k1_pos + k2_pos) * 0.5f;
-    angular_velocity += (k1_angular + k2_angular) * 0.5f;
+    velocity += acceleration * delta_time;
+    angular_velocity += angular_acceleration * delta_time;
 
-    // Update orientation using final angular velocity
+    // Step 2: Update positions using new velocities
+    position += velocity * delta_time;
+
+    // Update orientation using new angular velocity
     Vector3 rotation_amount = angular_velocity * delta_time;
     float angle = rotation_amount.length();
     if (angle > 0.0f) {
@@ -294,18 +276,8 @@ void RigidBodyCustom::integrate_forces(double delta_time) {
 
     // Update transform
     body_trans.origin = position;
+    
     set_trans(body_trans);
-
-       // Print debug information
-    /*
-    UtilityFunctions::print("\n=== Physics Update ===");
-    UtilityFunctions::print("Position: ", position);
-    UtilityFunctions::print("Velocity: ", velocity);
-    UtilityFunctions::print("Acceleration: ", acceleration);
-    UtilityFunctions::print("Angular Velocity: ", angular_velocity);
-    UtilityFunctions::print("Forces: ", forces);
-    UtilityFunctions::print("Torque: ", torque);
-    */
 
     // Clear forces and torque for next frame
     forces = Vector3();
@@ -394,3 +366,4 @@ void RigidBodyCustom::apply_impulse_off_centre(const Vector3& impulse, const Vec
     
     
 }
+
