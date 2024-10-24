@@ -57,7 +57,8 @@ RigidBodyCustom::RigidBodyCustom()
       friction(1.0f),
       gravity(Vector3(0, -9.8, 0)),
       position(),
-      old_position() {
+      old_position()
+       {
     // Constructor
 
     inertia_tensor = Basis().scaled(Vector3(1,1,1));
@@ -260,6 +261,12 @@ void RigidBodyCustom::integrate_forces(double delta_time) {
     
     velocity += acceleration * delta_time;
     angular_velocity += angular_acceleration * delta_time;
+
+
+
+
+
+
 
     // Step 2: Update positions using new velocities
     position += velocity * delta_time;

@@ -58,6 +58,8 @@ private:
     Basis inverse_inertia_tensor;
 
 
+
+
     Vector3 position;
     Vector3 old_position;
 
