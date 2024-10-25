@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://bwjq8xn2cv6uj"]
+
+[ext_resource type="Script" path="res://InteractableCube.gd" id="1_5c8mr"]
+[ext_resource type="Script" path="res://Affordance.gd" id="2_b14dk"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_laipm"]
+size = Vector3(0.3, 0.55, 0.3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6i8ws"]
+size = Vector3(0.3, 0.55, 0.3)
+
+[node name="JumpCube" type="StaticBody3D" groups=["interactable"]]
+transform = Transform3D(1, -5.80435e-10, 0, 5.81057e-10, 1, -2.91038e-10, 2.91038e-10, 0, 1, 1.19505, 0.00484995, 2.1224)
+script = ExtResource("1_5c8mr")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, -5.65663e-11, 0, 5.72413e-11, 1, -5.82077e-11, 5.82077e-11, 0, 1, 0, 0, 0)
+mesh = SubResource("BoxMesh_laipm")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_6i8ws")
+
+[node name="Affordance" type="Node" parent="."]
+script = ExtResource("2_b14dk")
