@@ -44,19 +44,18 @@ func setup_affordances() -> void:
 			affordance.add_affordance("duplicate", duplicate_cube)
 
 
-func activate() -> void:
+func activate() -> void:  # Default to green if no color specified
 	if is_interacting:
 		return
-		
-	is_interacting = true
 	
-	print("Cube activated - changing color")
+	is_interacting = true
+	print("Cube activated - changing to red")
 	change_color(Color.RED)
 	
 	await get_tree().create_timer(1.0).timeout
 	reset_color()
 	is_interacting = false
-
+	
 
 func jump() -> void:
 	change_color(Color.BLUE)
