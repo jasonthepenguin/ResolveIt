@@ -22,7 +22,8 @@ func _ready() -> void:
 	original_color = mesh.get_surface_override_material(0).albedo_color
 	original_scale = scale
 	add_to_group("interactable")
-	affordance.add_affordance("activate", activate)  # REMOVE THIS LIN
+	
+		### This line adds aaffordance to all cubes affordance.add_affordance("activate", activate)
 	print("Added activate affordance to cube")
 
 
@@ -30,6 +31,7 @@ func setup_affordances() -> void:
 	match name.to_lower():
 		"activatecube":
 			affordance.add_affordance("activate", activate)
+			print("Added activate affordance to ", name)
 		"jumpcube":
 			affordance.add_affordance("jump", jump)
 		"runcube":

@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://dwd34xr52ca2h"]
 
 [ext_resource type="Script" path="res://AI_Movement.gd" id="1_4mvsx"]
-[ext_resource type="Texture2D" uid="uid://0yv2hc7ong8i" path="res://Neutral.png" id="2_860cb"]
+[ext_resource type="Texture2D" uid="uid://0yv2hc7ong8i" path="res://neutral.png" id="2_860cb"]
 [ext_resource type="Script" path="res://EmojiManager.gd" id="3_4rdp4"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_wmvc6"]
