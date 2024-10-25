@@ -1,5 +1,8 @@
 class_name AgentKnowledgeBase extends Node
 
+var facts: Array = []
+var rules: Array = []
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
@@ -10,42 +13,42 @@ func _process(delta):
 	pass
 
 func _init():
-	self.facts = []
-	self.rules = []
+	pass
 
 # Add a new fact to the knowledge base
-func add_fact(fact: String):
-	fact = fact.to_lower()
-	if fact not in self.facts:
-		self.facts.append(fact)
+func add_fact(fact: String) -> void:
+	if not facts.has(fact.to_lower()):
+		facts.append(fact.to_lower())
 		
 # Add a rule to the knowledge base
-func add_rule(condition: Array, conclusion: String):
-	self.rules.append([condition, conclusion])
+func add_rule(conditions: Array, conclusion: String) -> void:
+	rules.append({
+		"conditions": conditions,
+		"conclusion": conclusion
+	})
 	
 # Query the knowledge base to check if a fact is true
 func query(query: String) -> bool:
 	query = query.to_lower()
-	if query in self.facts:
+	if facts.has(query):
 		return true
 	
-	# Attempt to derive new facts using rules
-	var new_facts = true
+	var new_facts: bool = true
 	while new_facts:
 		new_facts = false
-		for rule in self.rules:
-			var conditions = rule[0]
-			var conclusion = rule[1]
-			var all_conditions_met = true
-			for condition in conditions:
-				if condition not in self.facts:
-					all_conditions_met = false
+		for rule in rules:
+			var conditions_met = true
+			for condition in rule.conditions:
+				if not facts.has(condition):
+					conditions_met = false
 					break
-			if all_conditions_met and conclusion not in self.facts:
-				self.facts.append(conclusion)
+			
+			if conditions_met and not facts.has(rule.conclusion):
+				facts.append(rule.conclusion)
 				new_facts = true
-				if conclusion == query:
+				if rule.conclusion == query:
 					return true
+	
 	return false
 				
-	
+
