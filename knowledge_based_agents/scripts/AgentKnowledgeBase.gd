@@ -1,5 +1,5 @@
-# KnowledgeBase.gd
-class_name AgentKnowledgeBase extends Node
+# AgentKnowledgeBase.gd
+class_name AgentKnowledgeBase
 
 var facts = {}
 var rules = {}

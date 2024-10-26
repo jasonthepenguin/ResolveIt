@@ -1,15 +1,16 @@
 # TeacherAgent.gd
-class_name TeacherAgent
-extends Node
+class_name TeacherAgent extends Node
 
 var kb: AgentKnowledgeBase
 var anger_level = 0  # 0: normal, 1: angry, 2: really angry, 3: totally angry
 
-func _ready():
+func _init():
 	kb = AgentKnowledgeBase.new()
 	_seed_knowledge()
-	add_child(kb)
-	#test()
+
+func _ready():
+	pass
+	#goal_test()
 
 func update_state():
 	# Check if we can teach
@@ -17,6 +18,7 @@ func update_state():
 	if teaching_query.achieved:
 		kb.add_fact("is_teaching")
 		kb.add_fact("is_happy")
+		anger_level = max(0, anger_level - 1)  # Gradually become less angry when teaching
 	else:
 		kb.remove_fact("is_teaching")
 		kb.remove_fact("is_happy")
@@ -56,6 +58,8 @@ func start_yelling():
 
 func teach():
 	print("Teacher is teaching happily!")
+	if anger_level == 0:
+		print("Teacher's mood is improving while teaching!")
 	
 func _seed_knowledge():
 	# Teaching requirements
@@ -88,7 +92,7 @@ func _seed_knowledge():
 	])
 
 # Example usage
-func test():
+func goal_test():
 	# goal to query
 	var query = "can_teach"
 	# print query info
