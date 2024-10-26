@@ -2,6 +2,8 @@ extends CharacterBody3D
 
 @onready var agent: NavigationAgent3D = $NavigationAgent3D
 @onready var emoji_controller: Sprite3D = $Sprite3D
+@onready var animation_player: AnimationPlayer = $Rogue_Hooded/AnimationPlayer
+@onready var character_model: Node3D = $Rogue_Hooded
 
 	## Movement Variables
 var m_NPC_WalkSpeed = 1.5
@@ -21,17 +23,55 @@ var distance_backed_away = 0.0
 var current_target: Node3D = null
 var is_interacting: bool = false
 
+# Add animation states
+enum AnimationState {
+	IDLE,
+	WALK,
+	INTERACT
+}
+
+var current_animation: AnimationState = AnimationState.IDLE
+
 
 func _ready():
-	randomize()
+	print("Checking animations...")
+	if animation_player:
+		var animations = animation_player.get_animation_list()
 		
-	await get_tree().create_timer(0.1).timeout ## Wait for the NavigationServer to sync
+		for anim in animations:
+			print("- ", anim)
+	
+	randomize()
+	await get_tree().create_timer(0.1).timeout
 	move_to_random_location()
+	play_animation(AnimationState.IDLE)  # Start with idle animation
+	
+
+func play_animation(anim_state: AnimationState):
+	
+	if current_animation == anim_state:
+		return
+		
+	current_animation = anim_state
+	match anim_state:
+		AnimationState.IDLE:
+			animation_player.play("Unarmed_Idle")
+		AnimationState.WALK:
+			animation_player.play("Walking_A")
+		AnimationState.INTERACT:
+			animation_player.play("Use_Item")
+			
+
+func update_model_rotation(direction: Vector3):
+	if direction != Vector3.ZERO:
+		character_model.look_at(global_position + direction)
+
 
 
 func move_to_random_location():
 	m_Location = getRandomLocation()
 	agent.set_target_position(m_Location)
+	
 	print("Moving to new target location: ", m_Location)
 
 
@@ -61,11 +101,14 @@ func find_nearest_interactable():
 
 func handle_interaction():
 	if current_target and current_target.has_node("Affordance"):
+		
 		var affordance = current_target.get_node("Affordance")
+		
 		print("Found cube with affordance: ", current_target.name)  # Debug print
 		
 
 		if affordance.has_affordance("activate"):
+		
 			print("Triggering activate affordance")
 			affordance.trigger_affordance("activate")
 		
@@ -76,9 +119,12 @@ func handle_interaction():
 		
 			
 func updateAI(delta):
+	
 	if not is_interacting:
+		
 			## Look for interactable objects first when angry
 		if emoji_controller.texture == emoji_controller.angry_Emoji:
+			
 			var nearest_interactable = find_nearest_interactable()
 			
 			if nearest_interactable:
@@ -92,10 +138,12 @@ func updateAI(delta):
 				else:
 						## Move towards the interactable
 					agent.set_target_position(nearest_interactable.global_position)
+					
 	if collided:
 		pause_timer -= delta
 		
 		if pause_timer <= 0:
+			
 			var move_vector = back_away_direction * m_NPC_WalkSpeed * delta
 			var collision = move_and_collide(move_vector)
 			distance_backed_away += move_vector.length()

@@ -3,23 +3,15 @@
 [ext_resource type="Script" path="res://AI_Movement.gd" id="1_4mvsx"]
 [ext_resource type="Texture2D" uid="uid://0yv2hc7ong8i" path="res://neutral.png" id="2_860cb"]
 [ext_resource type="Script" path="res://EmojiManager.gd" id="3_4rdp4"]
+[ext_resource type="PackedScene" uid="uid://cuixol5qgt4t3" path="res://KayKit-Character-Pack-Adventures-1.0-672074b73ba276876a19e8816ecdc5241817ab47/addons/kaykit_character_pack_adventures/Characters/gltf/Rogue_Hooded.glb" id="4_bn5g1"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_wmvc6"]
-size = Vector3(0.3, 0.55, 0.3)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_5mtu6"]
-size = Vector3(0.3, 0.55, 0.3)
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_mwfmw"]
+radius = 0.15
+height = 0.3
 
 [node name="CharacterBody3D" type="CharacterBody3D" groups=["AI_NPC"]]
 transform = Transform3D(1, 0.000336087, -0.00022588, -0.000336028, 1, 0.000241059, 0.000225967, -0.000240978, 1, 0, 0, 0)
 script = ExtResource("1_4mvsx")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_wmvc6")
-skeleton = NodePath("../..")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("BoxShape3D_5mtu6")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
 
@@ -27,10 +19,19 @@ shape = SubResource("BoxShape3D_5mtu6")
 transform = Transform3D(1, -5.65663e-11, 0, 5.7252e-11, 1, -2.91038e-11, 2.91038e-11, 0, 1, -6.00723e-05, 0.178769, 4.30931e-05)
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
-transform = Transform3D(0.25, -7.23492e-11, -2.18279e-11, 7.25136e-11, 0.25, -1.45519e-11, 3.63798e-11, 0, 0.25, -0.000227598, 0.677309, 0.000163268)
+transform = Transform3D(0.25, -1.16005e-10, -2.18279e-11, 1.16164e-10, 0.25, -3.63798e-11, 5.82077e-11, 0, 0.25, -1.20456e-05, 0.835846, 8.64075e-06)
 texture = ExtResource("2_860cb")
 script = ExtResource("3_4rdp4")
 
 [node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-1, -4.65497e-09, -8.13889e-08, -1.07416e-10, 1, 5.09317e-09, 8.73697e-08, 0, -1, -0.000130918, 0.373859, -0.0233242)
+visible = false
 
 [node name="EmojiManager" type="Node" parent="."]
+
+[node name="Rogue_Hooded2" parent="." instance=ExtResource("4_bn5g1")]
+transform = Transform3D(0.28, 0, 0, 0, 0.28, 0, 0, 0, 0.28, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.35, -2.33933e-10, -8.65839e-11, 2.33933e-10, 0.35, 0, 8.65839e-11, -5.78709e-20, 0.35, 0, 0.15, 0)
+shape = SubResource("CapsuleShape3D_mwfmw")
