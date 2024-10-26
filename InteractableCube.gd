@@ -12,9 +12,9 @@ var is_interacting: bool = false
 func _ready() -> void:
 	setup_affordances()
 	
-	## Get the original material
+		## Get the original material
 	if mesh.get_surface_override_material(0) == null:
-		## Create a new material if none exists
+			## Create a new material if none exists
 		var material = StandardMaterial3D.new()
 		material.albedo_color = Color.WHITE
 		mesh.set_surface_override_material(0, material)
@@ -22,29 +22,33 @@ func _ready() -> void:
 	original_color = mesh.get_surface_override_material(0).albedo_color
 	original_scale = scale
 	add_to_group("interactable")
-	
-		### This line adds aaffordance to all cubes affordance.add_affordance("activate", activate)
-	print("Added activate affordance to cube")
 
 
 func setup_affordances() -> void:
-	match name.to_lower():
+	print("Checking affordances for: ", name)  # Print first to see which cube we're checking
+	match name.to_lower():	
 		"activatecube":
 			affordance.add_affordance("activate", activate)
 			print("Added activate affordance to ", name)
 		"jumpcube":
 			affordance.add_affordance("jump", jump)
+			print("Added jump affordance to ", name)
 		"runcube":
 			affordance.add_affordance("run", run)
+			print("Added run affordance to ", name)
 		"happycube":
 			affordance.add_affordance("happy", happy)
+			print("Added happy affordance to ", name)
 		"shrinkcube":
 			affordance.add_affordance("shrink", shrink)
+			print("Added shrink affordance to ", name)
 		"dancecube":
 			affordance.add_affordance("dance", dance)
+			print("Added dance affordance to ", name)
 		"duplicatecube":
 			affordance.add_affordance("duplicate", duplicate_cube)
-
+			print("Added duplicate affordance to ", name)
+		
 
 func activate() -> void:  # Default to green if no color specified
 	if is_interacting:
