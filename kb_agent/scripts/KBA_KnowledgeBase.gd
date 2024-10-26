@@ -4,8 +4,8 @@ var facts : Dictionary = {} # (Object ID, [facts set])
 var rules: Array = [] # {[Conditions], Conclusion}
 
 func _ready():
-	_run_test()
-	#pass
+	#_run_test()
+	pass
 
 func add_fact(obj: Node, fact: String):
 	var key = obj.get_instance_id()
