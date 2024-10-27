@@ -33,6 +33,7 @@ namespace godot {
 
 
 
+
     class PhysicsHandler : public Node3D {
         GDCLASS(PhysicsHandler, Node3D)
 
@@ -102,6 +103,9 @@ namespace godot {
             
                 PhysicsHandler();
                 ~PhysicsHandler();
+
+
+                Array get_rigid_bodies() const;
     
                 void _ready() override;
                 void _physics_process(double delta) override;

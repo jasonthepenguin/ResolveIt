@@ -1,0 +1,4 @@
+[gd_scene format=3 uid="uid://cv40w2kseo5hb"]
+
+[node name="PhysicsHandler" type="PhysicsHandler"]
+process_priority = 1

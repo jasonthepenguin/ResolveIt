@@ -37,7 +37,6 @@ script = ExtResource("1_8wg6m")
 process_priority = 1
 
 [node name="RigidBodyCustom" type="RigidBodyCustom" parent="PhysicsHandler"]
-integrate_forces_enabled = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.9859, -1.07189, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsHandler/RigidBodyCustom"]
@@ -59,11 +58,10 @@ script = ExtResource("3_q5q3k")
 
 [node name="Camera3D" type="Camera3D" parent="CharacterBody3D/camholder"]
 
-[node name="NPC" type="CharacterBody3D" parent="." node_paths=PackedStringArray("target_character", "pickup_object")]
+[node name="NPC" type="CharacterBody3D" parent="." node_paths=PackedStringArray("target_character")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.16553, -0.316639, -6.07741)
 script = ExtResource("4_2lsli")
 target_character = NodePath("../CharacterBody3D")
-pickup_object = NodePath("../PhysicsHandler/RigidBodyCustom")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="NPC"]
 shape = SubResource("CapsuleShape3D_8g421")

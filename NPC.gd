@@ -2,12 +2,12 @@ extends CharacterBody3D
 
 # Export variables for setup
 @export var target_character: CharacterBody3D
-@export var pickup_object: Node3D
 @export var movement_speed: float = 5.0
 @export var throw_force: float = 5.0
 @export var pickup_distance: float = 2.0
 @export var throw_distance: float = 5.0
 @export var cooldown_time: float = 5.0
+@export var search_radius: float = 100.0  # Maximum distance to search for objects
 
 # Holding position configuration
 @export_group("Holding Position")
@@ -22,10 +22,34 @@ var current_state: NPCState = NPCState.IDLE
 # Instance variables
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var picked_up_object: Node3D = null
+var target_object: Node3D = null
 var cooldown_timer: Timer
 var is_on_cooldown: bool = false
+var physics_handler: Node = null
 
 # ========== Utility Functions (Could be moved to a separate class) ==========
+
+static func find_closest_rigid_body(npc: CharacterBody3D, physics_handler: Node, search_radius: float) -> Node3D:
+	"""
+	Finds the closest rigid body to the NPC within the search radius.
+	Returns null if no valid rigid body is found.
+	"""
+	# Get all rigid bodies from physics handler
+	var rigid_bodies = physics_handler.get_rigid_bodies()
+	var closest_body: Node3D = null
+	var closest_distance: float = search_radius
+	
+	for body in rigid_bodies:
+		# Skip if the body is already being held
+		if body.has_method("is_integrate_forces_enabled") and !body.is_integrate_forces_enabled():
+			continue
+			
+		var distance = npc.global_position.distance_to(body.global_position)
+		if distance < closest_distance:
+			closest_distance = distance
+			closest_body = body
+	
+	return closest_body
 
 static func move_npc_towards(npc: CharacterBody3D, target_pos: Vector3, speed: float) -> void:
 	"""
@@ -86,16 +110,13 @@ static func update_held_object(
 	var hold_position = npc.global_position + (forward * hold_config.distance)
 	hold_position.y += hold_config.height
 	
-	# Create object transform
 	var new_transform = held_object.global_transform
 	new_transform.origin = hold_position
 	
-	# Create rotation to tilt the object
 	var tilt_rotation = Transform3D()
 	tilt_rotation = tilt_rotation.rotated(Vector3.RIGHT, deg_to_rad(hold_config.tilt))
 	new_transform.basis = npc.global_transform.basis * tilt_rotation.basis
 	
-	# Update object transform
 	held_object.set_trans(new_transform)
 
 static func handle_object_pickup(npc: CharacterBody3D, object: Node3D) -> bool:
@@ -121,11 +142,9 @@ static func throw_object(
 	if !object.has_method("set_integrate_forces_enabled"):
 		return
 		
-	# Re-enable physics
 	object.set_integrate_forces_enabled(true)
 	object.set_gravity_enabled(true)
 	
-	# Calculate throw trajectory
 	var distance = target_pos.distance_to(object.global_position)
 	var height_factor = clamp(distance / 10.0, 0.2, 0.6)
 	
@@ -133,7 +152,6 @@ static func throw_object(
 	throw_direction += Vector3(0, height_factor, 0)
 	throw_direction = throw_direction.normalized()
 	
-	# Apply throw force
 	object.apply_impulse(throw_direction * force)
 
 # ========== Main Process Functions ==========
@@ -141,8 +159,11 @@ static func throw_object(
 func _ready():
 	if !target_character:
 		push_error("Target character not set!")
-	if !pickup_object:
-		push_error("Pickup object not set!")
+	
+	# Get reference to PhysicsHandler
+	physics_handler = get_parent().get_node("PhysicsHandler")
+	if !physics_handler:
+		push_error("Could not find PhysicsHandler node!")
 	
 	setup_cooldown_timer()
 
@@ -180,24 +201,45 @@ func _physics_process(delta):
 
 # ========== State Handler Functions ==========
 
+func update_target_object() -> bool:
+	"""
+	Finds and updates the closest available rigid body as the target.
+	Returns true if a valid target was found.
+	"""
+	if !physics_handler:
+		return false
+		
+	var closest = find_closest_rigid_body(self, physics_handler, search_radius)
+	if closest:
+		target_object = closest
+		return true
+	return false
+
 func handle_idle_state():
-	if !is_on_cooldown and target_character and pickup_object:
-		current_state = NPCState.WALKING_TO_OBJECT
+	if !is_on_cooldown and target_character:
+		if update_target_object():
+			current_state = NPCState.WALKING_TO_OBJECT
 
 func handle_walking_to_object_state():
-	if is_within_distance(global_position, pickup_object.global_position, pickup_distance):
+	# First verify our target is still valid
+	if !is_instance_valid(target_object):
+		# If target became invalid, try to find a new one
+		if !update_target_object():
+			current_state = NPCState.IDLE
+			return
+	
+	if is_within_distance(global_position, target_object.global_position, pickup_distance):
 		current_state = NPCState.PICKING_UP
 	else:
-		move_npc_towards(self, pickup_object.global_position, movement_speed)
+		move_npc_towards(self, target_object.global_position, movement_speed)
 
 func handle_pickup_state():
-	if handle_object_pickup(self, pickup_object):
-		picked_up_object = pickup_object
+	if handle_object_pickup(self, target_object):
+		picked_up_object = target_object
 		current_state = NPCState.WALKING_TO_TARGET
 
 func handle_walking_to_target_state():
 	if picked_up_object:
-		# Update held object position
 		var hold_config = {
 			"distance": hold_distance,
 			"height": hold_height,
@@ -205,7 +247,6 @@ func handle_walking_to_target_state():
 		}
 		update_held_object(self, picked_up_object, hold_config)
 		
-		# Check distance and move towards target
 		if is_within_distance(global_position, target_character.global_position, throw_distance):
 			current_state = NPCState.THROWING
 		else:
@@ -220,6 +261,7 @@ func handle_throw_state():
 			throw_force
 		)
 		picked_up_object = null
+		target_object = null  # Clear target object reference
 	
 	start_cooldown()
 	current_state = NPCState.COOLDOWN

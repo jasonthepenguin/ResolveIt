@@ -21,9 +21,12 @@ void PhysicsHandler::_bind_methods() {
     ClassDB::bind_method(D_METHOD("gather_bodies"), &PhysicsHandler::gather_bodies);
     ClassDB::bind_method(D_METHOD("integrate_all_body_forces", "delta"), &PhysicsHandler::integrate_all_body_forces);
     ClassDB::bind_method(D_METHOD("update_server_transforms"), &PhysicsHandler::update_server_transforms);
+    ClassDB::bind_method(D_METHOD("get_rigid_bodies"), &PhysicsHandler::get_rigid_bodies);
     
     
+
 }
+
 
 PhysicsHandler::PhysicsHandler() {
     physics_server = PhysicsServer3D::get_singleton();
@@ -48,6 +51,15 @@ void PhysicsHandler::register_rigidbody(RigidBodyCustom* rigid_body) {
 void PhysicsHandler::deregister_rigidbody(RigidBodyCustom* rigid_body) {
     rigid_bodies.erase(std::remove(rigid_bodies.begin(), rigid_bodies.end(), rigid_body), rigid_bodies.end());
     rid_map.erase(rigid_body->get_body_rid());
+}
+
+
+Array PhysicsHandler::get_rigid_bodies() const {
+    Array result;
+    for (const auto* body : rigid_bodies) {
+        result.push_back(body);
+    }
+    return result;
 }
 
 

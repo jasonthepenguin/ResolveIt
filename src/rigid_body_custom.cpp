@@ -124,6 +124,7 @@ godot::RigidBodyCustom::RigidBodyCustom()
        {
     // Constructor
 
+
     if (PhysicsHandler::singleton) {
         PhysicsHandler::singleton->register_rigidbody(this);
     }
