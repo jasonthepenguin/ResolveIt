@@ -76,12 +76,13 @@ void godot::RigidBodyCustom::_bind_methods()
 }
 
 // In rigid_body_custom.cpp
-void godot::RigidBodyCustom::_enter_tree() {
+//void godot::RigidBodyCustom::_enter_tree() {
+
     // Find the PhysicsHandler instance and register this rigid body
-    if (PhysicsHandler::singleton) {
-        PhysicsHandler::singleton->register_rigidbody(this);
-    }
-}
+   // if (PhysicsHandler::singleton) {
+  //      PhysicsHandler::singleton->register_rigidbody(this);
+  //  }
+//}
 
 void godot::RigidBodyCustom::_exit_tree() {
     // Deregister this rigid body from the PhysicsHandler
@@ -114,6 +115,10 @@ godot::RigidBodyCustom::RigidBodyCustom()
       gravity_enabled(true)
        {
     // Constructor
+
+    if (PhysicsHandler::singleton) {
+        PhysicsHandler::singleton->register_rigidbody(this);
+    }
 
     //inertia_tensor = Basis().scaled(Vector3(1,1,1));
     //inverse_inertia_tensor = inertia_tensor.inverse();

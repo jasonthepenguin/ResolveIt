@@ -99,7 +99,7 @@ public:
     RigidBodyCustom();
     ~RigidBodyCustom();
 
-    void _enter_tree() override;
+    //void _enter_tree() override;
     void _exit_tree() override;
 
 
