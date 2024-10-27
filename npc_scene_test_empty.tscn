@@ -1,8 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://bjerw262ld03d"]
+[gd_scene load_steps=14 format=3 uid="uid://bjerw262ld03d"]
 
 [ext_resource type="Script" path="res://physics_scene_test_empty.gd" id="1_8wg6m"]
 [ext_resource type="Script" path="res://CharacterBody3D.gd" id="2_hdv2k"]
 [ext_resource type="Script" path="res://camholder.gd" id="3_q5q3k"]
+[ext_resource type="Script" path="res://NPC.gd" id="4_2lsli"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_rafh5"]
 
@@ -46,7 +47,7 @@ shape = SubResource("BoxShape3D_rafh5")
 mesh = SubResource("BoxMesh_ufxq0")
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.35078, 1.74341, 3.75794)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.42811, -0.357054, 3.75794)
 script = ExtResource("2_hdv2k")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
@@ -58,8 +59,11 @@ script = ExtResource("3_q5q3k")
 
 [node name="Camera3D" type="Camera3D" parent="CharacterBody3D/camholder"]
 
-[node name="NPC" type="CharacterBody3D" parent="."]
+[node name="NPC" type="CharacterBody3D" parent="." node_paths=PackedStringArray("target_character", "pickup_object")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.16553, -0.316639, -6.07741)
+script = ExtResource("4_2lsli")
+target_character = NodePath("../CharacterBody3D")
+pickup_object = NodePath("../PhysicsHandler/RigidBodyCustom")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="NPC"]
 shape = SubResource("CapsuleShape3D_8g421")
@@ -68,8 +72,6 @@ shape = SubResource("CapsuleShape3D_8g421")
 mesh = SubResource("CapsuleMesh_xyp48")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="NPC"]
-
-[node name="Action_Controller" type="Node" parent="."]
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
 navigation_mesh = SubResource("NavigationMesh_mhggr")
