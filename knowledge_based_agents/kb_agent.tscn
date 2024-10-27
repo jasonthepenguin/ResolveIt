@@ -7,6 +7,8 @@
 
 [node name="TeacherAgent" type="Node" parent="."]
 script = ExtResource("1_hcidy")
+run_test = true
 
 [node name="StudentAgent" type="Node" parent="."]
 script = ExtResource("2_jpala")
+run_test = true

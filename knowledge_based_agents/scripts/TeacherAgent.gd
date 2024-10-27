@@ -1,6 +1,11 @@
 # TeacherAgent.gd
 class_name TeacherAgent extends BaseAgent
 
+@export var run_test: bool = false
+@export_group("Test Info")
+@export var print_queries: bool = false
+@export var print_results: bool = true
+
 var anger_level = 0  # 0: normal, 1: angry, 2: really angry, 3: totally angry
 
 func _init():
@@ -8,7 +13,7 @@ func _init():
 	_seed_knowledge()
 
 func _ready():
-	test("can_teach", 0, 1)
+	if run_test: test("can_teach", print_queries, print_results)
 
 func update_state():
 	# Check if we can teach

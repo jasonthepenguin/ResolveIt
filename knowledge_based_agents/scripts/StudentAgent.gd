@@ -1,6 +1,11 @@
 # StudentAgent.gd
 class_name StudentAgent extends BaseAgent
 
+@export var run_test: bool = false
+@export_group("Test Info")
+@export var print_queries: bool = false
+@export var print_results: bool = true
+
 var sadness_level = 0  # 0: normal, 1: sad, 2: really sad, 3: leaving
 
 func _init():
@@ -8,7 +13,7 @@ func _init():
 	_seed_knowledge()
 
 func _ready():
-	test("can_study", 0, 1)
+	if run_test: test("can_study", print_queries, print_results)
 
 func update_state():
 	# Check if we can study
