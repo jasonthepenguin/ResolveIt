@@ -31,9 +31,14 @@ PhysicsHandler::PhysicsHandler() {
 
 PhysicsHandler::~PhysicsHandler() {
     // Cleanup if necessary
+    rigid_bodies.clear();
+    rid_map.clear();
 }
 
 void PhysicsHandler::register_rigidbody(RigidBodyCustom* rigid_body) {
+
+    if(!rigid_body) return;
+
     if (std::find(rigid_bodies.begin(), rigid_bodies.end(), rigid_body) == rigid_bodies.end()) {
         rigid_bodies.push_back(rigid_body);
         rid_map[rigid_body->get_body_rid()] = rigid_body;
@@ -305,6 +310,10 @@ void PhysicsHandler::resolve_collision(Manifold& manifold, double delta) {
         float j = -(1.0f + restitution) * velocity_along_normal;
         float denominator = body_a->get_inv_mass() + body_b_inv_mass + collision_normal.dot(angular_term_a + angular_term_b);
 
+        const float EPSILON = 0.0001f;
+        if(std::abs(denominator) < EPSILON){
+            continue;
+        }
         if (denominator == 0.0f) {
             continue;
         }

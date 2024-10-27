@@ -297,6 +297,13 @@ RID godot::RigidBodyCustom::get_body_rid() const {
 void godot::RigidBodyCustom::update_server_transforms() {
     // Update physics server with new transform
     // update with the geometric centre
+
+    if(!physics_server || !body_rid.is_valid())
+    {
+        UtilityFunctions::print("Issue with physics server or validity of custom rigid body RID");
+        return;
+    }
+
     physics_server->body_set_state(body_rid, PhysicsServer3D::BODY_STATE_TRANSFORM, get_trans());
 }
 
