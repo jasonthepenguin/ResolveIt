@@ -1,16 +1,19 @@
 #include "rigid_body_custom.h"
+#include "physics_handler.h"
+
 #include <godot_cpp/core/class_db.hpp>
 
 using namespace godot;
 
-void RigidBodyCustom::_bind_methods() {
+
+
+void godot::RigidBodyCustom::_bind_methods()
+{
     ClassDB::bind_method(D_METHOD("set_trans", "new_trans"), &RigidBodyCustom::set_trans);
     ClassDB::bind_method(D_METHOD("get_trans"), &RigidBodyCustom::get_trans);
     ClassDB::bind_method(D_METHOD("get_body_rid"), &RigidBodyCustom::get_body_rid);
     ClassDB::bind_method(D_METHOD("update_server_transforms"), &RigidBodyCustom::update_server_transforms);
     ClassDB::bind_method(D_METHOD("integrate_forces", "delta_time"), &RigidBodyCustom::integrate_forces);
-    ClassDB::bind_method(D_METHOD("set_velocity", "new_velocity"), &RigidBodyCustom::set_velocity);
-    ClassDB::bind_method(D_METHOD("get_velocity"), &RigidBodyCustom::get_velocity);
     ClassDB::bind_method(D_METHOD("apply_force", "force"), &RigidBodyCustom::apply_force);
     ClassDB::bind_method(D_METHOD("set_restitution", "new_restitution"), &RigidBodyCustom::set_restitution);
     ClassDB::bind_method(D_METHOD("get_restitution"), &RigidBodyCustom::get_restitution);
@@ -27,21 +30,74 @@ void RigidBodyCustom::_bind_methods() {
     ClassDB::bind_method(D_METHOD("apply_torque", "p_torque"), &RigidBodyCustom::apply_torque);
     ClassDB::bind_method(D_METHOD("apply_impulse_off_centre", "impulse", "rel_pos"), &RigidBodyCustom::apply_impulse_off_centre);
 
+    // Add to _bind_methods():
+    ClassDB::bind_method(D_METHOD("get_inverse_inertia_tensor"), &RigidBodyCustom::get_inverse_inertia_tensor);
     //void update_inertia_tensor();
 
     ClassDB::bind_method(D_METHOD("update_inertia_tensor"), &RigidBodyCustom::update_inertia_tensor);
 
 
-    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::VECTOR3, "velocity"), "set_velocity", "get_velocity");
+       // Add new method bindings
+    ClassDB::bind_method(D_METHOD("set_gravity_enabled", "enabled"), &RigidBodyCustom::set_gravity_enabled);
+    ClassDB::bind_method(D_METHOD("is_gravity_enabled"), &RigidBodyCustom::is_gravity_enabled);
+
+     // Add these method bindings that were missing
+    ClassDB::bind_method(D_METHOD("set_gravity", "gravity"), &RigidBodyCustom::set_gravity);
+    ClassDB::bind_method(D_METHOD("set_velocity", "velocity"), &RigidBodyCustom::set_velocity);
+    ClassDB::bind_method(D_METHOD("get_velocity"), &RigidBodyCustom::get_velocity);
+
+    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::FLOAT, "mass"), 
+                         "set_mass", "get_mass");
+    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::FLOAT, "restitution"), 
+                         "set_restitution", "get_restitution");
+    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::VECTOR3, "gravity"), 
+                         "set_gravity", "get_gravity");
+    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::VECTOR3, "velocity"), 
+                         "set_velocity", "get_velocity");
+    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::VECTOR3, "angular_velocity"), 
+                         "set_angular_velocity", "get_angular_velocity");
+
+    // Add property to make it visible in editor
+    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::BOOL, "gravity_enabled"), 
+        "set_gravity_enabled", "is_gravity_enabled");
+
+
+    ClassDB::bind_method(D_METHOD("set_center_of_mass_local", "center_of_mass"), &RigidBodyCustom::set_center_of_mass_local);
+    ClassDB::bind_method(D_METHOD("get_center_of_mass_local"), &RigidBodyCustom::get_center_of_mass_local);
+
+    ClassDB::bind_method(D_METHOD("get_center_of_mass_global"), &RigidBodyCustom::get_center_of_mass_global);
+
+    // Add property to make it visible in editor
+    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::VECTOR3, "center_of_mass_local"), 
+                          "set_center_of_mass_local", "get_center_of_mass_local");
+
+
+    
 }
 
-RigidBodyCustom::RigidBodyCustom()
+// In rigid_body_custom.cpp
+void godot::RigidBodyCustom::_enter_tree() {
+    // Find the PhysicsHandler instance and register this rigid body
+    if (PhysicsHandler::singleton) {
+        PhysicsHandler::singleton->register_rigidbody(this);
+    }
+}
+
+void godot::RigidBodyCustom::_exit_tree() {
+    // Deregister this rigid body from the PhysicsHandler
+    if (PhysicsHandler::singleton) {
+        PhysicsHandler::singleton->deregister_rigidbody(this);
+    }
+}
+
+
+godot::RigidBodyCustom::RigidBodyCustom()
     : physics_server(nullptr),
       body_rid(),
       mesh_rid(),
       collision_shape(nullptr),
       mesh_instance(nullptr),
-      body_trans(),
+      //body_trans(),
       velocity(Vector3(0, 0, 0)),
       angular_velocity(Vector3()),
       torque(Vector3()),
@@ -49,29 +105,61 @@ RigidBodyCustom::RigidBodyCustom()
       forces(Vector3(0, 0, 0)),
       mass(1.0f),
       inverse_mass(1.0f),
-      restitution(0.95f),
-      friction(1.0f),
+      restitution(0.80f),
       gravity(Vector3(0, -9.8, 0)),
-      position(),
-      old_position() {
+      //position(),
+      old_position(),
+      center_of_mass_local(Vector3(0,0,0)),
+      center_of_mass_global(Vector3(0,0,0)),
+      gravity_enabled(true)
+       {
     // Constructor
 
-    inertia_tensor = Basis().scaled(Vector3(1,1,1));
-    inverse_inertia_tensor = inertia_tensor.inverse();
+    //inertia_tensor = Basis().scaled(Vector3(1,1,1));
+    //inverse_inertia_tensor = inertia_tensor.inverse();
 }
 
-RigidBodyCustom::~RigidBodyCustom() {
+godot::RigidBodyCustom::~RigidBodyCustom() {
     // Destructor
 }
 
-void RigidBodyCustom::_process(double delta) {
+void godot::RigidBodyCustom::set_gravity(const Vector3& p_gravity) {
+    gravity = p_gravity;
+}
+
+
+void godot::RigidBodyCustom::set_center_of_mass_local(const Vector3& p_center_of_mass) {
+    center_of_mass_local = p_center_of_mass;
+    // Update global center of mass
+    center_of_mass_global = get_global_transform().xform(center_of_mass_local);
+}
+
+Vector3 godot::RigidBodyCustom::get_center_of_mass_local() const {
+    return center_of_mass_local;
+}
+
+Vector3 godot::RigidBodyCustom::get_center_of_mass_global() const {
+    return center_of_mass_global;
+}
+
+
+void godot::RigidBodyCustom::set_gravity_enabled(bool p_enabled) {
+    gravity_enabled = p_enabled;
+}
+
+bool godot::RigidBodyCustom::is_gravity_enabled() const {
+    return gravity_enabled;
+}
+
+void godot::RigidBodyCustom::_process(double delta) {
     // Process logic
 }
 
-void RigidBodyCustom::_ready() {
+void godot::RigidBodyCustom::_ready() {
     // Initialize Transform as user may change it in the editor
     body_trans = get_global_transform();
     position = body_trans.origin;
+    old_position = position;
 
     // print position
     //UtilityFunctions::print("Position: ");
@@ -107,16 +195,26 @@ void RigidBodyCustom::_ready() {
         physics_server->body_set_mode(body_rid, PhysicsServer3D::BODY_MODE_RIGID);
 
         UtilityFunctions::print("Added collision shape to body in the physics server.");
+        
 
+        // Update global center of mass based on where ever the user has placed RigidBodyCustom in their scene
+        center_of_mass_global = get_global_transform().xform(center_of_mass_local);
         // calculate our inertia tensor based on collision shape
         update_inertia_tensor();
+
+        
 
     }
 
     UtilityFunctions::print("Initialization complete.");
+
+
+    // Test impulse application
+    //apply_torque(Vector3(10,0,0));
+    //apply_impulse_off_centre(Vector3(60, 0, 0), Vector3(0, 1, 0));  // Force applied away from center
 }
 
-void RigidBodyCustom::update_inertia_tensor()
+void godot::RigidBodyCustom::update_inertia_tensor()
 {
     if(collision_shape == nullptr) return;
 
@@ -125,6 +223,8 @@ void RigidBodyCustom::update_inertia_tensor()
 
     Vector3 inertia;
     String shape_class = collision_shape->get_shape()->get_class();
+
+    Vector3 size;
 
     if(shape_class == "SphereShape3D"){
         //UtilityFunctions::print("we have a SphereShape3D");
@@ -138,11 +238,12 @@ void RigidBodyCustom::update_inertia_tensor()
     }
     else if(shape_class == "BoxShape3D"){
         Ref<BoxShape3D> box = collision_shape->get_shape();
-        Vector3 extents = box->get_size() * 0.5f; // half-extents
-        // For a box: I_x = 1/12 * m * (y² + z²), etc.
-        inertia.x = (1.0f/12.0f) * mass * (extents.y * extents.y + extents.z * extents.z);
-        inertia.y = (1.0f/12.0f) * mass * (extents.x * extents.x + extents.z * extents.z);
-        inertia.z = (1.0f/12.0f) * mass * (extents.x * extents.x + extents.y * extents.y);
+        size = box->get_size();  // full size
+
+        // For a box: I = (1/12) * mass * (width² + height²)
+        inertia.x = (1.0f/12.0f) * mass * (size.y * size.y + size.z * size.z);
+        inertia.y = (1.0f/12.0f) * mass * (size.x * size.x + size.z * size.z);
+        inertia.z = (1.0f/12.0f) * mass * (size.x * size.x + size.y * size.y);
     }
     // other shapes when get the chance and inertia. 
 
@@ -155,6 +256,10 @@ void RigidBodyCustom::update_inertia_tensor()
     UtilityFunctions::print("Inertia tensor values : ");
     UtilityFunctions::print(inertia_tensor);
     inverse_inertia_tensor = inertia_tensor.inverse();
+
+    // Debug prints
+    UtilityFunctions::print("Box size: ", size);
+    UtilityFunctions::print("Mass: ", mass);
     
 
     //UtilityFunctions::print("the shape class is : ");
@@ -165,29 +270,33 @@ void RigidBodyCustom::update_inertia_tensor()
 
 }
 
-void RigidBodyCustom::set_trans(const Transform3D &new_trans) {
+void godot::RigidBodyCustom::set_trans(const Transform3D &new_trans) {
     body_trans = new_trans;
-    position = body_trans.origin;
+    position = body_trans.origin; // geometric position
+
+    // Update the global center of mass based on the new transform
+    center_of_mass_global = body_trans.xform(center_of_mass_local);
+
     set_global_transform(body_trans);
 }
 
-Transform3D RigidBodyCustom::get_trans() const {
+Transform3D godot::RigidBodyCustom::get_trans() const {
     return body_trans;
 }
 
 
-RID RigidBodyCustom::get_body_rid() const {
+RID godot::RigidBodyCustom::get_body_rid() const {
     return body_rid;
 }
 
-void RigidBodyCustom::update_server_transforms() {
+void godot::RigidBodyCustom::update_server_transforms() {
     // Update physics server with new transform
+    // update with the geometric centre
     physics_server->body_set_state(body_rid, PhysicsServer3D::BODY_STATE_TRANSFORM, get_trans());
-    //set_global_transform(get_trans());
 }
 
 // set pos
-void RigidBodyCustom::set_position(const Vector3 &new_position) {
+void godot::RigidBodyCustom::set_position(const Vector3 &new_position) {
     //position = new_position;
     body_trans.origin = new_position;
     set_trans(body_trans);
@@ -196,108 +305,141 @@ void RigidBodyCustom::set_position(const Vector3 &new_position) {
 
 
 // get gravity
-Vector3 RigidBodyCustom::get_gravity() const {
+Vector3 godot::RigidBodyCustom::get_gravity() const {
     return gravity;
 }
 
 
-void RigidBodyCustom::apply_impulse(const Vector3& impulse){
+void godot::RigidBodyCustom::apply_impulse(const Vector3& impulse){
     // attempting method different from cookbook as that seemed to just add velocity directly
     // this way at least we are taking the mass of the object into account
 
     // LINEAR VELOCITY
     velocity = velocity + (impulse * inverse_mass); // scale the impulse based on objects mass
-
+    
     // TODO : ANGULAR VERSION OF THIS FUNCTION SO WE CAN APPLY IMPULSE OFF CENTRE ( eg rotational velocity  + linear velocity)
     // point of application and angular component later etc
 
 }
 
-void RigidBodyCustom::integrate_forces(double delta_time) {
+//  (Improved Euler/Heun's Method) decided to implement this when reading chapter Chapter 7, real time simulations (better methods section)
+void godot::RigidBodyCustom::integrate_forces(double delta_time) {
     // Store old state
     old_position = position;
     old_velocity = velocity;
 
-    // Calculate accelerations
-    Vector3 acceleration = (forces * inverse_mass) + gravity;
-    // Calculate angular acceleration in world space
-    Vector3 angular_acceleration = inverse_inertia_tensor.xform(torque);
+    update_world_inertia_tensor();
 
-    // Semi-implicit Euler integration
-    // Update velocities first
+
+
+    //Vector3 acceleration = (forces) * inverse_mass + gravity;
+    
+    Vector3 acceleration = forces * inverse_mass;
+    Vector3 angular_acceleration = inverse_world_inertia_tensor.xform(torque);
+
+    // Energy thresholds for coming to rest
+    const float min_linear_kinetic_energy = 0.01f;  // 0.5 * m * v^2
+    const float min_angular_kinetic_energy = 0.01f; // 0.5 * I * ω^2
+    
+
+    // Update velocities
     velocity += acceleration * delta_time;
     angular_velocity += angular_acceleration * delta_time;
 
-    // Update position using new velocity
-    position += velocity * delta_time;
+    // Calculate kinetic energies
+    float linear_kinetic_energy = 0.5f * mass * velocity.length_squared();
+    float angular_kinetic_energy = 0.5f * angular_velocity.dot(inertia_tensor.xform(angular_velocity));
 
-    // Update orientation
-    // Use quaternion integration for better stability
-    float angle = angular_velocity.length() * delta_time;
-    if (angle > 0.0f) {
-        Vector3 axis = angular_velocity.normalized();
-        // Create rotation quaternion
-        Quaternion rotation(axis, angle);
-        // Convert current basis to quaternion, rotate, and convert back
-        Quaternion current_orientation = Quaternion(body_trans.basis);
-        Quaternion new_orientation = rotation * current_orientation;
-        // Normalize to prevent drift
-        new_orientation.normalize();
-        body_trans.basis = Basis(new_orientation);
+    
+    // Bring to rest if energy is below thresholds
+    
+    if (Math::abs(linear_kinetic_energy) < min_linear_kinetic_energy) {
+        velocity = Vector3();
     }
 
-    // Update transform
-    body_trans.origin = position;
-    set_trans(body_trans);
-
-    // Energy-based sleeping
-    float linear_energy = 0.5f * mass * velocity.length_squared();
-    float angular_energy = 0.5f * angular_velocity.dot(inertia_tensor.xform(angular_velocity));
-    const float SLEEP_THRESHOLD = 0.01f;
-
-    if (linear_energy + angular_energy < SLEEP_THRESHOLD) {
-        velocity = Vector3();
+    if (Math::abs(angular_kinetic_energy) < min_angular_kinetic_energy) {
         angular_velocity = Vector3();
     }
+    
 
-    // Clear forces and torques for next frame
+    // Update positions using new velocities
+    //position += velocity * delta_time;
+    center_of_mass_global += velocity * delta_time;
+
+     // Update the body's geometric position based on center of mass movement
+    Transform3D new_trans = body_trans;
+    new_trans.origin = center_of_mass_global - body_trans.basis.xform(center_of_mass_local); // geometric position i think
+
+    // Update orientation using new angular velocity
+    Vector3 rotation_amount = angular_velocity * delta_time;
+    float angle = rotation_amount.length();
+    if (angle > 0.0f) {
+        Vector3 rotation_axis = rotation_amount.normalized();
+        Basis rotation = Basis(rotation_axis, angle);
+        new_trans.basis = rotation * body_trans.basis;
+        new_trans.basis = new_trans.basis.orthogonalized();
+
+    }
+
+   
+
+    // Update transform
+    set_trans(new_trans);
+
+    // Debug output if needed
+    /*
+    UtilityFunctions::print("\n=== Physics Update ===");
+    UtilityFunctions::print("Position: ", position);
+    UtilityFunctions::print("Velocity: ", velocity);
+    UtilityFunctions::print("Acceleration: ", acceleration);
+    UtilityFunctions::print("Angular Velocity: ", angular_velocity);
+    UtilityFunctions::print("Linear KE: ", linear_kinetic_energy);
+    UtilityFunctions::print("Angular KE: ", angular_kinetic_energy);
+    UtilityFunctions::print("Forces: ", forces);
+    UtilityFunctions::print("Torque: ", torque);
+    */
+
+    // Clear forces and torque for next frame
     forces = Vector3();
     torque = Vector3();
 }
 
-void RigidBodyCustom::set_velocity(const Vector3 &new_velocity) {
+
+
+
+void godot::RigidBodyCustom::set_velocity(const Vector3 &new_velocity) {
     velocity = new_velocity;
 }
 
-Vector3 RigidBodyCustom::get_velocity() const {
+Vector3 godot::RigidBodyCustom::get_velocity() const {
     return velocity;
 }
 
-void RigidBodyCustom::apply_force(const Vector3 &force) {
+void godot::RigidBodyCustom::apply_force(const Vector3 &force) {
     forces += force;
 }
 
-void RigidBodyCustom::set_restitution(float new_restitution) {
+void godot::RigidBodyCustom::set_restitution(float new_restitution) {
     restitution = new_restitution;
 }
 
-float RigidBodyCustom::get_restitution() const {
+float godot::RigidBodyCustom::get_restitution() const {
     return restitution;
 }
 
 // get and set mass
-void RigidBodyCustom::set_mass(float new_mass) {
+void godot::RigidBodyCustom::set_mass(float new_mass) {
     mass = new_mass;
     if(mass != 0.0f){
         inverse_mass = 1.0f / mass;
     }
 }
 
-float RigidBodyCustom::get_mass() const {
+float godot::RigidBodyCustom::get_mass() const {
     return mass;
 }
 
-float RigidBodyCustom::get_inv_mass() const {
+float godot::RigidBodyCustom::get_inv_mass() const {
    if(mass == 0.0f)
    {
         return 0.0f;
@@ -306,33 +448,53 @@ float RigidBodyCustom::get_inv_mass() const {
 }
 
 // get position
-Vector3 RigidBodyCustom::get_old_position() const {
+Vector3 godot::RigidBodyCustom::get_old_position() const {
     return old_position;
 }
 
-Vector3 RigidBodyCustom::get_position() const {
+Vector3 godot::RigidBodyCustom::get_position() const {
     return position;
 }
 
 
 
-void RigidBodyCustom::set_angular_velocity(const Vector3& p_angular_velocity) {
+void godot::RigidBodyCustom::set_angular_velocity(const Vector3& p_angular_velocity) {
     angular_velocity = p_angular_velocity;
 }
 
-Vector3 RigidBodyCustom::get_angular_velocity() const {
+Vector3 godot::RigidBodyCustom::get_angular_velocity() const {
     return angular_velocity;
 }
 
-void RigidBodyCustom::apply_torque(const Vector3& p_torque) {
+void godot::RigidBodyCustom::apply_torque(const Vector3& p_torque) {
     torque += p_torque;
 }
 
-void RigidBodyCustom::apply_impulse_off_centre(const Vector3& impulse, const Vector3& rel_pos) {
+void godot::RigidBodyCustom::apply_impulse_off_centre(const Vector3& impulse, const Vector3& rel_pos) {
     // Apply linear impulse
     velocity += impulse * inverse_mass;
 
     // Apply angular impulse
     Vector3 angular_impulse = rel_pos.cross(impulse);
-    angular_velocity += inverse_inertia_tensor.xform(angular_impulse);
+    //angular_velocity += inverse_inertia_tensor.xform(angular_impulse); 
+    angular_velocity += inverse_world_inertia_tensor.xform(angular_impulse); 
+    // .xform method seems to just be the transform method, in this case its allowing us matrix-vector multiplication
+
+
+    
+   // UtilityFunctions::print("Applied impulse: ", impulse);
+   // UtilityFunctions::print("At relative position: ", rel_pos);
+   // UtilityFunctions::print("Resulting angular impulse: ", rel_pos.cross(impulse));
+    
+    
 }
+
+void godot::RigidBodyCustom::update_world_inertia_tensor()
+{
+    Transform3D current_transform = get_trans();
+    // get rotation basis
+    Basis rotation = current_transform.basis;
+    inverse_world_inertia_tensor = rotation * inverse_inertia_tensor * rotation.transposed();
+}
+
+

@@ -10,14 +10,19 @@
 #include <godot_cpp/classes/physics_ray_query_parameters3d.hpp>
 #include <godot_cpp/classes/physics_direct_space_state3d.hpp>
 #include <godot_cpp/variant/array.hpp>
-#include "rigid_body_custom.h"
+
+//#include "rigid_body_custom.h"
+
 #include <map>
 #include <unordered_map>
 
 #include <godot_cpp/classes/engine.hpp>
 #include<godot_cpp/classes/static_body3d.hpp>
 
-
+// Forward declaration of RigidBodyCustom
+namespace godot{
+    class RigidBodyCustom;
+}
 
 
 namespace godot {
@@ -41,8 +46,10 @@ namespace godot {
 
             // constants
             // pos correction consts
-            const float CORRECTION_PERCENT = 0.8f;
-            const float POSITION_SLOP = 0.01f;
+            const float CORRECTION_PERCENT = 0.05f; 
+            const float POSITION_SLOP = 0.01f; 
+
+
             
 
 
@@ -52,12 +59,17 @@ namespace godot {
 
         public:
 
+            static PhysicsHandler* singleton;
+
+            void register_rigidbody(RigidBodyCustom* rigid_body);
+            void deregister_rigidbody(RigidBodyCustom* rigid_body);
+
 
             // manifolds class
     struct Manifold {
         RigidBodyCustom* body_a;
-        //RigidBodyCustom* body_b;
-        Node* body_b_node;
+        RigidBodyCustom* body_b;
+        //Node* body_b_node;
         std::vector<Vector3> contact_points;
         std::vector<Vector3> collision_normals;
         std::vector<float> penetrations;
@@ -66,18 +78,24 @@ namespace godot {
 
     struct ManifoldKey {
         RigidBodyCustom* body_a;
-        //RigidBodyCustom* body_b;
-        Node* body_b_node;
+        RigidBodyCustom* body_b;
+        //Node* body_b_node;
 
         bool operator==(const ManifoldKey& other) const {
-            return body_a == other.body_a && body_b_node == other.body_b_node;
+            return body_a == other.body_a && body_b == other.body_b;
                    
         }
     };
 
     struct ManifoldKeyHash {
         size_t operator()(const ManifoldKey& key) const {
-            return std::hash<RigidBodyCustom*>()(key.body_a) ^ std::hash<Node*>()(key.body_b_node);
+            // If body_b is nullptr (static body), only hash body_a
+            if (key.body_b == nullptr) {
+                return std::hash<RigidBodyCustom*>()(key.body_a);
+            }
+            // Otherwise, hash both bodies using XOR (^)
+            return std::hash<RigidBodyCustom*>()(key.body_a) ^ 
+                   std::hash<RigidBodyCustom*>()(key.body_b);
         }
     };
 

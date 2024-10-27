@@ -23,8 +23,16 @@
 #include <godot_cpp/classes/physics_body3d.hpp>
 #include <godot_cpp/classes/physics_direct_body_state3d.hpp>
 #include <godot_cpp/classes/rigid_body3d.hpp>
+#include <godot_cpp/classes/viewport.hpp>
+#include <godot_cpp/classes/engine.hpp>
+
+
+//#include "physics_handler.h"
+
 
 namespace godot {
+
+    class PhysicsHandler;
 
 class RigidBodyCustom : public Node3D {
     GDCLASS(RigidBodyCustom, Node3D)
@@ -41,8 +49,17 @@ private:
 
     Vector3 velocity;
    // Vector3 old_velocity;
+
+    bool gravity_enabled;
     
     Vector3 forces;
+
+    Vector3 center_of_mass_local; // relative to body origin
+    Vector3 center_of_mass_global; // COM position in global/world coordinates
+
+    // get and set center of mass
+    void set_center_of_mass_local(const Vector3& p_center_of_mass);
+
 
     float mass;
     float inverse_mass;
@@ -52,24 +69,42 @@ private:
     // new variables to support angular motion/acceleration angular impulse
     Vector3 angular_velocity;
     Vector3 torque;
+
     Basis inertia_tensor;
     Basis inverse_inertia_tensor;
+
+    //Basis world_inertia_tensor;
+    Basis inverse_world_inertia_tensor;
+
+    void update_world_inertia_tensor();
+
+
 
 
     Vector3 position;
     Vector3 old_position;
 
+    
 
 
 protected:
+
+
+
     static void _bind_methods();
+
+    
 
 public:
     RigidBodyCustom();
     ~RigidBodyCustom();
 
-    float friction; // should be moved or based on material object property?
+    void _enter_tree() override;
+    void _exit_tree() override;
 
+
+    Vector3 get_center_of_mass_local() const;
+    Vector3 get_center_of_mass_global() const; 
 
     Vector3 old_velocity;
 
@@ -78,6 +113,15 @@ public:
 
     void set_trans(const Transform3D &new_trans);
     Transform3D get_trans() const;
+
+
+
+    
+
+    
+
+    // DEBUG DRAWING
+    
 
     // angular 
     void set_angular_velocity(const Vector3& p_angular_velocity);
@@ -106,12 +150,21 @@ public:
     Vector3 get_old_position() const;
     Vector3 get_position() const;
     Vector3 get_gravity() const;
+    void set_gravity(const Vector3& p_gravity);
 
     // get and set mass
     void set_mass(float new_mass);
     float get_mass() const;
     // get inverse mass 
     float get_inv_mass() const;
+
+    // Add to public section:
+    const Basis& get_inverse_inertia_tensor() const { return inverse_inertia_tensor; }
+    const Basis& get_inverse_world_inertia_tensor() const { return inverse_world_inertia_tensor; }
+
+    // Add new methods
+    void set_gravity_enabled(bool p_enabled);
+    bool is_gravity_enabled() const;
 };
 
 } // namespace godot
