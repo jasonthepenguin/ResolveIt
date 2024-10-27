@@ -259,7 +259,7 @@ void PhysicsHandler::resolve_collision(Manifold& manifold, double delta) {
         if (velocity_along_normal > 0) {
             continue;
         }
-
+        /*
           // Log pre-collision state
         UtilityFunctions::print("\n=== Collision Event ===");
         UtilityFunctions::print("Body A Properties:");
@@ -286,7 +286,8 @@ void PhysicsHandler::resolve_collision(Manifold& manifold, double delta) {
         UtilityFunctions::print("- r1 (Body A arm): ", ra);
         UtilityFunctions::print("- r2 (Body B arm): ", rb);
         UtilityFunctions::print("- Coefficient of Restitution: ", MIN(body_a->get_restitution(), body_b_restitution));
-
+        */
+       
         // Calculate restitution (coefficient of restitution)
         float restitution = MIN(body_a->get_restitution(), body_b_restitution);
 
@@ -345,6 +346,7 @@ void PhysicsHandler::resolve_collision(Manifold& manifold, double delta) {
             //UtilityFunctions::print("Updated Angular Velocity B: ", body_b->get_angular_velocity());
         }
 
+        /*
          // After computing impulse
         UtilityFunctions::print("\nImpulse Details:");
         UtilityFunctions::print("- Impulse Magnitude (λ): ", j);
@@ -362,7 +364,7 @@ void PhysicsHandler::resolve_collision(Manifold& manifold, double delta) {
             UtilityFunctions::print("- Angular Velocity: ", body_b->get_angular_velocity());
         }
         UtilityFunctions::print("===========================\n");
-
+        */
 
 
     }

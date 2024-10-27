@@ -78,6 +78,8 @@ private:
 
     void update_world_inertia_tensor();
 
+    
+
 
 
 
@@ -165,6 +167,13 @@ public:
     // Add new methods
     void set_gravity_enabled(bool p_enabled);
     bool is_gravity_enabled() const;
+
+    // Add new member variable
+    bool integrate_forces_enabled;
+
+    // Add new method declarations
+    void set_integrate_forces_enabled(bool p_enabled);
+    bool is_integrate_forces_enabled() const;
 };
 
 } // namespace godot

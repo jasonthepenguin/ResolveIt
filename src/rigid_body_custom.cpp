@@ -73,6 +73,13 @@ void godot::RigidBodyCustom::_bind_methods()
 
 
     
+    // Add new method bindings
+    ClassDB::bind_method(D_METHOD("set_integrate_forces_enabled", "enabled"), &RigidBodyCustom::set_integrate_forces_enabled);
+    ClassDB::bind_method(D_METHOD("is_integrate_forces_enabled"), &RigidBodyCustom::is_integrate_forces_enabled);
+
+    // Add property to make it visible in editor
+    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::BOOL, "integrate_forces_enabled"), 
+                         "set_integrate_forces_enabled", "is_integrate_forces_enabled");
 }
 
 // In rigid_body_custom.cpp
@@ -112,7 +119,8 @@ godot::RigidBodyCustom::RigidBodyCustom()
       old_position(),
       center_of_mass_local(Vector3(0,0,0)),
       center_of_mass_global(Vector3(0,0,0)),
-      gravity_enabled(true)
+      gravity_enabled(true),
+      integrate_forces_enabled(true)  // Initialize the new member
        {
     // Constructor
 
@@ -282,6 +290,8 @@ void godot::RigidBodyCustom::set_trans(const Transform3D &new_trans) {
     // Update the global center of mass based on the new transform
     center_of_mass_global = body_trans.xform(center_of_mass_local);
 
+    update_world_inertia_tensor();
+
     set_global_transform(body_trans);
 }
 
@@ -336,11 +346,19 @@ void godot::RigidBodyCustom::apply_impulse(const Vector3& impulse){
 
 //  (Improved Euler/Heun's Method) decided to implement this when reading chapter Chapter 7, real time simulations (better methods section)
 void godot::RigidBodyCustom::integrate_forces(double delta_time) {
+    // Add check at the start of the method
+    if (!integrate_forces_enabled) {
+        // Clear forces and torque even when disabled
+        forces = Vector3();
+        torque = Vector3();
+        return;
+    }
+
     // Store old state
     old_position = position;
     old_velocity = velocity;
 
-    update_world_inertia_tensor();
+    //update_world_inertia_tensor();
 
 
 
@@ -509,4 +527,10 @@ void godot::RigidBodyCustom::update_world_inertia_tensor()
     inverse_world_inertia_tensor = rotation * inverse_inertia_tensor * rotation.transposed();
 }
 
+void godot::RigidBodyCustom::set_integrate_forces_enabled(bool p_enabled) {
+    integrate_forces_enabled = p_enabled;
+}
 
+bool godot::RigidBodyCustom::is_integrate_forces_enabled() const {
+    return integrate_forces_enabled;
+}

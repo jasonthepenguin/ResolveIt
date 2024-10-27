@@ -1,35 +1,23 @@
-[gd_scene load_steps=18 format=3 uid="uid://bjerw262ld03d"]
+[gd_scene load_steps=13 format=3 uid="uid://bjerw262ld03d"]
 
 [ext_resource type="Script" path="res://physics_scene_test_empty.gd" id="1_8wg6m"]
 [ext_resource type="Script" path="res://CharacterBody3D.gd" id="2_hdv2k"]
 [ext_resource type="Script" path="res://camholder.gd" id="3_q5q3k"]
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_rafh5"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_ufxq0"]
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_qvgf1"]
 height = 1.5
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_35ft8"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8g421"]
 
-[sub_resource type="SphereMesh" id="SphereMesh_xssum"]
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_xyp48"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_qg4px"]
-size = Vector3(0.3, 3, 2)
-
-[sub_resource type="BoxMesh" id="BoxMesh_j7dq8"]
-size = Vector3(0.3, 3, 2)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_3tf8m"]
-size = Vector3(0.3, 3, 2)
-
-[sub_resource type="BoxMesh" id="BoxMesh_kgoy0"]
-size = Vector3(0.3, 3, 2)
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_e3gr4"]
-
-[sub_resource type="SphereMesh" id="SphereMesh_aiy2m"]
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_idbp5"]
-
-[sub_resource type="SphereMesh" id="SphereMesh_hdlfg"]
+[sub_resource type="NavigationMesh" id="NavigationMesh_mhggr"]
+vertices = PackedVector3Array(-8.14403, -1.11642, -6.26717, -8.14403, -1.11642, 2.73283, 10.856, -1.11642, 2.73283, 10.856, -1.11642, -6.26717)
+polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_28b47"]
 albedo_color = Color(0, 0.378965, 0.133845, 1)
@@ -44,6 +32,19 @@ size = Vector3(20, 1, 10)
 [node name="physics_scene_test_empty" type="Node3D"]
 script = ExtResource("1_8wg6m")
 
+[node name="PhysicsHandler" type="PhysicsHandler" parent="."]
+process_priority = 1
+
+[node name="RigidBodyCustom" type="RigidBodyCustom" parent="PhysicsHandler"]
+integrate_forces_enabled = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.9859, -1.07189, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsHandler/RigidBodyCustom"]
+shape = SubResource("BoxShape3D_rafh5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PhysicsHandler/RigidBodyCustom"]
+mesh = SubResource("BoxMesh_ufxq0")
+
 [node name="CharacterBody3D" type="CharacterBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.35078, 1.74341, 3.75794)
 script = ExtResource("2_hdv2k")
@@ -57,74 +58,27 @@ script = ExtResource("3_q5q3k")
 
 [node name="Camera3D" type="Camera3D" parent="CharacterBody3D/camholder"]
 
-[node name="PhysicsHandler" type="PhysicsHandler" parent="."]
-process_priority = 1
+[node name="NPC" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.16553, -0.316639, -6.07741)
 
-[node name="ball" type="RigidBodyCustom" parent="PhysicsHandler"]
-restitution = 1.0
-velocity = Vector3(2.08165e-12, 2.08165e-12, 2.08165e-12)
-gravity_enabled = false
-center_of_mass_local = Vector3(2.08165e-12, 2.08165e-12, 2.08165e-12)
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.394, 2, -3.5)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NPC"]
+shape = SubResource("CapsuleShape3D_8g421")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsHandler/ball"]
-shape = SubResource("SphereShape3D_35ft8")
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NPC"]
+mesh = SubResource("CapsuleMesh_xyp48")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="PhysicsHandler/ball"]
-mesh = SubResource("SphereMesh_xssum")
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="NPC"]
 
-[node name="plate_1" type="RigidBodyCustom" parent="PhysicsHandler"]
-mass = 20.0
-restitution = 1.0
-angular_velocity = Vector3(2.08165e-12, 2.08165e-12, 2.08165e-12)
-gravity_enabled = false
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 2, -3.5)
+[node name="Action_Controller" type="Node" parent="."]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsHandler/plate_1"]
-shape = SubResource("BoxShape3D_qg4px")
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+navigation_mesh = SubResource("NavigationMesh_mhggr")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="PhysicsHandler/plate_1"]
-mesh = SubResource("BoxMesh_j7dq8")
-
-[node name="plate_2" type="RigidBodyCustom" parent="PhysicsHandler"]
-mass = 20.0
-restitution = 1.0
-gravity_enabled = false
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2, -3.5)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsHandler/plate_2"]
-shape = SubResource("BoxShape3D_3tf8m")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="PhysicsHandler/plate_2"]
-mesh = SubResource("BoxMesh_kgoy0")
-
-[node name="test_1" type="RigidBodyCustom" parent="PhysicsHandler"]
-gravity_enabled = false
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1.5, 2.08165e-12)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsHandler/test_1"]
-shape = SubResource("SphereShape3D_e3gr4")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="PhysicsHandler/test_1"]
-mesh = SubResource("SphereMesh_aiy2m")
-
-[node name="test_2" type="RigidBodyCustom" parent="PhysicsHandler"]
-restitution = 1.0
-velocity = Vector3(2.08165e-12, 2.08165e-12, 2.08165e-12)
-gravity_enabled = false
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 1.5, 2.08165e-12)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsHandler/test_2"]
-shape = SubResource("SphereShape3D_idbp5")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="PhysicsHandler/test_2"]
-mesh = SubResource("SphereMesh_hdlfg")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="PhysicsHandler"]
+[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.35597, -2.11642, -1.76717)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="PhysicsHandler/StaticBody3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/StaticBody3D"]
 mesh = SubResource("BoxMesh_438ge")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsHandler/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/StaticBody3D"]
 shape = SubResource("BoxShape3D_le2qq")
