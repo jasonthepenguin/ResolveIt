@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://n62f3tl150r0"]
+[gd_scene load_steps=15 format=3 uid="uid://n62f3tl150r0"]
 
 [ext_resource type="PackedScene" uid="uid://bqu44ul337erb" path="res://room.tscn" id="1_6tnus"]
 [ext_resource type="Script" path="res://player.gd" id="2_iwlwb"]
@@ -14,6 +14,10 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_54cet"]
 radius = 0.25
+
+[sub_resource type="BoxMesh" id="BoxMesh_je8ah"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rlbhn"]
 
 [node name="Node3D" type="Node3D"]
 
@@ -89,3 +93,15 @@ transform = Transform3D(0.0374894, 1.60827e-16, 0.498593, 1.74393e-16, 0.5, -1.7
 play_intro = false
 
 [node name="Exit_Screen" parent="." instance=ExtResource("9_64qiw")]
+
+[node name="PhysicsHandler" type="PhysicsHandler" parent="."]
+process_priority = 1
+
+[node name="RigidBodyCustom" type="RigidBodyCustom" parent="PhysicsHandler"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.9102, 6.71803, 7.08135)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PhysicsHandler/RigidBodyCustom"]
+mesh = SubResource("BoxMesh_je8ah")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsHandler/RigidBodyCustom"]
+shape = SubResource("BoxShape3D_rlbhn")

@@ -137,6 +137,7 @@ godot::RigidBodyCustom::~RigidBodyCustom() {
     // Destructor
 }
 
+
 void godot::RigidBodyCustom::set_gravity(const Vector3& p_gravity) {
     gravity = p_gravity;
 }
@@ -198,6 +199,10 @@ void godot::RigidBodyCustom::_ready() {
     if (collision_shape != nullptr) {
         // Set up the body in the physics server
         body_rid = physics_server->body_create();
+
+        
+        physics_server->body_attach_object_instance_id(body_rid, get_instance_id());
+
         physics_server->body_set_max_contacts_reported(body_rid, 5);
         physics_server->body_set_collision_layer(body_rid, 1);
         physics_server->body_set_collision_mask(body_rid, 1);

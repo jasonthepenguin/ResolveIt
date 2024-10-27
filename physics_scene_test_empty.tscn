@@ -62,7 +62,7 @@ process_priority = 1
 
 [node name="ball" type="RigidBodyCustom" parent="PhysicsHandler"]
 restitution = 1.0
-velocity = Vector3(2.08165e-12, 2.08165e-12, 2.08165e-12)
+velocity = Vector3(-3, 2.08165e-12, 2.08165e-12)
 gravity_enabled = false
 center_of_mass_local = Vector3(2.08165e-12, 2.08165e-12, 2.08165e-12)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.394, 2, -3.5)
