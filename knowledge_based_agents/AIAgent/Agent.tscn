@@ -24,9 +24,11 @@ mesh = SubResource("CapsuleMesh_psd8o")
 
 [node name="NavActuator" type="Node" parent="."]
 script = ExtResource("1_srmw5")
+debug_info = true
 
 [node name="ImpulseApplicator" type="Node" parent="."]
 script = ExtResource("2_g664y")
 
 [node name="RandomMovement" type="Node" parent="."]
 script = ExtResource("3_u5nd6")
+debug_info = true

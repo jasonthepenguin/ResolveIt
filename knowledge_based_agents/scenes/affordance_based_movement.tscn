@@ -1,0 +1,33 @@
+[gd_scene load_steps=7 format=3 uid="uid://d1i31utaraiye"]
+
+[ext_resource type="PackedScene" uid="uid://xjsu3jfdi53c" path="res://knowledge_based_agents/scenes/basic_setup.tscn" id="1_gix8m"]
+[ext_resource type="PackedScene" uid="uid://c7t4e2qd22gdb" path="res://knowledge_based_agents/AIAgent/Agent.tscn" id="2_0pm45"]
+[ext_resource type="PackedScene" uid="uid://bj0by5yaayd5t" path="res://knowledge_based_agents/scenes/waypoint.tscn" id="3_5tn57"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_qga40"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vkc12"]
+albedo_color = Color(0.111441, 0.393184, 0.162915, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_e8cqd"]
+material = SubResource("StandardMaterial3D_vkc12")
+
+[node name="Scene" type="Node3D"]
+
+[node name="Basic Setup" parent="." instance=ExtResource("1_gix8m")]
+
+[node name="Geometry" type="Node3D" parent="."]
+
+[node name="Floor" type="StaticBody3D" parent="Geometry"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Geometry/Floor"]
+shape = SubResource("WorldBoundaryShape3D_qga40")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Geometry/Floor"]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
+mesh = SubResource("PlaneMesh_e8cqd")
+
+[node name="Agent" parent="." instance=ExtResource("2_0pm45")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="Waypoint" parent="." instance=ExtResource("3_5tn57")]
