@@ -51,7 +51,7 @@ func query_goal(goal: String, info: bool = false, depth: int = 0) -> Dictionary:
 
 		for premise in premises:
 			if (info): print(indent, "Checking premise: ", premise)
-			var premise_result = query_goal(premise, depth + 1)
+			var premise_result = query_goal(premise, info, depth + 1)
 
 			if not premise_result.achieved:
 				if (info): print(indent, "Premise ", premise, " is not achieved")

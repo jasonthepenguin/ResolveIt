@@ -8,7 +8,7 @@ func _init():
 	_seed_knowledge()
 
 func _ready():
-	test()
+	test("can_study", 0, 1)
 
 func update_state():
 	# Check if we can study
@@ -76,16 +76,9 @@ func _seed_knowledge():
 	])
 
 # Example usage
-func test():
-	# goal to query
-	var query = "can_study"
-	# print query info
-	var info = false
-	# print result info
-	var r_info = true
-	
+func test(query: String, q_info: bool, r_info: bool):
 	# No facts - should show all missing conditions
-	var result = kb.query_goal(query, info)
+	var result = kb.query_goal(query, q_info)
 	if (r_info):
 		print("Query:", query)
 		print("Achieved: ", result.achieved)
@@ -97,7 +90,7 @@ func test():
 	kb.add_fact("computer_is_on")
 	kb.add_fact("teacher_is_present")
 	
-	result = kb.query_goal(query, info)
+	result = kb.query_goal(query, q_info)
 	if (r_info):
 		print("Query:", query)
 		print("Achieved: ", result.achieved)
@@ -107,7 +100,7 @@ func test():
 	if (r_info): print("Adding fact projector_is_on")
 	kb.add_fact("projector_is_on")
 	
-	result = kb.query_goal(query, info)
+	result = kb.query_goal(query, q_info)
 	if (r_info):
 		print("Query:", query)
 		print("Achieved: ", result.achieved)
