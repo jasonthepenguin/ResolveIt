@@ -1,7 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://b76j33t6utxgt"]
+[gd_scene load_steps=3 format=3 uid="uid://fflxac0t1yer"]
 
 [ext_resource type="PackedScene" uid="uid://bore76lu1o3v8" path="res://assets/entrance_door.glb" id="1_xc3o0"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dx5tf"]
+size = Vector3(1.5, 2.75, 0.25)
 
 [node name="glass_door" type="Node3D"]
 
 [node name="entrance_door" parent="." instance=ExtResource("1_xc3o0")]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="entrance_door"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="entrance_door/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 1.375, -0.1)
+shape = SubResource("BoxShape3D_dx5tf")

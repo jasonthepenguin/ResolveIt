@@ -1,44 +1,27 @@
-[gd_scene load_steps=15 format=3 uid="uid://n62f3tl150r0"]
+[gd_scene load_steps=13 format=3 uid="uid://n62f3tl150r0"]
 
 [ext_resource type="PackedScene" uid="uid://bqu44ul337erb" path="res://room.tscn" id="1_6tnus"]
 [ext_resource type="Script" path="res://player.gd" id="2_iwlwb"]
 [ext_resource type="Script" path="res://camholder.gd" id="3_8vfo1"]
 [ext_resource type="PackedScene" uid="uid://bwkhk2iahiriw" path="res://beach_sand.tscn" id="3_b8h1r"]
-[ext_resource type="PackedScene" uid="uid://d2ncr3nome2xn" path="res://water_plane.tscn" id="4_v5a5n"]
 [ext_resource type="PackedScene" uid="uid://fsvjs14lf13h" path="res://cafe.tscn" id="5_qjf3j"]
 [ext_resource type="PackedScene" uid="uid://uf5ny732gmq5" path="res://table_and_computers.tscn" id="6_rebbm"]
-[ext_resource type="PackedScene" uid="uid://bore76lu1o3v8" path="res://assets/entrance_door.glb" id="8_td48h"]
+[ext_resource type="PackedScene" uid="uid://bfui2hjydd0i0" path="res://scenes/OceanMap.tscn" id="7_54gfs"]
+[ext_resource type="PackedScene" uid="uid://cp04u3ni34ip8" path="res://video.tscn" id="8_8ats0"]
+[ext_resource type="PackedScene" uid="uid://fflxac0t1yer" path="res://glass_door.tscn" id="8_k4dga"]
+[ext_resource type="PackedScene" uid="uid://dbg61kthivd70" path="res://chair.tscn" id="9_5vil0"]
+[ext_resource type="PackedScene" uid="uid://bl3dfk47isg6s" path="res://splash_screen.tscn" id="9_64qiw"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_54cet"]
 radius = 0.25
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7o4bf"]
-sky_top_color = Color(0.815649, 0.306945, 0.479011, 1)
-sky_horizon_color = Color(0.760504, 0.649708, 0.143563, 1)
-ground_bottom_color = Color(0.815686, 0.305882, 0.478431, 1)
-ground_horizon_color = Color(0.760784, 0.65098, 0.145098, 1)
-sun_angle_max = 43.33
-
-[sub_resource type="Sky" id="Sky_410ox"]
-sky_material = SubResource("ProceduralSkyMaterial_7o4bf")
-
-[sub_resource type="Environment" id="Environment_5nbtb"]
-background_mode = 2
-sky = SubResource("Sky_410ox")
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_2tdyr"]
-size = Vector3(1.4, 2.75, 0.25)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_k0epy"]
-size = Vector3(1.4, 2.75, 0.25)
-
 [node name="Node3D" type="Node3D"]
 
-[node name="room" parent="." instance=ExtResource("1_6tnus")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.79279, 3.69052, 14.3113)
+[node name="OceanMap" parent="." instance=ExtResource("7_54gfs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.68975, 0)
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="."]
-transform = Transform3D(0.67, 0, 0, 0, 0.67, 0, 0, 0, 0.67, -2.70788, 3.69609, 14.5514)
+transform = Transform3D(0.354342, 0, -0.568632, 0, 0.67, 0, 0.568632, 0, 0.354342, -14.7131, 3.69609, 5.9018)
 script = ExtResource("2_iwlwb")
 SPEED = 3.0
 
@@ -52,62 +35,56 @@ script = ExtResource("3_8vfo1")
 
 [node name="Camera3D" type="Camera3D" parent="CharacterBody3D/camholder"]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_5nbtb")
+[node name="Geometry" type="Node3D" parent="."]
+transform = Transform3D(0.563814, 0, -0.825902, 0, 1, 0, 0.825902, 0, 0.563814, 0, 0, 0)
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.510258, 0, 0.860022, 0, 1, 0, -0.860022, 0, 0.510258, 0, 3.30203, -0.535959)
-shadow_enabled = true
+[node name="room" parent="Geometry" instance=ExtResource("1_6tnus")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.79279, 3.69052, 14.3113)
 
-[node name="sand" parent="." instance=ExtResource("3_b8h1r")]
+[node name="sand" parent="Geometry" instance=ExtResource("3_b8h1r")]
 transform = Transform3D(2, 0, 0, 0, 1, 0, 0, 0, 2, -0.00906372, 1.88131, -1.36072)
 
-[node name="WaterPlane" parent="." instance=ExtResource("4_v5a5n")]
-transform = Transform3D(4000, 0, 0, 0, 1, 0, 0, 0, 4000, -0.00306177, 2.28428, 0.0126964)
-
-[node name="cafe" parent="." instance=ExtResource("5_qjf3j")]
+[node name="cafe" parent="Geometry" instance=ExtResource("5_qjf3j")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.79129, 3.71638, 0)
 
-[node name="table_and_computers_collection" type="Node3D" parent="."]
+[node name="table_and_computers_collection" type="Node3D" parent="Geometry"]
 
-[node name="table_and_computers" parent="table_and_computers_collection" instance=ExtResource("6_rebbm")]
+[node name="table_and_computers" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 1.45834, 3.69094, 8.47153)
 
-[node name="table_and_computers2" parent="table_and_computers_collection" instance=ExtResource("6_rebbm")]
+[node name="table_and_computers2" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 1.45834, 3.69094, 11.6681)
 
-[node name="table_and_computers3" parent="table_and_computers_collection" instance=ExtResource("6_rebbm")]
+[node name="table_and_computers3" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 1.45834, 3.69094, 14.9051)
 
-[node name="table_and_computers4" parent="table_and_computers_collection" instance=ExtResource("6_rebbm")]
+[node name="table_and_computers4" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 1.45834, 3.69094, 18.1016)
 
-[node name="table_and_computers5" parent="table_and_computers_collection" instance=ExtResource("6_rebbm")]
+[node name="table_and_computers5" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
 transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, -7.40578, 3.69094, 18.1017)
 
-[node name="table_and_computers6" parent="table_and_computers_collection" instance=ExtResource("6_rebbm")]
+[node name="table_and_computers6" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
 transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, -7.40578, 3.69094, 14.9051)
 
-[node name="table_and_computers7" parent="table_and_computers_collection" instance=ExtResource("6_rebbm")]
+[node name="table_and_computers7" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
 transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, -7.40578, 3.69094, 11.6681)
 
-[node name="table_and_computers8" parent="table_and_computers_collection" instance=ExtResource("6_rebbm")]
+[node name="table_and_computers8" parent="Geometry/table_and_computers_collection" instance=ExtResource("6_rebbm")]
 transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, -7.40578, 3.69094, 8.47153)
 
-[node name="entrance_door" parent="." instance=ExtResource("8_td48h")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.22089, 3.70571, 6.1665)
+[node name="glass_door" parent="Geometry" instance=ExtResource("8_k4dga")]
+transform = Transform3D(0.99925, 0, 0.0387365, 0, 1, 0, -0.0387366, 0, 0.999251, -4.44796, 3.70144, 6.20087)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="entrance_door"]
+[node name="glass_door2" parent="Geometry" instance=ExtResource("8_k4dga")]
+transform = Transform3D(0.999252, 0, 0.0387367, 0, 1, 0, -0.0387366, 0, 0.999253, -1.21935, 3.7042, 6.11366)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="entrance_door/StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0528684, 1.37339, 0)
-shape = SubResource("BoxShape3D_2tdyr")
+[node name="beach_chair" parent="Geometry" instance=ExtResource("9_5vil0")]
+transform = Transform3D(0.185027, 0, 0.464505, 0, 0.5, 0, -0.464505, 0, 0.185027, 7.90824, 3.64405, 10.1963)
 
-[node name="entrance_door2" parent="." instance=ExtResource("8_td48h")]
-transform = Transform3D(1, -3.48787e-16, 3.48787e-16, 3.48787e-16, 1, -3.48787e-16, -3.48787e-16, 3.48787e-16, 1, -4.40968, 3.70804, 6.17123)
+[node name="beach_chair2" parent="Geometry" instance=ExtResource("9_5vil0")]
+transform = Transform3D(0.0374894, 1.60827e-16, 0.498593, 1.74393e-16, 0.5, -1.74394e-16, -0.498593, 1.86978e-16, 0.0374894, 7.5012, 3.57709, 11.7105)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="entrance_door2"]
+[node name="Intro_Vid" parent="." instance=ExtResource("8_8ats0")]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="entrance_door2/StaticBody3D"]
-transform = Transform3D(1, -1.21652e-31, 0, -1.21652e-31, 1, 0, 0, 0, 1, 0.0440016, 1.36839, -0.0148425)
-shape = SubResource("BoxShape3D_k0epy")
+[node name="Exit_Screen" parent="." instance=ExtResource("9_64qiw")]
