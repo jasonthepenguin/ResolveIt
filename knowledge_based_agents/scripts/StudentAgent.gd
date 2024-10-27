@@ -1,11 +1,10 @@
 # StudentAgent.gd
-class_name StudentAgent extends Node
+class_name StudentAgent extends BaseAgent
 
-var kb: AgentKnowledgeBase
 var sadness_level = 0  # 0: normal, 1: sad, 2: really sad, 3: leaving
 
 func _init():
-	kb = AgentKnowledgeBase.new()
+	super()
 	_seed_knowledge()
 
 func _ready():

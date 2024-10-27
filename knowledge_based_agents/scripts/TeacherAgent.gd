@@ -1,16 +1,15 @@
 # TeacherAgent.gd
-class_name TeacherAgent extends Node
+class_name TeacherAgent extends BaseAgent
 
-var kb: AgentKnowledgeBase
 var anger_level = 0  # 0: normal, 1: angry, 2: really angry, 3: totally angry
 
 func _init():
-	kb = AgentKnowledgeBase.new()
+	super()
 	_seed_knowledge()
 
 func _ready():
-	pass
-	#goal_test()
+	#pass
+	goal_test()
 
 func update_state():
 	# Check if we can teach
