@@ -1,11 +1,11 @@
-extends Node
+class_name AgentRandomMovement extends Node
 
 @export var max_stuck_time = 0.5
 @export var distance_threshold = 0.001
 @export var debug_info: bool = false
 @onready var character: CharacterBody3D = get_parent()
-@onready var nav_agent: NavigationAgent3D = character.get_node("NavigationAgent3D")
-@onready var actuator = character.get_node("NavActuator")
+@onready var nav_agent: NavigationAgent3D = character.get_nav_agent()
+@onready var actuator = character.get_actuator()
 var last_location: Vector3
 var stuck_time = 0.0
 

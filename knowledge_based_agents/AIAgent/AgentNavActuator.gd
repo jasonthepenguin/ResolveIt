@@ -1,9 +1,9 @@
-extends Node
+class_name AgentNavActuator extends Node
 
 @export var travel_speed = 5.0
 @export var debug_info: bool = false
 @onready var character: CharacterBody3D = get_parent()
-@onready var nav_agent: NavigationAgent3D = character.get_node("NavigationAgent3D")
+@onready var nav_agent: NavigationAgent3D = character.get_nav_agent()
 
 func _physics_process(_delta):
 	var current_location = character.global_transform.origin

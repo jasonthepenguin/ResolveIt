@@ -1,4 +1,4 @@
-extends Node
+class_name CharacterImpulseApplicator extends Node
 
 @export var push_force = 2.0
 @onready var character = get_parent()
