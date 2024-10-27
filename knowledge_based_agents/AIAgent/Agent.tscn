@@ -1,14 +1,18 @@
-[gd_scene load_steps=6 format=3 uid="uid://c7t4e2qd22gdb"]
+[gd_scene load_steps=7 format=3 uid="uid://c7t4e2qd22gdb"]
 
-[ext_resource type="Script" path="res://Test/Prefabs/AIAgent/AgentNavActuator.gd" id="1_srmw5"]
-[ext_resource type="Script" path="res://Test/Prefabs/AIAgent/CharacterBodyImpulse.gd" id="2_g664y"]
-[ext_resource type="Script" path="res://Test/Prefabs/AIAgent/AgentRandomMovement.gd" id="3_u5nd6"]
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/AgentNavActuator.gd" id="1_srmw5"]
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/CharacterBodyImpulse.gd" id="2_g664y"]
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/AgentRandomMovement.gd" id="3_u5nd6"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tvlyr"]
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_psd8o"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_47tti"]
+albedo_color = Color(0.161403, 0.437436, 0.811908, 1)
 
-[node name="CharacterBody3D" type="CharacterBody3D"]
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_psd8o"]
+material = SubResource("StandardMaterial3D_47tti")
+
+[node name="Agent" type="CharacterBody3D"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_tvlyr")
