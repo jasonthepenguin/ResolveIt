@@ -134,7 +134,11 @@ func _physics_process(delta):
 	if looked_object and holding_object:
 		var cam_trans = camera.global_transform
 		if looked_object is RigidBodyCustom:
-			looked_object.set_position(cam_trans.origin + cam_trans.basis.z * -2.0)
+			var new_transform = looked_object.global_transform
+			new_transform.origin = cam_trans.origin + cam_trans.basis.z * -2.0
+			new_transform.basis = cam_trans.basis  # This will match rotation to camera
+			looked_object.set_trans(new_transform)
+			
 		else:
 			looked_object.global_transform.origin = cam_trans.origin + cam_trans.basis.z * -1.0
 	
