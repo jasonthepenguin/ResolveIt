@@ -14,7 +14,7 @@ transform = Transform3D(1, 0.000336087, -0.00022588, -0.000336028, 1, 0.00024105
 script = ExtResource("1_4mvsx")
 
 [node name="Rogue_Hooded2" parent="." instance=ExtResource("4_bn5g1")]
-transform = Transform3D(0.28, -4.699e-11, 0, 6.14335e-11, 0.28, 0, 0, -2.91038e-11, 0.28, 1.50342e-11, -0.15, 0)
+transform = Transform3D(0.6, -1.31643e-10, -1.36833e-20, 1.31643e-10, 0.6, 6.23653e-11, 0, -6.23653e-11, 0.6, 1.50342e-11, -0.15, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, -9.0062e-10, 0, 9.01213e-10, 1, -2.91038e-11, 2.32831e-10, -2.03727e-10, 1, -1.28346e-05, 0.0381943, 9.20691e-06)
@@ -23,7 +23,7 @@ shape = SubResource("CapsuleShape3D_nn3sg")
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
-transform = Transform3D(0.25, -2.10592e-10, -2.18279e-11, 2.1074e-10, 0.25, -8.36735e-11, 1.05501e-10, 0, 0.250001, 4.20731e-05, 0.674793, -3.01821e-05)
+transform = Transform3D(0.25, -2.39696e-10, -2.18279e-11, 2.3984e-10, 0.25, -9.82254e-11, 1.20053e-10, 0, 0.250001, -0.000218882, 1.45137, 0.000157014)
 texture = ExtResource("2_860cb")
 script = ExtResource("3_4rdp4")
 
