@@ -101,7 +101,7 @@ process_priority = 1
 [node name="RigidBodyCustom" type="RigidBodyCustom" parent="PhysicsHandler"]
 collision_layer = 2
 collision_mask = 3
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.9102, 6.71803, 7.08135)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.9102, 4.23915, 7.08135)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="PhysicsHandler/RigidBodyCustom"]
 mesh = SubResource("BoxMesh_je8ah")

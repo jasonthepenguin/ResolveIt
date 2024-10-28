@@ -34,10 +34,6 @@ size = Vector3(20, 1, 10)
 script = ExtResource("1_qfcv8")
 
 [node name="PhysicsHandler" type="PhysicsHandler" parent="."]
-correction_percent = 0.05
-position_slop = 0.01
-collision_epsilon = 0.0001
-impulse_iterations = 1
 process_priority = 1
 
 [node name="RigidBodyCustom" type="RigidBodyCustom" parent="PhysicsHandler"]
