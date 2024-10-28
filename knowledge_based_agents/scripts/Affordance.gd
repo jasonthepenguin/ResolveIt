@@ -8,10 +8,11 @@ enum Type {
 	CAN_PUSH		= 1 << 4,
 	CAN_OPEN		= 1 << 5,
 	CAN_CLOSE		= 1 << 6,
-	CAN_USE			= 1 << 7
+	CAN_USE			= 1 << 7,
+	PROJECTOR_ON	= 1 << 8
 }
 
-@export_flags("Pickup", "Throw", "Present", "Study", "Push", "Open", "Close", "Use") 
+@export_flags("Pickup", "Throw", "Present", "Study", "Push", "Open", "Close", "Use", "Projector on") 
 var affordances: int = 0
 
 var parent_object = null
@@ -28,3 +29,11 @@ func add_affordance(type: Type):
 	
 func remove_affordance(type: Type):
 	affordances &= ~type
+	
+static func get_affordance_list(tree: SceneTree, affordance_type: Affordance.Type) -> Array[Node]:
+	var affordance_nodes = tree.get_nodes_in_group("Affordance")
+	var nodes: Array[Node] = []
+	for node in affordance_nodes:
+		if node.has_affordance(affordance_type):
+			nodes.append(node)
+	return nodes

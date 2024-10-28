@@ -556,8 +556,3 @@ skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="pc_monitors_w_arm_stand_004/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_hhibp")
-
-[node name="NavigationObstacle3D" type="NavigationObstacle3D" parent="."]
-height = 1.25
-vertices = PackedVector3Array(-1.57, 0, -0.775, 1.705, 1, -0.775, 1.705, 0, 0.775, -1.57, 0, 0.775)
-use_3d_avoidance = true

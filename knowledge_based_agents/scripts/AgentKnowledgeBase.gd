@@ -1,22 +1,25 @@
 # AgentKnowledgeBase.gd
 class_name AgentKnowledgeBase
 
-var facts = {}
-var rules = {}
+var _facts = {}
+var _rules = {}
 
 func add_fact(fact: String):
-	facts[fact] = null
+	_facts[fact] = null
 
 func remove_fact(fact: String):
-	facts.erase(fact)
+	_facts.erase(fact)
 
 func has_fact(fact: String) -> bool:
-	return facts.has(fact)
+	return _facts.has(fact)
 
 func add_rule(conclusion: String, premises: Array):
-	if not rules.has(conclusion):
-		rules[conclusion] = []
-	rules[conclusion].append(premises)
+	if not _rules.has(conclusion):
+		_rules[conclusion] = []
+	_rules[conclusion].append(premises)
+	
+func get_rules() -> Dictionary:
+	return _rules
 
 # Returns both whether the goal is achievable and what conditions are needed
 func query_goal(goal: String, info: bool = false, depth: int = 0) -> Dictionary:
@@ -34,17 +37,17 @@ func query_goal(goal: String, info: bool = false, depth: int = 0) -> Dictionary:
 		result.achieved = true
 		return result
 
-	# If there are no rules for this goal, it needs to be added as a fact
-	if not rules.has(goal):
-		if (info): print(indent, "No rules found for goal: ", goal, " - needs to be added as fact")
+	# If there are no _rules for this goal, it needs to be added as a fact
+	if not _rules.has(goal):
+		if (info): print(indent, "No _rules found for goal: ", goal, " - needs to be added as fact")
 		result.missing_conditions = [goal]
 		return result
 
-	if (info): print(indent, "Checking rules for: ", goal)
+	if (info): print(indent, "Checking _rules for: ", goal)
 	var shortest_path_length = -1
 	
 	# Check each possible rule path to achieve the goal
-	for premises in rules[goal]:
+	for premises in _rules[goal]:
 		if (info): print(indent, "Checking premises: ", premises)
 		var current_path_missing = []
 		var all_premises_achieved = true
@@ -53,11 +56,21 @@ func query_goal(goal: String, info: bool = false, depth: int = 0) -> Dictionary:
 			if (info): print(indent, "Checking premise: ", premise)
 			var premise_result = query_goal(premise, info, depth + 1)
 
+			#if not premise_result.achieved:
+				#if (info): print(indent, "Premise ", premise, " is not achieved")
+				#all_premises_achieved = false
+				## Add all missing conditions from this premise
+				#current_path_missing += premise_result.missing_conditions
+			#else:
+				#if (info): print(indent, "Premise ", premise, " is achieved")
+				
 			if not premise_result.achieved:
 				if (info): print(indent, "Premise ", premise, " is not achieved")
 				all_premises_achieved = false
-				# Add all missing conditions from this premise
-				current_path_missing += premise_result.missing_conditions
+				# Add missing conditions from this premise, avoiding duplicates
+				for condition in premise_result.missing_conditions:
+					if not condition in current_path_missing:
+						current_path_missing.append(condition)
 			else:
 				if (info): print(indent, "Premise ", premise, " is achieved")
 
