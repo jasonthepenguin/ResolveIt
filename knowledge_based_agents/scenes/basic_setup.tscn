@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" path="res://knowledge_based_agents/scripts/debug_utils.gd" id="1_f4d5a"]
 
-
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_4p2q7"]
 
 [sub_resource type="Sky" id="Sky_6c1ok"]

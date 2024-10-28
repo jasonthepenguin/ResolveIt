@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://c7t4e2qd22gdb"]
+[gd_scene load_steps=9 format=3 uid="uid://c7t4e2qd22gdb"]
 
 [ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/AgentControl.gd" id="1_5vpc8"]
 [ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/AgentNavActuator.gd" id="1_srmw5"]
 [ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/CharacterImpulseApplicator.gd" id="2_lfgqe"]
 [ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/AgentRandomMovement.gd" id="3_u5nd6"]
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/ThrowActuator.gd" id="5_x0mvl"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tvlyr"]
 
@@ -32,3 +33,6 @@ script = ExtResource("3_u5nd6")
 
 [node name="CharacterImpulseApplicator" type="Node" parent="."]
 script = ExtResource("2_lfgqe")
+
+[node name="AgentThrowActuator" type="Node" parent="."]
+script = ExtResource("5_x0mvl")

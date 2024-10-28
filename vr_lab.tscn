@@ -2505,7 +2505,7 @@ skeleton = NodePath("")
 [node name="StaticBody3D" type="StaticBody3D" parent="Geometry/Floor"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Geometry/Floor/StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, -0.25, 2.08165e-12)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.150718, 0)
 shape = SubResource("BoxShape3D_tjoqh")
 
 [node name="LeftEntranceWindow" type="MeshInstance3D" parent="Geometry"]

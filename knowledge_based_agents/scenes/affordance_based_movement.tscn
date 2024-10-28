@@ -1,10 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://d1i31utaraiye"]
+[gd_scene load_steps=13 format=3 uid="uid://d1i31utaraiye"]
 
 [ext_resource type="PackedScene" uid="uid://xjsu3jfdi53c" path="res://knowledge_based_agents/scenes/basic_setup.tscn" id="1_gix8m"]
 [ext_resource type="PackedScene" uid="uid://c7t4e2qd22gdb" path="res://knowledge_based_agents/AIAgent/Agent.tscn" id="2_0pm45"]
 [ext_resource type="Script" path="res://knowledge_based_agents/scripts/seek_affordance.gd" id="3_e8ed0"]
 [ext_resource type="Script" path="res://knowledge_based_agents/scripts/Affordance.gd" id="3_hswhn"]
-
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_jybs6"]
 vertices = PackedVector3Array(-9.5, 0.5, -9.5, -9.5, 0.5, 9.5, 9.5, 0.5, 9.5, 9.5, 0.5, -9.5)
@@ -24,6 +23,10 @@ material = SubResource("StandardMaterial3D_vkc12")
 material = SubResource("StandardMaterial3D_01oha")
 inner_radius = 0.766
 outer_radius = 0.931
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5d535"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_5udom"]
 
 [node name="Scene" type="Node3D"]
 
@@ -73,3 +76,19 @@ skeleton = NodePath("../../Geometry")
 [node name="Affordance" type="Node" parent="Waypoint2"]
 script = ExtResource("3_hswhn")
 affordances = 8
+
+[node name="PhysicsHandler" type="PhysicsHandler" parent="."]
+process_priority = 1
+
+[node name="RigidBodyCustom" type="RigidBodyCustom" parent="PhysicsHandler"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.68851, -1.84019)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsHandler/RigidBodyCustom"]
+shape = SubResource("BoxShape3D_5d535")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PhysicsHandler/RigidBodyCustom"]
+mesh = SubResource("BoxMesh_5udom")
+
+[node name="Affordance" type="Node" parent="PhysicsHandler/RigidBodyCustom"]
+script = ExtResource("3_hswhn")
+affordances = 2

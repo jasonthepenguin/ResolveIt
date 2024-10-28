@@ -1,9 +1,13 @@
-[gd_scene load_steps=6 format=3 uid="uid://briwpeajovmrh"]
+[gd_scene load_steps=8 format=3 uid="uid://briwpeajovmrh"]
 
 [ext_resource type="PackedScene" uid="uid://xjsu3jfdi53c" path="res://knowledge_based_agents/scenes/basic_setup.tscn" id="1_rmbti"]
 [ext_resource type="PackedScene" uid="uid://bf2u1rwxwumvb" path="res://knowledge_based_agents/scenes/box.tscn" id="2_mit0l"]
 [ext_resource type="PackedScene" uid="uid://c7t4e2qd22gdb" path="res://knowledge_based_agents/AIAgent/Agent.tscn" id="3_f8rhb"]
 [ext_resource type="PackedScene" uid="uid://djevvriesebdi" path="res://knowledge_based_agents/scenes/test_box.tscn" id="4_84n7w"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2gnxx"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_fwyiy"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_osrdd"]
 vertices = PackedVector3Array(-5, 0.5, 0, -1.25, 0.5, 0, -1, 0.5, -1.25, -5, 0.5, -5, 1, 0.5, -1.25, 1.5, 0.5, 0, 5, 0.5, 0, 5, 0.5, -5, -1, 0.5, -1.25, 1, 0.5, -1.25, 5, 0.5, -5, -5, 0.5, -5, -0.25, 3.5, -0.25, -0.25, 3.5, 0.25, 0.25, 3.5, 0.25, 0.25, 3.5, -0.25, 5, 0.5, 0, 1.5, 0.5, 0, 1, 0.5, 1.25, 5, 0.5, 5, -1, 0.5, 1.25, -1.25, 0.5, 0, -5, 0.5, 0, -5, 0.5, 5, 1, 0.5, 1.25, -1, 0.5, 1.25, -5, 0.5, 5, 5, 0.5, 5)
@@ -13,52 +17,19 @@ polygons = [PackedInt32Array(1, 0, 2), PackedInt32Array(2, 0, 3), PackedInt32Arr
 
 [node name="Basic Setup" parent="." instance=ExtResource("1_rmbti")]
 
+[node name="PhysicsHandler" type="PhysicsHandler" parent="Basic Setup"]
+process_priority = 1
+
+[node name="RigidBodyCustom" type="RigidBodyCustom" parent="Basic Setup/PhysicsHandler"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.18519, 0.589049, -3.51366)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Basic Setup/PhysicsHandler/RigidBodyCustom"]
+shape = SubResource("BoxShape3D_2gnxx")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Basic Setup/PhysicsHandler/RigidBodyCustom"]
+mesh = SubResource("BoxMesh_fwyiy")
+
 [node name="Interactables" type="Node" parent="."]
-
-[node name="Box" parent="Interactables" instance=ExtResource("2_mit0l")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.70158, 0.5, 1.6792)
-
-[node name="Box2" parent="Interactables" instance=ExtResource("2_mit0l")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.70158, 0.5, 0.633789)
-
-[node name="Box3" parent="Interactables" instance=ExtResource("2_mit0l")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.70158, 0.5, -0.435135)
-
-[node name="Box4" parent="Interactables" instance=ExtResource("2_mit0l")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.70158, 0.5, -1.48054)
-
-[node name="Box5" parent="Interactables" instance=ExtResource("2_mit0l")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.81594, 0.5, 1.6792)
-
-[node name="Box6" parent="Interactables" instance=ExtResource("2_mit0l")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.81594, 0.5, 0.633789)
-
-[node name="Box7" parent="Interactables" instance=ExtResource("2_mit0l")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.81594, 0.5, -0.435135)
-
-[node name="Box8" parent="Interactables" instance=ExtResource("2_mit0l")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.81594, 0.5, -1.48054)
-
-[node name="Box9" parent="Interactables" instance=ExtResource("2_mit0l")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 3.75103, 0.5, 1.6792)
-
-[node name="Box10" parent="Interactables" instance=ExtResource("2_mit0l")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 3.75103, 0.5, 0.633789)
-
-[node name="Box11" parent="Interactables" instance=ExtResource("2_mit0l")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 3.75103, 0.5, -0.435135)
-
-[node name="Box12" parent="Interactables" instance=ExtResource("2_mit0l")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 3.75103, 0.5, -1.48054)
-
-[node name="Box13" parent="Interactables" instance=ExtResource("2_mit0l")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.63668, 0.5, 1.6792)
-
-[node name="Box14" parent="Interactables" instance=ExtResource("2_mit0l")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.63668, 0.5, 0.633789)
-
-[node name="Box15" parent="Interactables" instance=ExtResource("2_mit0l")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.63668, 0.5, -0.435135)
 
 [node name="Box16" parent="Interactables" instance=ExtResource("2_mit0l")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.63668, 0.5, -1.48054)
