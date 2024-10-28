@@ -8,7 +8,7 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 var holding_object = false
 var looked_object = null
 var detect_distance: float = 20.0
-var target_layer: int = 1
+var target_layer: int = 2
 var throw_force = 7.0
 
 func _ready():

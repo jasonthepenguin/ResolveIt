@@ -26,6 +26,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.68975, 0)
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="."]
 transform = Transform3D(0.354342, 0, -0.568632, 0, 0.67, 0, 0.568632, 0, 0.354342, -14.7131, 3.69609, 5.9018)
+collision_mask = 3
 script = ExtResource("2_iwlwb")
 SPEED = 3.0
 
@@ -98,8 +99,8 @@ play_intro = false
 process_priority = 1
 
 [node name="RigidBodyCustom" type="RigidBodyCustom" parent="PhysicsHandler"]
-collision_layer = 1
-collision_mask = 1
+collision_layer = 2
+collision_mask = 3
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.9102, 6.71803, 7.08135)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="PhysicsHandler/RigidBodyCustom"]
