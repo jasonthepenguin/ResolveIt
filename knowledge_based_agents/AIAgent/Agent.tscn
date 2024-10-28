@@ -1,0 +1,34 @@
+[gd_scene load_steps=8 format=3 uid="uid://c7t4e2qd22gdb"]
+
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/AgentControl.gd" id="1_5vpc8"]
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/AgentNavActuator.gd" id="1_srmw5"]
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/CharacterImpulseApplicator.gd" id="2_lfgqe"]
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/AgentRandomMovement.gd" id="3_u5nd6"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tvlyr"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_47tti"]
+albedo_color = Color(0.161403, 0.437436, 0.811908, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_psd8o"]
+material = SubResource("StandardMaterial3D_47tti")
+
+[node name="Agent" type="CharacterBody3D"]
+script = ExtResource("1_5vpc8")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_tvlyr")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_psd8o")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+
+[node name="AgentNavActuator" type="Node" parent="."]
+script = ExtResource("1_srmw5")
+
+[node name="AgentRandomMovement" type="Node" parent="."]
+script = ExtResource("3_u5nd6")
+
+[node name="CharacterImpulseApplicator" type="Node" parent="."]
+script = ExtResource("2_lfgqe")
