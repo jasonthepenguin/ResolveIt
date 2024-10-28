@@ -19,6 +19,8 @@
 #include <godot_cpp/classes/engine.hpp>
 #include<godot_cpp/classes/static_body3d.hpp>
 
+#include "manifold.h"
+
 // Forward declaration of RigidBodyCustom
 namespace godot{
     class RigidBodyCustom;
@@ -67,39 +69,6 @@ namespace godot {
             void deregister_rigidbody(RigidBodyCustom* rigid_body);
 
 
-            // manifolds class
-    struct Manifold {
-        RigidBodyCustom* body_a;
-        RigidBodyCustom* body_b;
-        //Node* body_b_node;
-        std::vector<Vector3> contact_points;
-        std::vector<Vector3> collision_normals;
-        std::vector<float> penetrations;
-        bool body_b_is_static;
-    };
-
-    struct ManifoldKey {
-        RigidBodyCustom* body_a;
-        RigidBodyCustom* body_b;
-        //Node* body_b_node;
-
-        bool operator==(const ManifoldKey& other) const {
-            return body_a == other.body_a && body_b == other.body_b;
-                   
-        }
-    };
-
-    struct ManifoldKeyHash {
-        size_t operator()(const ManifoldKey& key) const {
-            // If body_b is nullptr (static body), only hash body_a
-            if (key.body_b == nullptr) {
-                return std::hash<RigidBodyCustom*>()(key.body_a);
-            }
-            // Otherwise, hash both bodies using XOR (^)
-            return std::hash<RigidBodyCustom*>()(key.body_a) ^ 
-                   std::hash<RigidBodyCustom*>()(key.body_b);
-        }
-    };
 
             
                 PhysicsHandler();
