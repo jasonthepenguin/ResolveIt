@@ -20,7 +20,7 @@ func _ready():
 	apply_settings()
 	
 	# apply an impulse to the ball
-	ball_test.apply_impulse(Vector3(-5,0,0))
+	ball_test.apply_impulse(Vector3(-10,0,0))
 	
 	
 
