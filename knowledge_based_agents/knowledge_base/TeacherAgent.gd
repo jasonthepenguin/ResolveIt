@@ -51,6 +51,9 @@ func update_emotional_state():
 		3: 
 			kb.add_fact("is_totally_angry")
 			storm_out()
+			
+func move_to_teaching_position():
+	pass
 
 func storm_out():
 	print("Teacher storms out of the room!")
@@ -67,7 +70,7 @@ func teach():
 func _seed_knowledge():
 	# Teaching requirements
 	kb.add_rule("can_teach", [
-		"is_in_classroom",
+		"is_in_position",
 		"has_presentation_setup"
 	])
 	

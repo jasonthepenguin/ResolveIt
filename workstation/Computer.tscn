@@ -1,0 +1,176 @@
+[gd_scene load_steps=13 format=3 uid="uid://bemcdkqv2q2rg"]
+
+[ext_resource type="Texture2D" uid="uid://bvpiid2u7bu1n" path="res://assets/table_and_computers_desktop-aw-r16-bk-air-cool-gallery-8.png" id="1_2fgla"]
+[ext_resource type="Texture2D" uid="uid://bihjg7ody2mhf" path="res://assets/table_and_computers_desktop-aw-r16-bk-solid-gallery-6.png" id="2_1e5t3"]
+[ext_resource type="Texture2D" uid="uid://cyf3h6ix0tqll" path="res://assets/table_and_computers_desktop-aw-r16-bk-lqd-cooling-gallery-5.png" id="3_prc2i"]
+[ext_resource type="Texture2D" uid="uid://dct2drtnvq863" path="res://assets/table_and_computers_desktop-aw-r16-bk-lqd-cooling-gallery-4.png" id="4_a4vt4"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_enymk"]
+resource_name = "pc_base"
+cull_mode = 2
+albedo_color = Color(0, 0, 0, 1)
+roughness = 0.6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6ddvc"]
+resource_name = "pc_sideA"
+cull_mode = 2
+albedo_texture = ExtResource("1_2fgla")
+roughness = 0.6
+texture_repeat = false
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nukt0"]
+resource_name = "pc_sideB"
+cull_mode = 2
+albedo_texture = ExtResource("2_1e5t3")
+roughness = 0.6
+texture_repeat = false
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l4p3r"]
+resource_name = "pc_front"
+cull_mode = 2
+albedo_texture = ExtResource("3_prc2i")
+roughness = 0.6
+texture_repeat = false
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p6hb7"]
+resource_name = "pc_back"
+cull_mode = 2
+albedo_texture = ExtResource("4_a4vt4")
+roughness = 0.6
+texture_repeat = false
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_4c1hc"]
+_surfaces = [{
+"aabb": AABB(-2.38187, -2.39378, -1.1731, 4.90598, 4.89389, 2.3462),
+"format": 34896613377,
+"index_count": 12,
+"index_data": PackedByteArray(2, 0, 4, 0, 6, 0, 2, 0, 0, 0, 4, 0, 7, 0, 1, 0, 3, 0, 7, 0, 5, 0, 1, 0),
+"name": "pc_base",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 254, 255, 0, 0, 0, 0, 255, 255, 254, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0, 255, 255, 0, 0, 254, 255, 0, 0, 255, 255, 255, 255, 254, 255, 0, 0, 255, 255, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0)
+}, {
+"aabb": AABB(-2.38187, -2.39378, 1.1731, 4.90598, 4.89389, 1.00136e-05),
+"format": 34896613377,
+"index_count": 6,
+"index_data": PackedByteArray(2, 0, 1, 0, 3, 0, 2, 0, 0, 0, 1, 0),
+"name": "pc_sideA",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0)
+}, {
+"aabb": AABB(-2.38187, -2.39378, -1.1731, 4.90598, 4.89389, 1.00136e-05),
+"format": 34896613377,
+"index_count": 6,
+"index_data": PackedByteArray(0, 0, 3, 0, 1, 0, 0, 0, 2, 0, 3, 0),
+"name": "pc_sideB",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0)
+}, {
+"aabb": AABB(2.52411, -2.39378, -1.1731, 1.00136e-05, 4.89389, 2.3462),
+"format": 34896613377,
+"index_count": 6,
+"index_data": PackedByteArray(2, 0, 1, 0, 3, 0, 2, 0, 0, 0, 1, 0),
+"name": "pc_front",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 254, 255, 0, 0, 0, 0, 255, 255, 254, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0)
+}, {
+"aabb": AABB(-2.38187, -2.39378, -1.1731, 1.00136e-05, 4.89389, 2.3462),
+"format": 34896613377,
+"index_count": 6,
+"index_data": PackedByteArray(0, 0, 3, 0, 1, 0, 0, 0, 2, 0, 3, 0),
+"name": "pc_back",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 254, 255, 0, 0, 0, 0, 255, 255, 254, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0)
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_m62gg"]
+resource_name = "table_and_computers_Cube_046"
+_surfaces = [{
+"aabb": AABB(-2.38187, -2.39378, -1.1731, 4.90598, 4.89389, 2.3462),
+"attribute_data": PackedByteArray(255, 31, 255, 63, 255, 223, 255, 63, 255, 31, 255, 127, 255, 223, 255, 127, 255, 95, 255, 63, 255, 159, 255, 63, 255, 95, 255, 127, 255, 159, 255, 127),
+"format": 34896613399,
+"index_count": 12,
+"index_data": PackedByteArray(2, 0, 4, 0, 6, 0, 2, 0, 0, 0, 4, 0, 7, 0, 1, 0, 3, 0, 7, 0, 5, 0, 1, 0),
+"material": SubResource("StandardMaterial3D_enymk"),
+"name": "pc_base",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 254, 255, 255, 191, 0, 0, 255, 255, 254, 255, 255, 255, 0, 0, 0, 0, 0, 0, 255, 191, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 0, 0, 254, 255, 255, 191, 255, 255, 255, 255, 254, 255, 255, 255, 255, 255, 0, 0, 0, 0, 255, 191, 255, 255, 255, 255, 0, 0, 255, 255, 0, 0, 255, 127, 255, 127, 255, 191, 0, 0, 255, 127, 255, 127, 255, 191, 0, 0, 255, 127, 255, 127, 255, 191, 0, 0, 255, 127, 255, 127, 255, 191)
+}, {
+"aabb": AABB(-2.38187, -2.39378, 1.1731, 4.90598, 4.89389, 1.00136e-05),
+"attribute_data": PackedByteArray(102, 128, 255, 255, 102, 128, 196, 127, 255, 255, 254, 255, 255, 255, 196, 127),
+"format": 34896613399,
+"index_count": 6,
+"index_data": PackedByteArray(2, 0, 1, 0, 3, 0, 2, 0, 0, 0, 1, 0),
+"material": SubResource("StandardMaterial3D_6ddvc"),
+"name": "pc_sideA",
+"primitive": 3,
+"uv_scale": Vector4(2.01352, 1.90258, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 128, 0, 0, 255, 255, 0, 0, 0, 128, 255, 255, 0, 0, 0, 0, 0, 128, 255, 255, 255, 255, 0, 0, 0, 128, 255, 127, 255, 255, 255, 127, 255, 255, 255, 127, 255, 255, 255, 127, 255, 255)
+}, {
+"aabb": AABB(-2.38187, -2.39378, -1.1731, 4.90598, 4.89389, 1.00136e-05),
+"attribute_data": PackedByteArray(255, 255, 255, 255, 255, 255, 36, 128, 241, 127, 254, 255, 241, 127, 36, 128),
+"format": 34896613399,
+"index_count": 6,
+"index_data": PackedByteArray(0, 0, 3, 0, 1, 0, 0, 0, 2, 0, 3, 0),
+"material": SubResource("StandardMaterial3D_nukt0"),
+"name": "pc_sideB",
+"primitive": 3,
+"uv_scale": Vector4(2.00595, 1.87823, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 255, 255, 255, 127, 254, 255, 255, 127, 254, 255, 255, 127, 254, 255, 255, 127, 254, 255)
+}, {
+"aabb": AABB(2.52411, -2.39378, -1.1731, 1.00136e-05, 4.89389, 2.3462),
+"attribute_data": PackedByteArray(111, 129, 254, 255, 111, 129, 189, 127, 255, 255, 255, 255, 255, 255, 189, 127),
+"format": 34896613399,
+"index_count": 6,
+"index_data": PackedByteArray(2, 0, 1, 0, 3, 0, 2, 0, 0, 0, 1, 0),
+"material": SubResource("StandardMaterial3D_l4p3r"),
+"name": "pc_front",
+"primitive": 3,
+"uv_scale": Vector4(2.00953, 1.92858, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 254, 255, 255, 191, 0, 0, 255, 255, 254, 255, 255, 191, 0, 0, 0, 0, 0, 0, 255, 191, 0, 0, 255, 255, 0, 0, 255, 191, 255, 127, 0, 0, 255, 127, 0, 0, 255, 127, 0, 0, 255, 127, 0, 0)
+}, {
+"aabb": AABB(-2.38187, -2.39378, -1.1731, 1.00136e-05, 4.89389, 2.3462),
+"attribute_data": PackedByteArray(255, 255, 255, 255, 255, 255, 211, 127, 235, 135, 254, 255, 235, 135, 211, 127),
+"format": 34896613399,
+"index_count": 6,
+"index_data": PackedByteArray(0, 0, 3, 0, 1, 0, 0, 0, 2, 0, 3, 0),
+"material": SubResource("StandardMaterial3D_p6hb7"),
+"name": "pc_back",
+"primitive": 3,
+"uv_scale": Vector4(1.77324, 1.92154, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 254, 255, 255, 191, 0, 0, 255, 255, 254, 255, 255, 191, 0, 0, 0, 0, 0, 0, 255, 191, 0, 0, 255, 255, 0, 0, 255, 191, 255, 127, 254, 255, 255, 127, 255, 255, 255, 127, 254, 255, 255, 127, 255, 255)
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_4c1hc")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hx1tt"]
+size = Vector3(0.168945, 0.35022, 0.352966)
+
+[node name="Computer" type="RigidBody3D"]
+collision_layer = 5
+collision_mask = 7
+
+[node name="pc_001" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.27183e-08, 0, 0.0711261, 0, 0.0711261, 0, -0.0711261, 0, 1.27183e-08, 0, 0, 0)
+mesh = SubResource("ArrayMesh_m62gg")
+skeleton = NodePath("")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00372314, -0.00570679)
+shape = SubResource("BoxShape3D_hx1tt")
