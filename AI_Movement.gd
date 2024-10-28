@@ -73,12 +73,8 @@ func handle_emotion_change():
 		
 		match current_emotion:
 			"Angry":
-				play_animation(AnimationState.IDLE)
+				play_animation(AnimationState.RUN)
 			"Happy":
-				play_animation(AnimationState.JUMP)
-				await get_tree().create_timer(1.0).timeout
-				if not animation_locked and current_animation != AnimationState.JUMP:
-					play_animation(AnimationState.JUMP)
 				play_animation(AnimationState.WALK)
 			"Sad": 
 				play_animation(AnimationState.LIE_IDLE)
@@ -122,10 +118,27 @@ func handle_sad_state():
 		lie_down()
 
 
+func lie_down():
+	is_lying_down = true
+	agent.set_target_position(global_position)  # Stop moving
+
+
 func handle_neutral_state():
 	if not is_sitting_floor:
 		sit_on_floor()
 
+
+func sit_on_floor():
+	is_sitting_floor = true
+	agent.set_target_position(global_position)  # Stop moving
+
+
+func stand_up():
+	is_lying_down = false
+
+
+func stand_up_from_floor():
+	is_sitting_floor = false
 
 
 
@@ -160,20 +173,6 @@ func find_nearest_interactable():
 	return nearestObj
 
 
-func handle_angry_interaction():
-	if current_target and current_target.has_node("Affordance"):
-		var affordance = current_target.get_node("Affordance")
-		if affordance.has_affordance("activate"):
-			play_animation(AnimationState.INTERACT)
-			affordance.trigger_affordance("activate")  # Default red color
-			m_NPC_WalkSpeed = 2.5  # Move faster when angry
-		
-		is_interacting = true
-		await get_tree().create_timer(2.0).timeout
-		is_interacting = false
-		current_target = null
-
-
 func handle_movement(delta):
 	var nextLocation = agent.get_next_path_position()
 	var travelDirection = (nextLocation - global_transform.origin).normalized()
@@ -205,22 +204,18 @@ func handle_collision_state(delta):
 			move_to_random_location()
 
 
-func lie_down():
-	is_lying_down = true
-	agent.set_target_position(global_position)  # Stop moving
-
-
-func stand_up():
-	is_lying_down = false
-
-
-func sit_on_floor():
-	is_sitting_floor = true
-	agent.set_target_position(global_position)  # Stop moving
-
-
-func stand_up_from_floor():
-	is_sitting_floor = false
+func handle_angry_interaction():
+	if current_target and current_target.has_node("Affordance"):
+		var affordance = current_target.get_node("Affordance")
+		if affordance.has_affordance("activate"):
+			play_animation(AnimationState.INTERACT)
+			affordance.trigger_affordance("activate")  # Default red color
+			m_NPC_WalkSpeed = 2.5  # Move faster when angry
+		
+		is_interacting = true
+		await get_tree().create_timer(2.0).timeout
+		is_interacting = false
+		current_target = null
 
 
 func handle_angry_state():
@@ -228,19 +223,20 @@ func handle_angry_state():
 		var nearest_interactable = find_nearest_interactable()
 		if nearest_interactable:
 			var distance = global_position.distance_to(nearest_interactable.global_position)
-			if distance <= 2.0:
+			
+			if distance <= 1.5:
 				current_target = nearest_interactable
 				handle_angry_interaction()
-				play_animation(AnimationState.IDLE)
-			else:
+				play_animation(AnimationState.INTERACT)
+			elif distance <= 2.0 and distance >= 1.5:
 				agent.set_target_position(nearest_interactable.global_position)
 				if current_animation != AnimationState.RUN:
 					play_animation(AnimationState.RUN)
 		else:
 			if agent.is_navigation_finished():
 				move_to_random_location()
-				if current_animation != AnimationState.RUN:
-					play_animation(AnimationState.RUN)
+				#if current_animation != AnimationState.RUN:
+				play_animation(AnimationState.RUN)
 
 
 func handle_happy_state():
@@ -251,7 +247,7 @@ func handle_happy_state():
 		
 		if not animation_locked and current_animation != AnimationState.JUMP:
 			play_animation(AnimationState.JUMP)
-			await get_tree().create_timer(0.5).timeout
+			await get_tree().create_timer(1.5).timeout
 
 
 
