@@ -25,3 +25,6 @@ func get_random_movement() -> AgentRandomMovement:
 	
 func get_impulse_applicator() -> CharacterImpulseApplicator:
 	return $CharacterImpulseApplicator
+
+func get_carry_actuator() -> ObjectCarryActuator:
+	return $ObjectCarryActuator

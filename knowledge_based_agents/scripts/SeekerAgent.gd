@@ -2,6 +2,7 @@ extends BaseAgent
 
 @onready var agent_actuator: AgentNavActuator = get_parent().get_actuator()
 @onready var nav_agent: NavigationAgent3D = get_parent().get_nav_agent()
+
 var stop = false
 var move_to_a = false
 var move_to_b = false

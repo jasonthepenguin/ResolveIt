@@ -28,6 +28,7 @@ func throw_object(target: Node3D):
 			var affordance = target.get_node_or_null("Affordance")
 			if affordance:
 				affordance.remove_affordance(Affordance.Type.CAN_THROW)
+				pass
 			return true
 	return false
 
