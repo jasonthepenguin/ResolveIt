@@ -220,7 +220,7 @@ void godot::RigidBodyCustom::_ready() {
         center_of_mass_global = get_global_transform().xform(center_of_mass_local);
         // calculate our inertia tensor based on collision shape
         update_inertia_tensor();
-
+        update_world_inertia_tensor();
         
 
     }
@@ -266,22 +266,26 @@ void godot::RigidBodyCustom::update_inertia_tensor()
     }
     // other shapes when get the chance and inertia. 
 
-
-     // For debugging ( print calculated inertia values to be certain )
-     /*
-    UtilityFunctions::print("Calculated inertia tensor for shape: ", shape_class);
-    UtilityFunctions::print("Inertia values: ", inertia);
-
     inertia_tensor = Basis().scaled(inertia);
-    UtilityFunctions::print("Inertia tensor values : ");
-    UtilityFunctions::print(inertia_tensor);
+    
     inverse_inertia_tensor = inertia_tensor.inverse();
 
-    // Debug prints
-    UtilityFunctions::print("Box size: ", size);
-    UtilityFunctions::print("Mass: ", mass);
+
+     // For debugging ( print calculated inertia values to be certain )
+     
+    //UtilityFunctions::print("Calculated inertia tensor for shape: ", shape_class);
+    //UtilityFunctions::print("Inertia values: ", inertia);
+
     
-    */
+    //UtilityFunctions::print("Inertia tensor values : ");
+    //UtilityFunctions::print(inertia_tensor);
+    
+
+    // Debug prints
+    //UtilityFunctions::print("Box size: ", size);
+    //UtilityFunctions::print("Mass: ", mass);
+    
+    
     //UtilityFunctions::print("the shape class is : ");
     //UtilityFunctions::print(collision_shape->get_shape()->get_class());
     
@@ -419,7 +423,9 @@ void godot::RigidBodyCustom::integrate_forces(double delta_time) {
         Vector3 rotation_axis = rotation_amount.normalized();
         Basis rotation = Basis(rotation_axis, angle);
         new_trans.basis = rotation * body_trans.basis;
-        new_trans.basis = new_trans.basis.orthogonalized();
+        new_trans.basis = new_trans.basis.orthonormalized(); // adjusts basis so axes are both orthogonal and normalized
+        // to maintain proper rotation matrix without skewing effects
+        update_world_inertia_tensor();
 
     }
 
@@ -475,6 +481,9 @@ void godot::RigidBodyCustom::set_mass(float new_mass) {
     if(mass != 0.0f){
         inverse_mass = 1.0f / mass;
     }
+
+    update_inertia_tensor();
+    update_world_inertia_tensor();
 }
 
 float godot::RigidBodyCustom::get_mass() const {
