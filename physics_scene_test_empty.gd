@@ -8,6 +8,9 @@ extends Node3D
 @export var sun_angle: Vector2 = Vector2(-45, -45)  # (pitch, yaw)
 @export var sun_energy: float = 1.5
 
+@export_group("Physics Test Settings")
+@export var ball_test: RigidBodyCustom
+
 var world_environment: WorldEnvironment
 var sun: DirectionalLight3D
 
@@ -15,6 +18,11 @@ func _ready():
 	setup_environment()
 	setup_sun()
 	apply_settings()
+	
+	# apply an impulse to the ball
+	ball_test.apply_impulse(Vector3(-5,0,0))
+	
+	
 
 func setup_environment():
 	world_environment = WorldEnvironment.new()

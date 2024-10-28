@@ -37,6 +37,8 @@ script = ExtResource("1_8wg6m")
 process_priority = 1
 
 [node name="RigidBodyCustom" type="RigidBodyCustom" parent="PhysicsHandler"]
+collision_layer = 1
+collision_mask = 1
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.9859, -1.07189, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsHandler/RigidBodyCustom"]
