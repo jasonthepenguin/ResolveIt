@@ -37,3 +37,16 @@ static func get_affordance_list(tree: SceneTree, affordance_type: Affordance.Typ
 		if node.has_affordance(affordance_type):
 			nodes.append(node)
 	return nodes
+	
+static func to_str(type: Affordance.Type) -> String:
+	match type:
+		Type.CAN_PICKUP: return "Pickup"
+		Type.CAN_THROW: return "Throw"
+		Type.CAN_PRESENT: return "Present"
+		Type.CAN_STUDY: return "Study"
+		Type.CAN_PUSH: return "Push"
+		Type.CAN_OPEN: return "Open"
+		Type.CAN_CLOSE: return "Close"
+		Type.CAN_USE: return "Use"
+		Type.PROJECTOR_ON: return "Projector On"
+		_: return "Unknown"

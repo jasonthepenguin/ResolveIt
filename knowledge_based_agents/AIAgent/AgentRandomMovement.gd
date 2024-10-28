@@ -21,9 +21,10 @@ func _process(delta):
 	
 	if (nav_agent.is_navigation_finished()):
 		actuator.move_to(get_random_position())
-	var current_location = character.global_transform.origin
 	
 	accumulator = 0
+	
+	#var current_location = character.global_transform.origin
 	#if current_location.distance_to(last_location) < distance_threshold:
 		#stuck_time += delta
 		#if (stuck_time > max_stuck_time):

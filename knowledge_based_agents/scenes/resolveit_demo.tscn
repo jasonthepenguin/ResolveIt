@@ -3007,7 +3007,7 @@ script = ExtResource("24_f0bg8")
 
 [node name="TeacherBrain" type="Node" parent="TeacherAgent"]
 script = ExtResource("25_5o5oi")
-print_thoughts = true
+show_thoughts = true
 
 [node name="TeacherPerception" type="Node" parent="TeacherAgent"]
 script = ExtResource("26_iwcrl")

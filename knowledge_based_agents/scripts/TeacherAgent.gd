@@ -50,12 +50,12 @@ func update_state():
 	# Check if we can teach
 	var query = kb.query_goal("can_teach")
 	if query.achieved:
-		LogManager.add_message(["Teacher: is teaching"])
+		if show_thoughts: LogManager.add_message(LogManager.id_format("Teacher"), "is teaching")
 		kb.add_fact("is_teaching")
 		kb.add_fact("is_happy")
 		anger_level = max(0, anger_level - 1)  # Gradually become less angry when teaching
 	else:
-		LogManager.add_message(["Teacher: cant teach, missing ", query.missing_conditions])
+		if show_thoughts: LogManager.add_message(LogManager.id_format("Teacher"), "cant teach, missing", query.missing_conditions)
 		kb.remove_fact("is_teaching")
 		kb.remove_fact("is_happy")
 		make_decision(query.missing_conditions)
@@ -86,29 +86,33 @@ func update_emotional_state():
 			storm_out()
 			
 func make_decision(conditions: Array):
-	LogManager.add_message(["Teacher: making decision"])
+	if show_thoughts: LogManager.add_message(LogManager.id_format("Teacher"), "making decision")
 	busy = true
 	for condition in conditions:
 		await run_action(condition)
 	busy = false
 	
 func move_to_position():
+	if show_thoughts: LogManager.add_message(LogManager.id_format("Teacher"), LogManager.seek_affordance_format(Affordance.Type.CAN_PRESENT))
 	var nodes = Affordance.get_affordance_list(get_tree(), Affordance.Type.CAN_PRESENT)
 	if nodes.is_empty():
 		return # cannot reach position
-		
-	LogManager.add_message(["Teacher: moving to position"])
+	
+	if show_thoughts: LogManager.add_message(LogManager.id_format("Teacher"), LogManager.found_affordance_format())
+	if show_thoughts: LogManager.add_message(LogManager.id_format("Teacher"), "moving to position")
 	var position = nodes[0].parent_object.global_position
 	if await agent_actuator.move_to(Vector2(position.x, position.z)):
 		kb.add_fact("in_position")
-		LogManager.add_message(["Teacher: in position"])
+		if show_thoughts: LogManager.add_message(LogManager.id_format("Teacher"), "in position")
 	
 func turn_projector_on():
+	if show_thoughts: LogManager.add_message(LogManager.id_format("Teacher"), LogManager.seek_affordance_format(Affordance.Type.PROJECTOR_ON))
 	var nodes = Affordance.get_affordance_list(get_tree(), Affordance.Type.PROJECTOR_ON)
 	if nodes.is_empty():
 		return # cannot reach position
 	
-	LogManager.add_message(["Teacher: turning projector on"])
+	if show_thoughts: LogManager.add_message(LogManager.id_format("Teacher"), LogManager.found_affordance_format())
+	if show_thoughts: LogManager.add_message(LogManager.id_format("Teacher"), "turning projector on")
 	var projector = nodes[0].parent_object as Projector
 	projector.set_projector(true)
 	kb.add_fact("projector_is_on") # todo: done through perception
