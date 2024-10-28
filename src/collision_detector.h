@@ -30,14 +30,19 @@ class CollisionDetector {
 public:
     CollisionDetector(PhysicsServer3D* p_physics_server);
     
+    
     void detect_collisions(
         const std::vector<RigidBodyCustom*>& bodies,
-        const std::map<RID, RigidBodyCustom*>& rid_map,
-        std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash>& manifold_map
+        const std::map<RID, RigidBodyCustom*>& rid_map
     );
+
+    void clear_manifolds();
+
+    std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash>& get_manifold_map();
 
 private:
     PhysicsServer3D* physics_server;
+    std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash> manifold_map;
 };
 
 

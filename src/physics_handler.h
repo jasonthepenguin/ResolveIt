@@ -21,6 +21,7 @@
 #include "manifold.h"
 
 #include "collision_detector.h"
+#include "collision_resolver.h"
 
 // Forward declaration of RigidBodyCustom
 namespace godot{
@@ -49,6 +50,7 @@ namespace godot {
 
             PhysicsServer3D *physics_server;
             std::unique_ptr<CollisionDetector> collision_detector;
+            std::unique_ptr<CollisionResolver> collision_resolver;
 
             // constants
             // pos correction consts
@@ -66,14 +68,12 @@ namespace godot {
 
         public:
 
-            static PhysicsHandler* singleton;
+                static PhysicsHandler* singleton;
 
-            void register_rigidbody(RigidBodyCustom* rigid_body);
-            void deregister_rigidbody(RigidBodyCustom* rigid_body);
+                void register_rigidbody(RigidBodyCustom* rigid_body);
+                void deregister_rigidbody(RigidBodyCustom* rigid_body);
 
 
-
-            
                 PhysicsHandler();
                 ~PhysicsHandler();
 
@@ -87,15 +87,9 @@ namespace godot {
 
                 void integrate_all_body_forces(double delta);
 
-                void detect_and_resolve_collisions(double delta);
-
-                
-                void resolve_collision(Manifold& manifold, double delta);
-
+                void apply_gravity_forces();
 
                 void update_server_transforms();
-
-                void apply_positional_corrections(std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash>& manifold_map);
 
                 void set_correction_percent(float p_value);
                 float get_correction_percent() const;
@@ -109,7 +103,7 @@ namespace godot {
                 void set_impulse_iterations(int p_value);
                 int get_impulse_iterations() const;
                 
-                void find_manifolds(std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash>& manifold_map);
+                
                 
 
 

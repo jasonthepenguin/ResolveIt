@@ -13,8 +13,7 @@ CollisionDetector::CollisionDetector(PhysicsServer3D* p_physics_server)
 
 void CollisionDetector::detect_collisions(
     const std::vector<RigidBodyCustom*>& bodies,
-    const std::map<RID, RigidBodyCustom*>& rid_map,
-    std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash>& manifold_map
+    const std::map<RID, RigidBodyCustom*>& rid_map
 ) {
     for (auto* rigid_body : bodies) {
         PhysicsDirectBodyState3D* state = physics_server->body_get_direct_state(rigid_body->get_body_rid());
@@ -68,4 +67,13 @@ void CollisionDetector::detect_collisions(
             }
         }
     }
+}
+
+std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash>& CollisionDetector::get_manifold_map() {
+    return manifold_map;
+}
+
+
+void CollisionDetector::clear_manifolds() {
+    manifold_map.clear();
 }
