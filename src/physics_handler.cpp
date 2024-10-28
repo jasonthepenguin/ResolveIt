@@ -24,6 +24,29 @@ void PhysicsHandler::_bind_methods() {
     ClassDB::bind_method(D_METHOD("get_rigid_bodies"), &PhysicsHandler::get_rigid_bodies);
     
     
+    ClassDB::bind_method(D_METHOD("set_correction_percent", "value"), &PhysicsHandler::set_correction_percent);
+    ClassDB::bind_method(D_METHOD("get_correction_percent"), &PhysicsHandler::get_correction_percent);
+    
+    ClassDB::bind_method(D_METHOD("set_position_slop", "value"), &PhysicsHandler::set_position_slop);
+    ClassDB::bind_method(D_METHOD("get_position_slop"), &PhysicsHandler::get_position_slop);
+    
+    ClassDB::bind_method(D_METHOD("set_collision_epsilon", "value"), &PhysicsHandler::set_collision_epsilon);
+    ClassDB::bind_method(D_METHOD("get_collision_epsilon"), &PhysicsHandler::get_collision_epsilon);
+    
+    ClassDB::bind_method(D_METHOD("set_impulse_iterations", "value"), &PhysicsHandler::set_impulse_iterations);
+    ClassDB::bind_method(D_METHOD("get_impulse_iterations"), &PhysicsHandler::get_impulse_iterations);
+
+    
+    ADD_GROUP("Physics Settings", "");
+    ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "correction_percent", PROPERTY_HINT_RANGE, "0.01,1.0,0.01"), 
+                "set_correction_percent", "get_correction_percent");
+    ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "position_slop", PROPERTY_HINT_RANGE, "0.001,0.1,0.001"), 
+                "set_position_slop", "get_position_slop");
+    ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "collision_epsilon", PROPERTY_HINT_RANGE, "0.00001,0.001,0.00001"), 
+                "set_collision_epsilon", "get_collision_epsilon");
+    ADD_PROPERTY(PropertyInfo(Variant::INT, "impulse_iterations", PROPERTY_HINT_RANGE, "1,10,1"), 
+                "set_impulse_iterations", "get_impulse_iterations");
+    
 
 }
 
@@ -102,9 +125,9 @@ void PhysicsHandler::_physics_process(double delta) {
 
     
     // impulse iteration solving 
-    int impulse_iteration = 1; //= 5;
+    
     // Process all manifolds eg perhaps loop this like 5 times
-    for(int i = 0; i < impulse_iteration; ++i){
+    for(int i = 0; i < impulse_iterations; ++i){
 
         for (auto& pair : manifold_map) {
             Manifold& manifold = pair.second;
@@ -128,7 +151,7 @@ void PhysicsHandler::gather_bodies() {
     for (int i = 0; i < get_child_count(); ++i) {
         Node *child = get_child(i);
         if (RigidBodyCustom *rigid_body = Object::cast_to<RigidBodyCustom>(child)) {
-            UtilityFunctions::print("gathered a body!");
+            //UtilityFunctions::print("gathered a body!");
             rigid_bodies.push_back(rigid_body);
             rid_map[rigid_body->get_body_rid()] = rigid_body;
         }
@@ -324,8 +347,8 @@ void PhysicsHandler::resolve_collision(Manifold& manifold, double delta) {
         float j = -(1.0f + restitution) * velocity_along_normal;
         float denominator = body_a->get_inv_mass() + body_b_inv_mass + collision_normal.dot(angular_term_a + angular_term_b);
 
-        const float EPSILON = 0.0001f;
-        if(std::abs(denominator) < EPSILON){
+       
+        if(std::abs(denominator) < epsilon){
             continue;
         }
         if (denominator == 0.0f) {
@@ -405,8 +428,8 @@ void PhysicsHandler::apply_positional_corrections(std::unordered_map<ManifoldKey
         for (size_t i = 0; i < manifold.contact_points.size(); ++i) {
             float penetration = manifold.penetrations[i];
             //UtilityFunctions::print(penetration);
-            if (std::abs(penetration) > POSITION_SLOP ) {
-                Vector3 correction = manifold.collision_normals[i] * (penetration - POSITION_SLOP) * CORRECTION_PERCENT;
+            if (std::abs(penetration) > position_slop ) {
+                Vector3 correction = manifold.collision_normals[i] * (penetration - position_slop) * correction_percent;
 
                 if (body_b_mass == INFINITY)
                 {
@@ -441,3 +464,34 @@ void PhysicsHandler::update_server_transforms() {
 
 
 
+void PhysicsHandler::set_correction_percent(float p_value) {
+    correction_percent = p_value;
+}
+
+float PhysicsHandler::get_correction_percent() const {
+    return correction_percent;
+}
+
+void PhysicsHandler::set_position_slop(float p_value) {
+    position_slop = p_value;
+}
+
+float PhysicsHandler::get_position_slop() const {
+    return position_slop;
+}
+
+void PhysicsHandler::set_collision_epsilon(float p_value) {
+    epsilon = p_value;
+}
+
+float PhysicsHandler::get_collision_epsilon() const {
+    return epsilon;
+}
+
+void PhysicsHandler::set_impulse_iterations(int p_value) {
+    impulse_iterations = p_value;
+}
+
+int PhysicsHandler::get_impulse_iterations() const {
+    return impulse_iterations;
+}

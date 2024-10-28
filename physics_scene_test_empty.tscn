@@ -59,6 +59,10 @@ script = ExtResource("3_xfbb0")
 [node name="Camera3D" type="Camera3D" parent="CharacterBody3D/camholder"]
 
 [node name="PhysicsHandler" type="PhysicsHandler" parent="."]
+correction_percent = 0.05
+position_slop = 0.01
+collision_epsilon = 0.0001
+impulse_iterations = 1
 process_priority = 1
 
 [node name="ball" type="RigidBodyCustom" parent="PhysicsHandler"]

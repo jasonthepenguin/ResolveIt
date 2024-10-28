@@ -196,10 +196,10 @@ void godot::RigidBodyCustom::_ready() {
 
         if (child->is_class("CollisionShape3D")) {
             collision_shape = Object::cast_to<CollisionShape3D>(child);
-            UtilityFunctions::print("Found a collision shape.");
+           // UtilityFunctions::print("Found a collision shape.");
         } else if (child->is_class("MeshInstance3D")) {
             mesh_instance = Object::cast_to<MeshInstance3D>(child);
-            UtilityFunctions::print("Found a mesh instance.");
+           // UtilityFunctions::print("Found a mesh instance.");
         }
     }
 
@@ -222,7 +222,7 @@ void godot::RigidBodyCustom::_ready() {
         physics_server->body_set_omit_force_integration(body_rid, true);
         physics_server->body_set_mode(body_rid, PhysicsServer3D::BODY_MODE_RIGID);
 
-        UtilityFunctions::print("Added collision shape to body in the physics server.");
+        //UtilityFunctions::print("Added collision shape to body in the physics server.");
         
 
         // Update global center of mass based on where ever the user has placed RigidBodyCustom in their scene
@@ -234,7 +234,7 @@ void godot::RigidBodyCustom::_ready() {
 
     }
 
-    UtilityFunctions::print("Initialization complete.");
+    //UtilityFunctions::print("Initialization complete.");
 
 
     // Test impulse application
@@ -277,6 +277,7 @@ void godot::RigidBodyCustom::update_inertia_tensor()
 
 
      // For debugging ( print calculated inertia values to be certain )
+     /*
     UtilityFunctions::print("Calculated inertia tensor for shape: ", shape_class);
     UtilityFunctions::print("Inertia values: ", inertia);
 
@@ -289,7 +290,7 @@ void godot::RigidBodyCustom::update_inertia_tensor()
     UtilityFunctions::print("Box size: ", size);
     UtilityFunctions::print("Mass: ", mass);
     
-
+    */
     //UtilityFunctions::print("the shape class is : ");
     //UtilityFunctions::print(collision_shape->get_shape()->get_class());
     

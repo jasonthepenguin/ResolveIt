@@ -11,7 +11,6 @@
 #include <godot_cpp/classes/physics_direct_space_state3d.hpp>
 #include <godot_cpp/variant/array.hpp>
 
-//#include "rigid_body_custom.h"
 
 #include <map>
 #include <unordered_map>
@@ -50,9 +49,10 @@ namespace godot {
 
             // constants
             // pos correction consts
-            const float CORRECTION_PERCENT = 0.05f; 
-            const float POSITION_SLOP = 0.01f; 
-
+            float correction_percent = 0.05f; 
+            float position_slop = 0.01f; 
+            float epsilon = 0.0001f;
+            int impulse_iterations = 1; //= 5;
 
             
 
@@ -86,7 +86,7 @@ namespace godot {
 
                 void detect_and_resolve_collisions(double delta);
 
-                //void resolve_collision(RigidBodyCustom* body_a, RigidBodyCustom* body_b, const Vector3& collision_normal, const Vector3& collision_point , const Vector3& local_contact_point ,  double delta);
+                
                 void resolve_collision(Manifold& manifold, double delta);
 
 
@@ -94,8 +94,18 @@ namespace godot {
 
                 void apply_positional_corrections(std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash>& manifold_map);
 
-
-                //-------
+                void set_correction_percent(float p_value);
+                float get_correction_percent() const;
+                
+                void set_position_slop(float p_value);
+                float get_position_slop() const;
+                
+                void set_collision_epsilon(float p_value);
+                float get_collision_epsilon() const;
+                
+                void set_impulse_iterations(int p_value);
+                int get_impulse_iterations() const;
+                
                 void find_manifolds(std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash>& manifold_map);
                 
 
