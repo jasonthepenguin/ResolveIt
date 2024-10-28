@@ -1,5 +1,5 @@
 extends StaticBody3D
-
+##interactableCube.gd
 @onready var mesh: MeshInstance3D = $MeshInstance3D
 @onready var affordance: Node = $Affordance
 

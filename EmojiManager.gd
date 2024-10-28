@@ -1,5 +1,5 @@
 extends Sprite3D
-
+## Emoji Manager.gd
 ## Enum for Emotions
 enum Emotions {
 	NEUTRAL,
@@ -42,8 +42,10 @@ func _ready():
 	update_texture()
 	emotionDuration = 0.0
 
+
 func update_texture():
 	self.texture = emotion_textures[current_emotion]
+
 
 func cycleEmotions():
 	if force_emotion:
@@ -64,6 +66,7 @@ func cycleEmotions():
 	update_texture()
 	emotionDuration = 0.0  ## Reset the timer
 
+
 func setEmotion(emotion):
 	current_emotion = emotion
 	update_texture()
@@ -72,6 +75,7 @@ func setEmotion(emotion):
 
 	await get_tree().create_timer(4.0).timeout
 	force_emotion = false
+
 
 func _process(delta):
 	if not force_emotion:
