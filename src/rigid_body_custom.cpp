@@ -6,7 +6,6 @@
 using namespace godot;
 
 
-
 void godot::RigidBodyCustom::_bind_methods()
 {
     // Method bindings for transforms and basic properties
@@ -86,14 +85,6 @@ void godot::RigidBodyCustom::_bind_methods()
     ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_mask", PROPERTY_HINT_LAYERS_3D_PHYSICS), "set_collision_mask", "get_collision_mask");
 }
 
-// In rigid_body_custom.cpp
-//void godot::RigidBodyCustom::_enter_tree() {
-
-    // Find the PhysicsHandler instance and register this rigid body
-   // if (PhysicsHandler::singleton) {
-  //      PhysicsHandler::singleton->register_rigidbody(this);
-  //  }
-//}
 
 void godot::RigidBodyCustom::_exit_tree() {
     // Deregister this rigid body from the PhysicsHandler

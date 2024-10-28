@@ -20,6 +20,8 @@
 
 #include "manifold.h"
 
+#include "collision_detector.h"
+
 // Forward declaration of RigidBodyCustom
 namespace godot{
     class RigidBodyCustom;
@@ -46,6 +48,7 @@ namespace godot {
             std::map<RID, RigidBodyCustom*> rid_map;
 
             PhysicsServer3D *physics_server;
+            std::unique_ptr<CollisionDetector> collision_detector;
 
             // constants
             // pos correction consts

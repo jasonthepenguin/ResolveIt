@@ -53,6 +53,7 @@ void PhysicsHandler::_bind_methods() {
 
 PhysicsHandler::PhysicsHandler() {
     physics_server = PhysicsServer3D::get_singleton();
+    collision_detector = std::make_unique<CollisionDetector>(physics_server);
 }
 
 PhysicsHandler::~PhysicsHandler() {
@@ -167,85 +168,8 @@ void PhysicsHandler::integrate_all_body_forces(double delta) {
 void PhysicsHandler::find_manifolds(std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash>& manifold_map)
 {
 
-    for (auto *rigid_body : rigid_bodies) {
-        PhysicsDirectBodyState3D* state = physics_server->body_get_direct_state(rigid_body->get_body_rid());
-        if (state) {
-            int contact_count = state->get_contact_count();
-            for (int i = 0; i < contact_count; ++i) {
-                Vector3 collision_normal = state->get_contact_local_normal(i).normalized();
-                RID other_rid = state->get_contact_collider(i);
-
-                Vector3 collision_point = state->get_contact_local_position(i); // position of contact on body in global coords
-
-                Object* obj = ObjectDB::get_instance(state->get_contact_collider_id(i));
-                Node* other_node = Object::cast_to<Node>(obj);
-                
-                
-                
-                RigidBodyCustom* other_body = nullptr;
-                bool other_is_static = true;
-
-                auto it = rid_map.find(other_rid);
-
-               // UtilityFunctions::print("=== Manifold Creation Debug ===");
-                //UtilityFunctions::print("Found RID in map: ", (it != rid_map.end()));
-                if (other_node) {
-                    //UtilityFunctions::print("Other node class: ", other_node->get_class());
-                }
-
-                if (it != rid_map.end()) {
-                    other_body = rid_map[other_rid];
-                    other_is_static = false;  // Explicitly set to false for dynamic bodies
-                    //UtilityFunctions::print("Found dynamic body in rid_map");
-                } else if (other_node && other_node->is_class("StaticBody3D")) {
-                    other_is_static = true;
-                    other_body = nullptr;
-                   // UtilityFunctions::print("Found static body");
-                } else {
-                    //UtilityFunctions::print("Warning: Unhandled collision case");
-                    other_is_static = true;  // Default to static for safety
-                    other_body = nullptr;
-                }
-
-                // Create a key for the manifold
-                ManifoldKey key{rigid_body, other_body};
-
-
-
-               // Vector3 penetration_vector = local_contact_point - collision_point;
-                Vector3 penetration_vector = state->get_contact_local_position(i) - state->get_contact_collider_position(i);
-                float penetration_depth = penetration_vector.dot(collision_normal);
-                // print penetration depth
-               // UtilityFunctions::print("---");
-              //  UtilityFunctions::print("penetration depth");
-               // UtilityFunctions::print(penetration_depth);
-              // UtilityFunctions::print("---");
-
-
-
-                // Check if manifold exists
-                auto manifold_it = manifold_map.find(key);
-                if (manifold_it == manifold_map.end()) {
-                    // Manifold doesn't exist, create a new one
-                    Manifold manifold;
-                    manifold.body_a = rigid_body;
-                    manifold.body_b = other_body;
-                    manifold.body_b_is_static = other_is_static;
-                    manifold.contact_points.push_back(collision_point);
-                    manifold.collision_normals.push_back(collision_normal);
-                    manifold.penetrations.push_back(penetration_depth);
-                    manifold_map[key] = manifold;
-                } else {
-                    // Add contact to existing manifold
-                    Manifold& manifold = manifold_it->second;
-                    manifold.contact_points.push_back(collision_point);
-                    manifold.collision_normals.push_back(collision_normal);
-                    manifold.penetrations.push_back(penetration_depth);
-                }
-            }
-        }
-    }    
-
+    collision_detector->detect_collisions(rigid_bodies, rid_map, manifold_map);
+    
 }
 
 
