@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://bjerw262ld03d"]
 
-[ext_resource type="Script" path="res://physics_scene_test_empty.gd" id="1_8wg6m"]
+[ext_resource type="Script" path="res://npc_scene_test_empty.gd" id="1_qfcv8"]
 [ext_resource type="Script" path="res://CharacterBody3D.gd" id="2_hdv2k"]
 [ext_resource type="Script" path="res://camholder.gd" id="3_q5q3k"]
 [ext_resource type="Script" path="res://NPC.gd" id="4_2lsli"]
@@ -31,7 +31,7 @@ size = Vector3(20, 1, 10)
 size = Vector3(20, 1, 10)
 
 [node name="physics_scene_test_empty" type="Node3D"]
-script = ExtResource("1_8wg6m")
+script = ExtResource("1_qfcv8")
 
 [node name="PhysicsHandler" type="PhysicsHandler" parent="."]
 process_priority = 1

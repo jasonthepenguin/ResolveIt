@@ -63,8 +63,8 @@ process_priority = 1
 
 [node name="ball" type="RigidBodyCustom" parent="PhysicsHandler"]
 restitution = 1.0
-velocity = Vector3(2.08165e-12, 2.08165e-12, 2.08165e-12)
 gravity_enabled = false
+velocity = Vector3(2.08165e-12, 2.08165e-12, 2.08165e-12)
 center_of_mass_local = Vector3(2.08165e-12, 2.08165e-12, 2.08165e-12)
 collision_layer = 1
 collision_mask = 1
@@ -79,8 +79,8 @@ mesh = SubResource("SphereMesh_xssum")
 [node name="plate_1" type="RigidBodyCustom" parent="PhysicsHandler"]
 mass = 20.0
 restitution = 1.0
-angular_velocity = Vector3(2.08165e-12, 2.08165e-12, 2.08165e-12)
 gravity_enabled = false
+angular_velocity = Vector3(2.08165e-12, 2.08165e-12, 2.08165e-12)
 collision_layer = 1
 collision_mask = 1
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 2, -3.5)
@@ -119,8 +119,8 @@ mesh = SubResource("SphereMesh_aiy2m")
 
 [node name="test_2" type="RigidBodyCustom" parent="PhysicsHandler"]
 restitution = 1.0
-velocity = Vector3(2.08165e-12, 2.08165e-12, 2.08165e-12)
 gravity_enabled = false
+velocity = Vector3(2.08165e-12, 2.08165e-12, 2.08165e-12)
 collision_layer = 1
 collision_mask = 1
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 1.5, 2.08165e-12)

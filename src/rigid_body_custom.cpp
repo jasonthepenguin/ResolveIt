@@ -9,99 +9,81 @@ using namespace godot;
 
 void godot::RigidBodyCustom::_bind_methods()
 {
+    // Method bindings for transforms and basic properties
     ClassDB::bind_method(D_METHOD("set_trans", "new_trans"), &RigidBodyCustom::set_trans);
     ClassDB::bind_method(D_METHOD("get_trans"), &RigidBodyCustom::get_trans);
     ClassDB::bind_method(D_METHOD("get_body_rid"), &RigidBodyCustom::get_body_rid);
     ClassDB::bind_method(D_METHOD("update_server_transforms"), &RigidBodyCustom::update_server_transforms);
+    
+    // Physics simulation methods
     ClassDB::bind_method(D_METHOD("integrate_forces", "delta_time"), &RigidBodyCustom::integrate_forces);
     ClassDB::bind_method(D_METHOD("apply_force", "force"), &RigidBodyCustom::apply_force);
+    ClassDB::bind_method(D_METHOD("apply_impulse"), &RigidBodyCustom::apply_impulse);
+    ClassDB::bind_method(D_METHOD("apply_torque", "p_torque"), &RigidBodyCustom::apply_torque);
+    ClassDB::bind_method(D_METHOD("apply_impulse_off_centre", "impulse", "rel_pos"), &RigidBodyCustom::apply_impulse_off_centre);
+    
+    // Basic property getters and setters
     ClassDB::bind_method(D_METHOD("set_restitution", "new_restitution"), &RigidBodyCustom::set_restitution);
     ClassDB::bind_method(D_METHOD("get_restitution"), &RigidBodyCustom::get_restitution);
     ClassDB::bind_method(D_METHOD("set_mass", "new_mass"), &RigidBodyCustom::set_mass);
     ClassDB::bind_method(D_METHOD("get_mass"), &RigidBodyCustom::get_mass);
     ClassDB::bind_method(D_METHOD("get_inv_mass"), &RigidBodyCustom::get_inv_mass);
+    
+    // Position and velocity methods
     ClassDB::bind_method(D_METHOD("get_old_position"), &RigidBodyCustom::get_old_position);
     ClassDB::bind_method(D_METHOD("get_position"), &RigidBodyCustom::get_position);
-    ClassDB::bind_method(D_METHOD("get_gravity"), &RigidBodyCustom::get_gravity);
-    ClassDB::bind_method(D_METHOD("apply_impulse"), &RigidBodyCustom::apply_impulse);
-
-    ClassDB::bind_method(D_METHOD("set_angular_velocity", "angular_velocity"), &RigidBodyCustom::set_angular_velocity);
-    ClassDB::bind_method(D_METHOD("get_angular_velocity"), &RigidBodyCustom::get_angular_velocity);
-    ClassDB::bind_method(D_METHOD("apply_torque", "p_torque"), &RigidBodyCustom::apply_torque);
-    ClassDB::bind_method(D_METHOD("apply_impulse_off_centre", "impulse", "rel_pos"), &RigidBodyCustom::apply_impulse_off_centre);
-
-    // Add to _bind_methods():
-    ClassDB::bind_method(D_METHOD("get_inverse_inertia_tensor"), &RigidBodyCustom::get_inverse_inertia_tensor);
-    //void update_inertia_tensor();
-
-    ClassDB::bind_method(D_METHOD("update_inertia_tensor"), &RigidBodyCustom::update_inertia_tensor);
-
-
-       // Add new method bindings
-    ClassDB::bind_method(D_METHOD("set_gravity_enabled", "enabled"), &RigidBodyCustom::set_gravity_enabled);
-    ClassDB::bind_method(D_METHOD("is_gravity_enabled"), &RigidBodyCustom::is_gravity_enabled);
-
-     // Add these method bindings that were missing
-    ClassDB::bind_method(D_METHOD("set_gravity", "gravity"), &RigidBodyCustom::set_gravity);
     ClassDB::bind_method(D_METHOD("set_velocity", "velocity"), &RigidBodyCustom::set_velocity);
     ClassDB::bind_method(D_METHOD("get_velocity"), &RigidBodyCustom::get_velocity);
-
-    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::FLOAT, "mass"), 
-                         "set_mass", "get_mass");
-    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::FLOAT, "restitution"), 
-                         "set_restitution", "get_restitution");
-    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::VECTOR3, "gravity"), 
-                         "set_gravity", "get_gravity");
-    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::VECTOR3, "velocity"), 
-                         "set_velocity", "get_velocity");
-    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::VECTOR3, "angular_velocity"), 
-                         "set_angular_velocity", "get_angular_velocity");
-
-    // Add property to make it visible in editor
-    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::BOOL, "gravity_enabled"), 
-        "set_gravity_enabled", "is_gravity_enabled");
-
-
+    
+    // Angular motion methods
+    ClassDB::bind_method(D_METHOD("set_angular_velocity", "angular_velocity"), &RigidBodyCustom::set_angular_velocity);
+    ClassDB::bind_method(D_METHOD("get_angular_velocity"), &RigidBodyCustom::get_angular_velocity);
+    
+    // Gravity methods
+    ClassDB::bind_method(D_METHOD("set_gravity", "gravity"), &RigidBodyCustom::set_gravity);
+    ClassDB::bind_method(D_METHOD("get_gravity"), &RigidBodyCustom::get_gravity);
+    ClassDB::bind_method(D_METHOD("set_gravity_enabled", "enabled"), &RigidBodyCustom::set_gravity_enabled);
+    ClassDB::bind_method(D_METHOD("is_gravity_enabled"), &RigidBodyCustom::is_gravity_enabled);
+    
+    // Center of mass methods
     ClassDB::bind_method(D_METHOD("set_center_of_mass_local", "center_of_mass"), &RigidBodyCustom::set_center_of_mass_local);
     ClassDB::bind_method(D_METHOD("get_center_of_mass_local"), &RigidBodyCustom::get_center_of_mass_local);
-
     ClassDB::bind_method(D_METHOD("get_center_of_mass_global"), &RigidBodyCustom::get_center_of_mass_global);
-
-    // Add property to make it visible in editor
-    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::VECTOR3, "center_of_mass_local"), 
-                          "set_center_of_mass_local", "get_center_of_mass_local");
-
-
     
-    // Add new method bindings
+    // Inertia tensor methods
+    ClassDB::bind_method(D_METHOD("get_inverse_inertia_tensor"), &RigidBodyCustom::get_inverse_inertia_tensor);
+    ClassDB::bind_method(D_METHOD("update_inertia_tensor"), &RigidBodyCustom::update_inertia_tensor);
+    
+    // Integration control methods
     ClassDB::bind_method(D_METHOD("set_integrate_forces_enabled", "enabled"), &RigidBodyCustom::set_integrate_forces_enabled);
     ClassDB::bind_method(D_METHOD("is_integrate_forces_enabled"), &RigidBodyCustom::is_integrate_forces_enabled);
-
-    // Add property to make it visible in editor
-    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::BOOL, "integrate_forces_enabled"), 
-                         "set_integrate_forces_enabled", "is_integrate_forces_enabled");
-
-        // Add to _bind_methods() in the cpp file:
+    
+    // Collision layer/mask methods
     ClassDB::bind_method(D_METHOD("set_collision_layer", "layer"), &RigidBodyCustom::set_collision_layer);
     ClassDB::bind_method(D_METHOD("get_collision_layer"), &RigidBodyCustom::get_collision_layer);
     ClassDB::bind_method(D_METHOD("set_collision_mask", "mask"), &RigidBodyCustom::set_collision_mask);
     ClassDB::bind_method(D_METHOD("get_collision_mask"), &RigidBodyCustom::get_collision_mask);
+    ClassDB::bind_method(D_METHOD("set_collision_layer_value", "layer_number", "value"), &RigidBodyCustom::set_collision_layer_value);
+    ClassDB::bind_method(D_METHOD("get_collision_layer_value", "layer_number"), &RigidBodyCustom::get_collision_layer_value);
+    ClassDB::bind_method(D_METHOD("set_collision_mask_value", "layer_number", "value"), &RigidBodyCustom::set_collision_mask_value);
+    ClassDB::bind_method(D_METHOD("get_collision_mask_value", "layer_number"), &RigidBodyCustom::get_collision_mask_value);
 
-    ClassDB::bind_method(D_METHOD("set_collision_layer_value", "layer_number", "value"), 
-        &RigidBodyCustom::set_collision_layer_value);
-    ClassDB::bind_method(D_METHOD("get_collision_layer_value", "layer_number"), 
-        &RigidBodyCustom::get_collision_layer_value);
-    ClassDB::bind_method(D_METHOD("set_collision_mask_value", "layer_number", "value"), 
-        &RigidBodyCustom::set_collision_mask_value);
-    ClassDB::bind_method(D_METHOD("get_collision_mask_value", "layer_number"), 
-        &RigidBodyCustom::get_collision_mask_value);
-
-    // Add these properties to make them visible in editor with the grid UI
-    ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_layer", PROPERTY_HINT_LAYERS_3D_PHYSICS),
-        "set_collision_layer", "get_collision_layer");
-    ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_mask", PROPERTY_HINT_LAYERS_3D_PHYSICS),
-        "set_collision_mask", "get_collision_mask");
-                         
+    // Property bindings for editor UI
+    ADD_GROUP("Physics Properties", "");
+    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::FLOAT, "mass"), "set_mass", "get_mass");
+    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::FLOAT, "restitution"), "set_restitution", "get_restitution");
+    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::VECTOR3, "gravity"), "set_gravity", "get_gravity");
+    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::BOOL, "gravity_enabled"), "set_gravity_enabled", "is_gravity_enabled");
+    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::BOOL, "integrate_forces_enabled"), "set_integrate_forces_enabled", "is_integrate_forces_enabled");
+    
+    ADD_GROUP("Motion", "");
+    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::VECTOR3, "velocity"), "set_velocity", "get_velocity");
+    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::VECTOR3, "angular_velocity"), "set_angular_velocity", "get_angular_velocity");
+    ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::VECTOR3, "center_of_mass_local"), "set_center_of_mass_local", "get_center_of_mass_local");
+    
+    ADD_GROUP("Collision", "");
+    ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_layer", PROPERTY_HINT_LAYERS_3D_PHYSICS), "set_collision_layer", "get_collision_layer");
+    ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_mask", PROPERTY_HINT_LAYERS_3D_PHYSICS), "set_collision_mask", "get_collision_mask");
 }
 
 // In rigid_body_custom.cpp
@@ -137,7 +119,6 @@ godot::RigidBodyCustom::RigidBodyCustom()
       inverse_mass(1.0f),
       restitution(0.80f),
       gravity(Vector3(0, -9.8, 0)),
-      //position(),
       old_position(),
       center_of_mass_local(Vector3(0,0,0)),
       center_of_mass_global(Vector3(0,0,0)),
