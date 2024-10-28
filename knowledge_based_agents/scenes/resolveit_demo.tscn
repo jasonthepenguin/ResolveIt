@@ -1,4 +1,4 @@
-[gd_scene load_steps=204 format=3 uid="uid://crwldh8o2res2"]
+[gd_scene load_steps=206 format=3 uid="uid://crwldh8o2res2"]
 
 [ext_resource type="Script" path="res://knowledge_based_agents/scripts/WorldState.gd" id="1_7wrub"]
 [ext_resource type="Script" path="res://knowledge_based_agents/scripts/debug_utils.gd" id="2_qxibw"]
@@ -31,6 +31,7 @@
 [ext_resource type="Script" path="res://player.gd" id="27_si2vn"]
 [ext_resource type="Script" path="res://camholder.gd" id="28_7cnmy"]
 [ext_resource type="Script" path="res://knowledge_based_agents/scripts/Affordance.gd" id="29_il4p2"]
+[ext_resource type="Script" path="res://log manager/LogDisplay.gd" id="32_e1aty"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_v2glv"]
 vertices = PackedVector3Array(-6.30544, 6.00515, -8.17704, -6.30544, 6.00515, 7.82296, 6.19456, 6.00515, 7.82296, 6.19456, 6.00515, -8.17704, 2.94456, 0.505145, -2.67704, 5.44456, 0.505145, -2.67704, 5.44456, 0.505145, -3.42704, 2.69456, 0.505145, -3.42704, -2.30544, 0.505145, -4.17704, 1.94456, 0.505145, -4.17704, 1.94456, 0.505145, -5.42704, -2.30544, 0.505145, -5.67704, 2.19456, 0.505145, -2.17704, 2.94456, 0.505145, -2.67704, 2.69456, 0.505145, -3.42704, 1.94456, 0.505145, -4.17704, -2.30544, 0.505145, -1.92704, -2.30544, 0.505145, -1.17704, 1.94456, 0.505145, -1.17704, -3.05544, 0.505145, -3.42704, -5.55544, 0.505145, -3.42704, -5.55544, 0.505145, -2.67704, -3.05544, 0.505145, -2.67704, 2.44456, 0.505145, -6.17704, 5.44456, 0.505145, -7.42704, -5.55544, 0.505145, -7.42704, -2.80544, 0.505145, -6.17704, -2.30544, 0.505145, -4.17704, -3.05544, 0.505145, -3.42704, -3.05544, 0.505145, -2.67704, -2.30544, 0.505145, -4.17704, -3.05544, 0.505145, -2.67704, -2.30544, 0.505145, -1.92704, 1.94456, 0.505145, -1.17704, 2.19456, 0.505145, -2.17704, 1.94456, 0.505145, -4.17704, -2.30544, 0.505145, -5.67704, 1.94456, 0.505145, -5.42704, 2.44456, 0.505145, -6.17704, -2.80544, 0.505145, -6.17704, -5.55544, 0.505145, -7.42704, -5.55544, 0.505145, -6.17704, -2.80544, 0.505145, -6.17704, 2.44456, 0.505145, -6.17704, 5.44456, 0.505145, -6.17704, 5.44456, 0.505145, -7.42704, 2.69456, 0.505145, 1.07296, 5.44456, 0.505145, 1.07296, 5.44456, 0.505145, 0.0729589, 2.44456, 0.505145, 0.0729589, -2.30544, 0.505145, -1.17704, -2.55544, 0.505145, 1.32296, -2.30544, 0.505145, 3.07296, 0.94456, 0.505145, 4.82296, 1.94456, 0.505145, 1.82296, 1.94456, 0.505145, -1.17704, 1.94456, 0.505145, 1.82296, 2.69456, 0.505145, 1.07296, 2.44456, 0.505145, 0.0729589, 1.94456, 0.505145, -1.17704, -2.80544, 0.505145, 0.0729589, -5.55544, 0.505145, 0.0729589, -5.55544, 0.505145, 1.07296, -2.55544, 0.505145, 1.32296, -2.30544, 0.505145, 3.07296, -0.80544, 0.505145, 4.82296, 0.94456, 0.505145, 4.82296, -2.30544, 0.505145, -1.17704, -2.80544, 0.505145, 0.0729589, -2.55544, 0.505145, 1.32296, 0.94456, 0.505145, 4.82296, 1.94456, 0.505145, 3.07296, 1.94456, 0.505145, 1.82296, 2.69456, 0.505145, 3.82296, 1.94456, 0.505145, 3.07296, 0.94456, 0.505145, 4.82296, 1.44456, 0.505145, 5.07296, -1.05544, 0.505145, 6.82296, -1.30544, 0.505145, 5.07296, -2.80544, 0.505145, 3.82296, -5.55544, 0.505145, 3.82296, -5.55544, 0.505145, 7.82296, -1.30544, 0.505145, 5.07296, -0.80544, 0.505145, 4.82296, -2.30544, 0.505145, 3.07296, -2.80544, 0.505145, 3.82296, -1.05544, 0.505145, 6.82296, -5.55544, 0.505145, 7.82296, 5.44456, 0.505145, 7.82296, 1.19456, 0.505145, 6.82296, 2.69456, 0.505145, 3.82296, 1.44456, 0.505145, 5.07296, 1.19456, 0.505145, 6.82296, 5.44456, 0.505145, 7.82296, 5.44456, 0.505145, 3.82296)
@@ -2526,6 +2527,17 @@ size = Vector3(10, 1, 10)
 
 [sub_resource type="BoxMesh" id="BoxMesh_egtqr"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uswg8"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0, 0, 0, 0.6)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
 [node name="Scene" type="Node3D"]
 
 [node name="WorldState" type="Node" parent="."]
@@ -3048,3 +3060,19 @@ shape = SubResource("BoxShape3D_s73h0")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D2/StaticBody3D"]
 transform = Transform3D(10, 0, 0, 0, 1, 0, 0, 0, 10, 0, 0, 0)
 mesh = SubResource("BoxMesh_egtqr")
+
+[node name="LogDisplay" type="CanvasLayer" parent="."]
+script = ExtResource("32_e1aty")
+
+[node name="LogContainer" type="PanelContainer" parent="LogDisplay"]
+custom_minimum_size = Vector2(500, 150)
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 40.0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_uswg8")
+
+[node name="MessagesContainer" type="VBoxContainer" parent="LogDisplay/LogContainer"]
+layout_mode = 2

@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 NpcManager="*res://NPC_Manager.gd"
+LogManager="*res://log manager/LogManager.gd"
 
 [display]
 
