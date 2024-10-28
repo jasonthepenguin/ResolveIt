@@ -3,7 +3,7 @@ class_name BaseAgent extends Node
 
 @export var enabled = true
 @export var update_interval = 1.0
-@export var show_thoughts: bool = false
+@export var show_debug: bool = false
 @onready var world_state: WorldState = WorldState.find(get_tree())
 
 var kb: AgentKnowledgeBase

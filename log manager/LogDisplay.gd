@@ -1,5 +1,6 @@
 extends CanvasLayer
 
+@export var redirect_to_console = false
 @onready var log_container = $LogContainer
 @onready var messages_container = $LogContainer/MessagesContainer
 
@@ -12,6 +13,10 @@ func _ready():
 		_add_message_label(message)
 
 func _on_message_added(text: String):
+	if redirect_to_console:
+		print(text)
+		return
+		
 	_add_message_label(text)
 	
 	# Remove old messages if we have too many children

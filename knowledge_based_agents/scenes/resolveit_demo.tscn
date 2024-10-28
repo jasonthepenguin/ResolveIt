@@ -1,4 +1,4 @@
-[gd_scene load_steps=206 format=3 uid="uid://crwldh8o2res2"]
+[gd_scene load_steps=208 format=3 uid="uid://crwldh8o2res2"]
 
 [ext_resource type="Script" path="res://knowledge_based_agents/scripts/WorldState.gd" id="1_7wrub"]
 [ext_resource type="Script" path="res://knowledge_based_agents/scripts/debug_utils.gd" id="2_qxibw"]
@@ -26,7 +26,8 @@
 [ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/CharacterImpulseApplicator.gd" id="24_f0bg8"]
 [ext_resource type="Script" path="res://knowledge_based_agents/scripts/TeacherAgent.gd" id="25_5o5oi"]
 [ext_resource type="Texture2D" uid="uid://dusgatgam4nlf" path="res://assets/ict398_presentation.png" id="25_5xdo1"]
-[ext_resource type="Script" path="res://knowledge_based_agents/scripts/BasePerception.gd" id="26_iwcrl"]
+[ext_resource type="Script" path="res://knowledge_based_agents/scripts/EmotionController.gd" id="26_003ri"]
+[ext_resource type="Script" path="res://knowledge_based_agents/scripts/EmojiManager2.gd" id="26_pcb4i"]
 [ext_resource type="Script" path="res://knowledge_based_agents/scripts/Projector.gd" id="26_tunn7"]
 [ext_resource type="Script" path="res://player.gd" id="27_si2vn"]
 [ext_resource type="Script" path="res://camholder.gd" id="28_7cnmy"]
@@ -2501,6 +2502,12 @@ material = SubResource("StandardMaterial3D_47tti")
 radius = 0.25
 height = 1.47
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aw10k"]
+albedo_color = Color(1, 0, 1, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_epjtk"]
+material = SubResource("StandardMaterial3D_aw10k")
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8box1"]
 emission_enabled = true
 emission_texture = ExtResource("25_5xdo1")
@@ -2511,9 +2518,6 @@ material = SubResource("StandardMaterial3D_8box1")
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_62lgu"]
 radius = 0.25
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aw10k"]
-albedo_color = Color(1, 0, 1, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_cq5sl"]
 material = SubResource("StandardMaterial3D_aw10k")
@@ -3007,10 +3011,19 @@ script = ExtResource("24_f0bg8")
 
 [node name="TeacherBrain" type="Node" parent="TeacherAgent"]
 script = ExtResource("25_5o5oi")
-show_thoughts = true
+show_debug = true
 
-[node name="TeacherPerception" type="Node" parent="TeacherAgent"]
-script = ExtResource("26_iwcrl")
+[node name="EmotionController" type="Node" parent="TeacherAgent"]
+script = ExtResource("26_003ri")
+
+[node name="EmojiManager" type="Sprite3D" parent="TeacherAgent"]
+transform = Transform3D(0.201984, 0, 0, 0, 0.201984, 0, 0, 0, 0.201984, 0, 0.894445, 0)
+script = ExtResource("26_pcb4i")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TeacherAgent/EmojiManager"]
+transform = Transform3D(1.25793, 0, 0, 0, 1.25793, 0, 0, 0, 1.25793, 0, 0, 0)
+visible = false
+mesh = SubResource("QuadMesh_epjtk")
 
 [node name="Projector" type="MeshInstance3D" parent="."]
 transform = Transform3D(-4.307, 0, -1.02677e-08, 0, 2.723, 0, 6.50339e-07, 0, -0.068, 0.0159473, 2.64128, 8.35915)
