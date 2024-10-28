@@ -59,10 +59,6 @@ script = ExtResource("3_xfbb0")
 [node name="Camera3D" type="Camera3D" parent="CharacterBody3D/camholder"]
 
 [node name="PhysicsHandler" type="PhysicsHandler" parent="."]
-correction_percent = 0.05
-position_slop = 0.01
-collision_epsilon = 0.0001
-impulse_iterations = 1
 process_priority = 1
 
 [node name="ball" type="RigidBodyCustom" parent="PhysicsHandler"]
@@ -70,7 +66,7 @@ restitution = 1.0
 gravity_enabled = false
 velocity = Vector3(2.08165e-12, 2.08165e-12, 2.08165e-12)
 center_of_mass_local = Vector3(2.08165e-12, 2.08165e-12, 2.08165e-12)
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.394, 2, -3.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2, -3.5)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsHandler/ball"]
 shape = SubResource("SphereShape3D_35ft8")

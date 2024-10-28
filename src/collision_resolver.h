@@ -26,6 +26,7 @@ private:
     CollisionDetector* collision_detector = nullptr;
 };
 
+
 }
 
 #endif // COLLISION_RESOLVER_H

@@ -70,6 +70,7 @@ void CollisionResolver::apply_positional_corrections() {
     }
 }
 
+
 // Copy the resolve_collision and apply_positional_corrections methods from PhysicsHandler
 void CollisionResolver::resolve_collision(Manifold& manifold, double delta) {
     RigidBodyCustom* body_a = manifold.body_a;
