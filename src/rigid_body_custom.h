@@ -43,6 +43,10 @@ private:
     RID body_rid;
     RID mesh_rid;
 
+    // collision layer/masks 
+    uint32_t collision_layer = 1;
+    uint32_t collision_mask = 1; 
+
     CollisionShape3D *collision_shape;
     MeshInstance3D *mesh_instance;
 
@@ -101,6 +105,17 @@ protected:
 public:
     RigidBodyCustom();
     ~RigidBodyCustom();
+
+
+    void set_collision_layer_value(int p_layer_number, bool p_value);
+    bool get_collision_layer_value(int p_layer_number) const;
+    void set_collision_mask_value(int p_layer_number, bool p_value);
+    bool get_collision_mask_value(int p_layer_number) const;
+
+    void set_collision_layer(uint32_t p_layer);
+    uint32_t get_collision_layer() const;
+    void set_collision_mask(uint32_t p_mask);
+    uint32_t get_collision_mask() const;
 
     //void _enter_tree() override;
     void _exit_tree() override;

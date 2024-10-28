@@ -80,6 +80,28 @@ void godot::RigidBodyCustom::_bind_methods()
     // Add property to make it visible in editor
     ClassDB::add_property("RigidBodyCustom", PropertyInfo(Variant::BOOL, "integrate_forces_enabled"), 
                          "set_integrate_forces_enabled", "is_integrate_forces_enabled");
+
+        // Add to _bind_methods() in the cpp file:
+    ClassDB::bind_method(D_METHOD("set_collision_layer", "layer"), &RigidBodyCustom::set_collision_layer);
+    ClassDB::bind_method(D_METHOD("get_collision_layer"), &RigidBodyCustom::get_collision_layer);
+    ClassDB::bind_method(D_METHOD("set_collision_mask", "mask"), &RigidBodyCustom::set_collision_mask);
+    ClassDB::bind_method(D_METHOD("get_collision_mask"), &RigidBodyCustom::get_collision_mask);
+
+    ClassDB::bind_method(D_METHOD("set_collision_layer_value", "layer_number", "value"), 
+        &RigidBodyCustom::set_collision_layer_value);
+    ClassDB::bind_method(D_METHOD("get_collision_layer_value", "layer_number"), 
+        &RigidBodyCustom::get_collision_layer_value);
+    ClassDB::bind_method(D_METHOD("set_collision_mask_value", "layer_number", "value"), 
+        &RigidBodyCustom::set_collision_mask_value);
+    ClassDB::bind_method(D_METHOD("get_collision_mask_value", "layer_number"), 
+        &RigidBodyCustom::get_collision_mask_value);
+
+    // Add these properties to make them visible in editor with the grid UI
+    ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_layer", PROPERTY_HINT_LAYERS_3D_PHYSICS),
+        "set_collision_layer", "get_collision_layer");
+    ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_mask", PROPERTY_HINT_LAYERS_3D_PHYSICS),
+        "set_collision_mask", "get_collision_mask");
+                         
 }
 
 // In rigid_body_custom.cpp
@@ -120,7 +142,9 @@ godot::RigidBodyCustom::RigidBodyCustom()
       center_of_mass_local(Vector3(0,0,0)),
       center_of_mass_global(Vector3(0,0,0)),
       gravity_enabled(true),
-      integrate_forces_enabled(true)  // Initialize the new member
+      integrate_forces_enabled(true),  // Initialize the new member
+      collision_layer(1),
+      collision_mask(1) // default to layer / mask 1
        {
     // Constructor
 
@@ -204,8 +228,10 @@ void godot::RigidBodyCustom::_ready() {
         physics_server->body_attach_object_instance_id(body_rid, get_instance_id());
 
         physics_server->body_set_max_contacts_reported(body_rid, 5);
-        physics_server->body_set_collision_layer(body_rid, 1);
-        physics_server->body_set_collision_mask(body_rid, 1);
+        //physics_server->body_set_collision_layer(body_rid, 1);
+        //physics_server->body_set_collision_mask(body_rid, 1);
+        physics_server->body_set_collision_layer(body_rid, collision_layer);
+        physics_server->body_set_collision_mask(body_rid, collision_mask);
         physics_server->body_set_space(body_rid, get_world_3d()->get_space());
         physics_server->body_add_shape(body_rid, collision_shape->get_shape()->get_rid());
         physics_server->body_set_state(body_rid, PhysicsServer3D::BODY_STATE_TRANSFORM, body_trans);
@@ -539,4 +565,61 @@ void godot::RigidBodyCustom::set_integrate_forces_enabled(bool p_enabled) {
 
 bool godot::RigidBodyCustom::is_integrate_forces_enabled() const {
     return integrate_forces_enabled;
+}
+
+
+void godot::RigidBodyCustom::set_collision_layer_value(int p_layer_number, bool p_value) {
+    ERR_FAIL_COND_MSG(p_layer_number < 1 || p_layer_number > 32, "Layer number must be between 1 and 32.");
+
+    if (p_value) {
+        collision_layer |= (1 << (p_layer_number - 1));
+    } else {
+        collision_layer &= ~(1 << (p_layer_number - 1));
+    }
+    if (body_rid.is_valid()) {
+        PhysicsServer3D::get_singleton()->body_set_collision_layer(body_rid, collision_layer);
+    }
+}
+
+bool godot::RigidBodyCustom::get_collision_layer_value(int p_layer_number) const {
+    return collision_layer & (1 << (p_layer_number - 1));
+}
+
+void godot::RigidBodyCustom::set_collision_mask_value(int p_layer_number, bool p_value) {
+    ERR_FAIL_COND_MSG(p_layer_number < 1 || p_layer_number > 32, "Layer number must be between 1 and 32.");
+    
+    if (p_value) {
+        collision_mask |= (1 << (p_layer_number - 1));
+    } else {
+        collision_mask &= ~(1 << (p_layer_number - 1));
+    }
+    if (body_rid.is_valid()) {
+        PhysicsServer3D::get_singleton()->body_set_collision_mask(body_rid, collision_mask);
+    }
+}
+
+bool godot::RigidBodyCustom::get_collision_mask_value(int p_layer_number) const {
+    return collision_mask & (1 << (p_layer_number - 1));
+}
+
+void godot::RigidBodyCustom::set_collision_layer(uint32_t p_layer) {
+    collision_layer = p_layer;
+    if (body_rid.is_valid()) {
+        PhysicsServer3D::get_singleton()->body_set_collision_layer(body_rid, collision_layer);
+    }
+}
+
+uint32_t godot::RigidBodyCustom::get_collision_layer() const {
+    return collision_layer;
+}
+
+void godot::RigidBodyCustom::set_collision_mask(uint32_t p_mask) {
+    collision_mask = p_mask;
+    if (body_rid.is_valid()) {
+        PhysicsServer3D::get_singleton()->body_set_collision_mask(body_rid, collision_mask);
+    }
+}
+
+uint32_t RigidBodyCustom::get_collision_mask() const {
+    return collision_mask;
 }
