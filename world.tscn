@@ -5,6 +5,7 @@
 [ext_resource type="Script" path="res://camholder.gd" id="3_8vfo1"]
 [ext_resource type="PackedScene" uid="uid://bwkhk2iahiriw" path="res://beach_sand.tscn" id="3_b8h1r"]
 [ext_resource type="PackedScene" uid="uid://fsvjs14lf13h" path="res://cafe.tscn" id="5_qjf3j"]
+[ext_resource type="PackedScene" uid="uid://dwd34xr52ca2h" path="res://AI_Movement.tscn" id="6_41cnx"]
 [ext_resource type="PackedScene" uid="uid://uf5ny732gmq5" path="res://table_and_computers.tscn" id="6_rebbm"]
 [ext_resource type="PackedScene" uid="uid://bfui2hjydd0i0" path="res://scenes/OceanMap.tscn" id="7_54gfs"]
 [ext_resource type="PackedScene" uid="uid://cp04u3ni34ip8" path="res://video.tscn" id="8_8ats0"]

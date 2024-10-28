@@ -15,12 +15,20 @@ run/main_scene="res://world.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+NpcManager="*res://NPC_Manager.gd"
+
 [display]
 
 window/size/viewport_width=1400
 window/size/viewport_height=900
 window/stretch/mode="viewport"
 window/vsync/vsync_mode=0
+
+[dotnet]
+
+project/assembly_name="ResolveIt"
 
 [input]
 
