@@ -8,7 +8,6 @@ extends CharacterBody3D
 ## Movement Variables
 var m_NPC_WalkSpeed = 1.5
 var m_Location = Vector3()
-var last_emotion = null
 
 ## Time to pause after collision (in seconds)
 var collided = false
@@ -20,8 +19,6 @@ var back_away_direction = Vector3.ZERO
 
 ## Sad State Variables
 var is_in_corner: bool = false
-var sad_look_angle: float = PI/3
-var sad_rotation_speed: float = 0.5  # Slower rotation
 
 ## Detection Variables
 var is_interacting: bool = false
@@ -34,11 +31,16 @@ enum AnimationState {
 	WALK,
 	RUN,
 	JUMP,
-	INTERACT
+	INTERACT,
+	LIE_IDLE,
+	SIT_FLOOR_IDLE
 }
 
 var current_animation: AnimationState = AnimationState.IDLE
 var animation_locked: bool = false
+var current_emotion = null
+var is_lying_down: bool = false
+var is_sitting_floor: bool = false
 
 func _ready():
 	randomize()
@@ -48,15 +50,42 @@ func _ready():
 
 
 func handle_emotion_change():
-	print("Emotion changed to: ", "Angry" if emoji_controller.texture == emoji_controller.angry_Emoji 
-		else "Happy" if emoji_controller.texture == emoji_controller.happy_Emoji 
-		else "Sad" if emoji_controller.texture == emoji_controller.sad_Emoji 
-		else "Neutral")
+	var new_emotion = null
+	if emoji_controller.texture == emoji_controller.angry_Emoji:
+		new_emotion = "Angry"
+	elif emoji_controller.texture == emoji_controller.happy_Emoji:
+		new_emotion = "Happy"
+	elif emoji_controller.texture == emoji_controller.sad_Emoji:
+		new_emotion = "Sad"
+	else:
+		new_emotion = "Neutral"
 	
-	m_NPC_WalkSpeed = 1.5  # Reset to default speed
-	is_in_corner = false
-	current_target = null
-	is_interacting = false
+	if new_emotion != current_emotion:
+		print("Emotion changed to: ", new_emotion)
+		current_emotion = new_emotion
+		
+		m_NPC_WalkSpeed = 1.5  # Reset to default speed
+		is_in_corner = false
+		current_target = null
+		is_interacting = false
+		is_lying_down = false
+		is_sitting_floor = false
+		
+		match current_emotion:
+			"Angry":
+				play_animation(AnimationState.IDLE)
+			"Happy":
+				play_animation(AnimationState.JUMP)
+				await get_tree().create_timer(1.0).timeout
+				if not animation_locked and current_animation != AnimationState.JUMP:
+					play_animation(AnimationState.JUMP)
+				play_animation(AnimationState.WALK)
+			"Sad": 
+				play_animation(AnimationState.LIE_IDLE)
+				lie_down()
+			"Neutral":
+				play_animation(AnimationState.SIT_FLOOR_IDLE)
+				sit_on_floor()
 
 
 func play_animation(anim_state: AnimationState):
@@ -78,10 +107,27 @@ func play_animation(anim_state: AnimationState):
 				animation_player.play("PickUp")
 			else:
 				animation_player.play("Use_Item")
+		AnimationState.LIE_IDLE:
+			animation_player.play("Lie_Down")
+		AnimationState.SIT_FLOOR_IDLE:
+			animation_player.play("Sit_Floor_Idle")
 	
 	animation_locked = true
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(0.1).timeout
 	animation_locked = false
+
+
+func handle_sad_state():
+	if not is_lying_down:
+		lie_down()
+
+
+func handle_neutral_state():
+	if not is_sitting_floor:
+		sit_on_floor()
+
+
+
 
 func update_model_rotation(direction: Vector3):
 	if direction != Vector3.ZERO:
@@ -128,18 +174,6 @@ func handle_angry_interaction():
 		current_target = null
 
 
-func handle_happy_interaction():
-	if current_target and current_target.has_node("Affordance"):
-		var affordance = current_target.get_node("Affordance")
-		if affordance.has_affordance("activate"):
-			play_animation(AnimationState.INTERACT)
-			affordance.trigger_affordance("activate", Color.GREEN)
-		is_interacting = true
-		await get_tree().create_timer(2.0).timeout
-		is_interacting = false
-		current_target = null
-
-
 func handle_movement(delta):
 	var nextLocation = agent.get_next_path_position()
 	var travelDirection = (nextLocation - global_transform.origin).normalized()
@@ -150,11 +184,13 @@ func handle_movement(delta):
 	var collision = move_and_collide(travelDirection * m_NPC_WalkSpeed * delta)
 	return collision
 
+
 func handle_collision(collision):
 	collided = true
 	pause_timer = collision_pause_time
 	back_away_direction = -collision.get_normal().normalized()
 	play_animation(AnimationState.IDLE)
+
 
 func handle_collision_state(delta):
 	pause_timer -= delta
@@ -168,107 +204,69 @@ func handle_collision_state(delta):
 			distance_backed_away = 0.0
 			move_to_random_location()
 
-func move_to_corner():
-	if is_in_corner:
-		return
-		
-	var corners = [
-		Vector3(-8.7, 0, 7),    # Back left
-		Vector3(2.7, 0, 7),     # Back right
-		Vector3(-8.7, 0, 22.5), # Front left
-		Vector3(2.7, 0, 22.5)   # Front right
-	]
-	
-	var furthest_corner = corners[0]
-	var furthest_dist = 0
-	
-	for corner in corners:
-		var dist = global_position.distance_to(corner)
-		if dist > furthest_dist:
-			furthest_dist = dist
-			furthest_corner = corner
-			
-	m_NPC_WalkSpeed = 3.0  # Run to corner faster
-	agent.set_target_position(furthest_corner)
-	await get_tree().create_timer(0.1).timeout
-	is_in_corner = true
 
-func rotate_sad():
-	if not is_interacting and is_in_corner:
-		play_animation(AnimationState.IDLE)
-		
-		var tween = create_tween()
-		tween.set_trans(Tween.TRANS_SINE)
-		tween.set_ease(Tween.EASE_IN_OUT)
-		tween.tween_property(character_model, "rotation:y", sad_look_angle, sad_rotation_speed)
-		await tween.finished
-		
-		if emoji_controller.texture != emoji_controller.sad_Emoji:
-			return
-			
-		tween = create_tween()
-		tween.set_trans(Tween.TRANS_SINE)
-		tween.set_ease(Tween.EASE_IN_OUT)
-		tween.tween_property(character_model, "rotation:y", -sad_look_angle, sad_rotation_speed)
-		await tween.finished
-		
-		if emoji_controller.texture == emoji_controller.sad_Emoji:
-			rotate_sad()
+func lie_down():
+	is_lying_down = true
+	agent.set_target_position(global_position)  # Stop moving
+
+
+func stand_up():
+	is_lying_down = false
+
+
+func sit_on_floor():
+	is_sitting_floor = true
+	agent.set_target_position(global_position)  # Stop moving
+
+
+func stand_up_from_floor():
+	is_sitting_floor = false
+
 
 func handle_angry_state():
 	if not is_interacting:
 		var nearest_interactable = find_nearest_interactable()
 		if nearest_interactable:
 			var distance = global_position.distance_to(nearest_interactable.global_position)
-			if distance <= 1.5:
+			if distance <= 2.0:
 				current_target = nearest_interactable
 				handle_angry_interaction()
+				play_animation(AnimationState.IDLE)
 			else:
 				agent.set_target_position(nearest_interactable.global_position)
-				play_animation(AnimationState.RUN)
+				if current_animation != AnimationState.RUN:
+					play_animation(AnimationState.RUN)
 		else:
 			if agent.is_navigation_finished():
 				move_to_random_location()
-				play_animation(AnimationState.RUN)
+				if current_animation != AnimationState.RUN:
+					play_animation(AnimationState.RUN)
+
 
 func handle_happy_state():
-	if not is_interacting:
-		var nearest_interactable = find_nearest_interactable()
-		if nearest_interactable:
-			var distance = global_position.distance_to(nearest_interactable.global_position)
-			if distance <= 1.5:
-				current_target = nearest_interactable
-				handle_happy_interaction()
-			else:
-				agent.set_target_position(nearest_interactable.global_position)
-				play_animation(AnimationState.WALK)
-		else:
-			if agent.is_navigation_finished():
-				move_to_random_location()
-				play_animation(AnimationState.WALK)
-		
-		if not animation_locked:
-			play_animation(AnimationState.JUMP)
-			await get_tree().create_timer(1.0).timeout
-
-func handle_sad_state():
-	move_to_corner()
-	rotate_sad()
-
-func handle_neutral_state():
-	if not is_interacting and agent.is_navigation_finished():
+	if agent.is_navigation_finished():
 		move_to_random_location()
-		play_animation(AnimationState.WALK)
+		if current_animation != AnimationState.WALK:
+			play_animation(AnimationState.WALK)
+		
+		if not animation_locked and current_animation != AnimationState.JUMP:
+			play_animation(AnimationState.JUMP)
+			await get_tree().create_timer(0.5).timeout
+
+
 
 func updateAI(delta):
-	match emoji_controller.texture:
-		emoji_controller.angry_Emoji:
+	if is_lying_down or is_sitting_floor:
+		return  # Do not update AI when lying down or sitting on the floor
+	
+	match current_emotion:
+		"Angry":
 			handle_angry_state()
-		emoji_controller.happy_Emoji:
+		"Happy":
 			handle_happy_state()
-		emoji_controller.sad_Emoji:
+		"Sad":
 			handle_sad_state()
-		emoji_controller.neutral_Emoji:
+		"Neutral":
 			handle_neutral_state()
 	
 	var collision = handle_movement(delta)
@@ -278,9 +276,8 @@ func updateAI(delta):
 	if collided:
 		handle_collision_state(delta)
 
+
+
 func _physics_process(delta):
-	if last_emotion != emoji_controller.texture:
-		handle_emotion_change()
-		last_emotion = emoji_controller.texture
-	
+	handle_emotion_change()
 	updateAI(delta)
