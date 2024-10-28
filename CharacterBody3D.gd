@@ -57,7 +57,7 @@ func spawn_rigid_body():
 	# Apply impulse in the direction the camera is facing
 	# Wait one frame to ensure the rigid body is properly added to the scene
 	# await get_tree().process_frame
-	var impulse_strength = 10.0  # Adjust this value to change the force
+	var impulse_strength = 5.0  # Adjust this value to change the force
 	rigid_body.apply_impulse(-camera.global_transform.basis.z * impulse_strength)
 
 func _physics_process(delta):

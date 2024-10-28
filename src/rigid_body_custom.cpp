@@ -111,6 +111,7 @@ godot::RigidBodyCustom::RigidBodyCustom()
       mesh_instance(nullptr),
       //body_trans(),
       velocity(Vector3(0, 0, 0)),
+      previous_basis(Basis()),
       angular_velocity(Vector3()),
       torque(Vector3()),
       old_velocity(Vector3(0, 0, 0)),
@@ -126,6 +127,7 @@ godot::RigidBodyCustom::RigidBodyCustom()
       integrate_forces_enabled(true),  // Initialize the new member
       collision_layer(1),
       collision_mask(1) // default to layer / mask 1
+      
        {
     // Constructor
 
@@ -303,7 +305,12 @@ void godot::RigidBodyCustom::set_trans(const Transform3D &new_trans) {
     // Update the global center of mass based on the new transform
     center_of_mass_global = body_trans.xform(center_of_mass_local);
 
-    update_world_inertia_tensor();
+    if(body_trans.basis != previous_basis){
+        update_world_inertia_tensor();
+        previous_basis = body_trans.basis;
+        //UtilityFunctions::print("rotation, so world inertia tensor is updated.");
+    }
+    
 
     set_global_transform(body_trans);
 }

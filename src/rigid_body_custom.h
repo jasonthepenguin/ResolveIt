@@ -91,6 +91,8 @@ private:
     Vector3 position;
     Vector3 old_position;
 
+    Basis previous_basis;
+
     
 
 
