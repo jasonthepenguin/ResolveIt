@@ -1,6 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://xjsu3jfdi53c"]
 
 [ext_resource type="Script" path="res://knowledge_based_agents/scripts/debug_utils.gd" id="1_f4d5a"]
+[ext_resource type="Script" path="res://knowledge_based_agents/scripts/debug_utils.gd" id="1_f4d5a"]
 
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_4p2q7"]

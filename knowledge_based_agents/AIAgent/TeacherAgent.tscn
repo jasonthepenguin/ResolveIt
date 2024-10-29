@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/AIAgent.gd" id="1_u022w"]
 [ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/AgentActuator.gd" id="2_53kyg"]
-[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/TeacherAgent.gd" id="3_3y0c6"]
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/TeacherBehaviour.gd" id="2_wfkbw"]
 [ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/EmojiManager.gd" id="4_dlaa6"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_6y4io"]
@@ -24,9 +24,9 @@ albedo_color = Color(1, 0, 1, 1)
 material = SubResource("StandardMaterial3D_euf2q")
 
 [node name="TeacherAgent" type="CharacterBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.740571, -6.02141)
 script = ExtResource("1_u022w")
-base_agent_script = ExtResource("3_3y0c6")
+agent_script = ExtResource("2_wfkbw")
+debug_navigation = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_6y4io")
