@@ -44,4 +44,15 @@ navigation_mesh = SubResource("NavigationMesh_osrdd")
 
 [node name="Agent" parent="." instance=ExtResource("4_hurjk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -3.7417)
+movement_speed = 2.0
+debug_navigation = false
 random_movement = true
+random_movement_interval = 1.5
+stuck_threshold_distance = 0.001
+max_stuck_time = 0.5
+apply_impulse = true
+push_force = 2.0
+emotion_update_interval = 0.05
+emotion_lerp_speed = 8.0
+strong_emotion_threshold = 0.75
+moderate_emotion_threshold = 0.4

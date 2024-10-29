@@ -20,7 +20,6 @@ material = SubResource("StandardMaterial3D_aw10k")
 
 [node name="Agent" type="CharacterBody3D"]
 script = ExtResource("1_5vpc8")
-enabled = null
 movement_speed = null
 debug_navigation = null
 random_movement = null
