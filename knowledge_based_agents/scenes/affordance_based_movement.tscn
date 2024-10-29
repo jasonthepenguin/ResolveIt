@@ -2,8 +2,9 @@
 
 [ext_resource type="PackedScene" uid="uid://xjsu3jfdi53c" path="res://knowledge_based_agents/scenes/basic_setup.tscn" id="1_gix8m"]
 [ext_resource type="PackedScene" uid="uid://c7t4e2qd22gdb" path="res://knowledge_based_agents/AIAgent/Agent.tscn" id="2_0pm45"]
-[ext_resource type="Script" path="res://knowledge_based_agents/scenes/seek_affordance.gd" id="3_e8ed0"]
-[ext_resource type="Script" path="res://knowledge_based_agents/scenes/Affordance.gd" id="3_hswhn"]
+[ext_resource type="Script" path="res://knowledge_based_agents/scripts/seek_affordance.gd" id="3_e8ed0"]
+[ext_resource type="Script" path="res://knowledge_based_agents/scripts/Affordance.gd" id="3_hswhn"]
+
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_jybs6"]
 vertices = PackedVector3Array(-9.5, 0.5, -9.5, -9.5, 0.5, 9.5, 9.5, 0.5, 9.5, 9.5, 0.5, -9.5)

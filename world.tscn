@@ -1,11 +1,11 @@
 [gd_scene load_steps=13 format=3 uid="uid://n62f3tl150r0"]
 
-[ext_resource type="PackedScene" uid="uid://bqu44ul337erb" path="res://room.tscn" id="1_6tnus"]
+[ext_resource type="PackedScene" uid="uid://bqu44ul337erb" path="res://vr_lab.tscn" id="1_6tnus"]
 [ext_resource type="Script" path="res://player.gd" id="2_iwlwb"]
 [ext_resource type="Script" path="res://camholder.gd" id="3_8vfo1"]
 [ext_resource type="PackedScene" uid="uid://bwkhk2iahiriw" path="res://beach_sand.tscn" id="3_b8h1r"]
 [ext_resource type="PackedScene" uid="uid://fsvjs14lf13h" path="res://cafe.tscn" id="5_qjf3j"]
-[ext_resource type="PackedScene" uid="uid://uf5ny732gmq5" path="res://table_and_computers.tscn" id="6_rebbm"]
+[ext_resource type="PackedScene" uid="uid://uf5ny732gmq5" path="res://workstation/Workstation.tscn" id="6_rebbm"]
 [ext_resource type="PackedScene" uid="uid://bfui2hjydd0i0" path="res://scenes/OceanMap.tscn" id="7_54gfs"]
 [ext_resource type="PackedScene" uid="uid://cp04u3ni34ip8" path="res://video.tscn" id="8_8ats0"]
 [ext_resource type="PackedScene" uid="uid://fflxac0t1yer" path="res://glass_door.tscn" id="8_k4dga"]
