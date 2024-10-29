@@ -1,4 +1,4 @@
-class_name TeacherAgent extends BaseAgent
+class_name TeacherBehaviour extends AgentBaseBehaviour
 
 # Teacher-specific emotional influence positions
 const TEACHING_SATISFACTION = Vector2(0, -0.9)  # Strong happiness

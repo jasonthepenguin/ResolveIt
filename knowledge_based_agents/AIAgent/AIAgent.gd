@@ -34,7 +34,7 @@ class_name AIAgent extends CharacterBody3D
 @onready var emoji_manager: Sprite3D = $EmojiManager
 
 # Integrated Components
-var base_agent: BaseAgent
+var base_agent: AgentBaseBehaviour
 var impulse_controller: ImpulseApplicator
 var emotion_controller: EmotionController
 
@@ -87,8 +87,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 	
 	if not agent_script:
 		warnings.append("No base agent script specified!")
-	elif not (agent_script.new() is BaseAgent):
-		warnings.append("Specified script must extend BaseAgent!")
+	elif not (agent_script.new() is AgentBaseBehaviour):
+		warnings.append("Specified script must extend AgentBaseBehaviour!")
 	if not has_node("AgentNavActuator"):
 		warnings.append("Missing required AgentNavActuator node")
 	if not has_node("EmojiManager"):

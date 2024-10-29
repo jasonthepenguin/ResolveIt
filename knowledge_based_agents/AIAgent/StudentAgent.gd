@@ -1,4 +1,4 @@
-class_name StudentAgent extends BaseAgent
+class_name StudentAgent extends AgentBaseBehaviour
 
 # Student-specific emotional influence positions
 const LEARNING_JOY = Vector2(0, -0.8)        # Strong happiness from learning
@@ -8,6 +8,7 @@ const DEEP_SADNESS = Vector2(-0.8, 0.4)       # Deep sadness when unable to lear
 
 func _init():
 	super()
+	agent_name = "Student"
 	_initialize_knowledge()
 	_initialize_emotional_influences()
 
@@ -74,24 +75,49 @@ func _handle_state():
 			kb.add_fact("is_confused")
 			
 		if show_debug:
-			print("Cannot study yet. Need: ", study_query.missing_conditions)
+			LogManager.add_message(LogManager.id_format(agent_name), 
+				"Cannot study yet. Need: ", study_query.missing_conditions)
 		
 		# Special case: Leave room if crying and unable to study
 		if kb.has_fact("is_crying") and kb.has_fact("unable_to_study"):
-			leave_room()
+			await leave_room()
 
 # Student-specific actions
 func start_crying():
 	if show_debug:
-		LogManager.add_message(LogManager.id_format("Student"), "starts crying")
+		LogManager.add_message(LogManager.id_format(agent_name), "starts crying")
 
 func show_frustration():
 	if show_debug:
-		LogManager.add_message(LogManager.id_format("Student"), "shows frustration")
+		LogManager.add_message(LogManager.id_format(agent_name), "shows frustration")
 
 func express_happiness():
 	if show_debug:
-		LogManager.add_message(LogManager.id_format("Student"), "expresses happiness")
+		LogManager.add_message(LogManager.id_format(agent_name), "expresses happiness")
 
 func leave_room():
-	if show
+	if show_debug:
+		LogManager.add_message(LogManager.id_format(agent_name), "leaving room due to emotional distress")
+	
+	busy = true
+	
+	# Try to find an exit affordance and move to it
+	var exit_nodes = Affordance.get_affordance_list(scene_tree, Affordance.Type.CAN_USE)
+	if not exit_nodes.is_empty():
+		var exit_node = exit_nodes[0]
+		var exit_position = exit_node.parent_object.global_position
+		var success = await actuator.move_to(Vector2(exit_position.x, exit_position.z))
+		
+		if success:
+			if show_debug:
+				LogManager.add_message(LogManager.id_format(agent_name), "has left the room")
+			# Since we're now a behavior, we need to signal the parent AIAgent to clean up
+			scene_tree.get_current_scene().queue_free()
+		else:
+			if show_debug:
+				LogManager.add_message(LogManager.id_format(agent_name), "couldn't reach exit, staying in room")
+			busy = false
+	else:
+		if show_debug:
+			LogManager.add_message(LogManager.id_format(agent_name), "couldn't find exit, staying in room")
+		busy = false

@@ -1,4 +1,4 @@
-class_name BaseAgent
+class_name AgentBaseBehaviour
 
 var update_interval = 1.0
 var show_debug = false
@@ -109,13 +109,13 @@ func _handle_emotional_states():
 
 # Virtual methods to be overridden by child classes
 func _initialize_knowledge():
-	push_error("Function '_initialize_knowledge' in BaseAgent was not implemented by child class")
+	push_error("Function '_initialize_knowledge' in AgentBaseBehaviour was not implemented by child class")
 
 func _initialize_emotional_influences():
-	push_error("Function '_initialize_emotional_influences' in BaseAgent was not implemented by child class")
+	push_error("Function '_initialize_emotional_influences' in AgentBaseBehaviour was not implemented by child class")
 
 func _handle_state():
-	push_error("Function '_handle_state' in BaseAgent was not implemented by child class")
+	push_error("Function '_handle_state' in AgentBaseBehaviour was not implemented by child class")
 
 func make_decision(conditions: Array):
 	if show_debug: 
