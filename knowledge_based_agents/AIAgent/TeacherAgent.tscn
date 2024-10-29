@@ -1,0 +1,50 @@
+[gd_scene load_steps=10 format=3 uid="uid://cvx7s6x5vdo0e"]
+
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/AIAgent.gd" id="1_u022w"]
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/AgentActuator.gd" id="2_53kyg"]
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/TeacherAgent.gd" id="3_3y0c6"]
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/EmojiManager.gd" id="4_dlaa6"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_6y4io"]
+radius = 0.25
+height = 1.47
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_47tti"]
+albedo_color = Color(0.161403, 0.437436, 0.811908, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_b4to1"]
+material = SubResource("StandardMaterial3D_47tti")
+radius = 0.25
+height = 1.47
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_euf2q"]
+albedo_color = Color(1, 0, 1, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_epjtk"]
+material = SubResource("StandardMaterial3D_euf2q")
+
+[node name="TeacherAgent" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.740571, -6.02141)
+script = ExtResource("1_u022w")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_6y4io")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_b4to1")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+script = ExtResource("2_53kyg")
+
+[node name="TeacherBrain" type="Node" parent="."]
+script = ExtResource("3_3y0c6")
+show_debug = true
+
+[node name="EmojiManager" type="Sprite3D" parent="."]
+transform = Transform3D(0.201984, 0, 0, 0, 0.201984, 0, 0, 0, 0.201984, 0, 0.894445, 0)
+script = ExtResource("4_dlaa6")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="EmojiManager"]
+transform = Transform3D(1.25793, 0, 0, 0, 1.25793, 0, 0, 0, 1.25793, 0, 0, 0)
+visible = false
+mesh = SubResource("QuadMesh_epjtk")
