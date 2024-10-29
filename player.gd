@@ -1,7 +1,6 @@
 extends CharacterBody3D
 
 @onready var camera = $camholder/Camera3D
-@onready var camera = $camholder/Camera3D
 
 @export var SPEED = 5.0
 @export var JUMP_VELOCITY = 4.5

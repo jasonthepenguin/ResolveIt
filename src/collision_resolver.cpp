@@ -46,7 +46,7 @@ void CollisionResolver::apply_positional_corrections() {
 
         for (size_t i = 0; i < manifold.contact_points.size(); ++i) {
             float penetration = manifold.penetrations[i];
-            //UtilityFunctions::print(penetration);
+            ////UtilityFunctions::print(penetration);
             if (std::abs(penetration) > position_slop ) {
                 Vector3 correction = manifold.collision_normals[i] * (penetration - position_slop) * correction_percent;
 
@@ -117,42 +117,42 @@ void CollisionResolver::resolve_collision(Manifold& manifold, double delta) {
         // **Add print statements here**
 
         // 1. Mass properties of each body (mass and inertia tensor)
-        UtilityFunctions::print("\n=== Collision Event ===");
-        UtilityFunctions::print("Body A Mass: ", body_a->get_mass());
-        UtilityFunctions::print("Body A Inertia Tensor: ", body_a->get_inverse_world_inertia_tensor().inverse());
+        //UtilityFunctions::print("\n=== Collision Event ===");
+        //UtilityFunctions::print("Body A Mass: ", body_a->get_mass());
+        //UtilityFunctions::print("Body A Inertia Tensor: ", body_a->get_inverse_world_inertia_tensor().inverse());
         if (!manifold.body_b_is_static && body_b) {
-            UtilityFunctions::print("Body B Mass: ", body_b->get_mass());
-            UtilityFunctions::print("Body B Inertia Tensor: ", body_b->get_inverse_world_inertia_tensor().inverse());
+            //UtilityFunctions::print("Body B Mass: ", body_b->get_mass());
+            //UtilityFunctions::print("Body B Inertia Tensor: ", body_b->get_inverse_world_inertia_tensor().inverse());
         }
 
         // 2. Contact normal
-        UtilityFunctions::print("Contact Normal: ", collision_normal);
+        //UtilityFunctions::print("Contact Normal: ", collision_normal);
 
         // 3. Center of mass of each body
-        UtilityFunctions::print("Body A Center of Mass: ", body_a->get_center_of_mass_global());
+        //UtilityFunctions::print("Body A Center of Mass: ", body_a->get_center_of_mass_global());
         if (!manifold.body_b_is_static && body_b) {
-            UtilityFunctions::print("Body B Center of Mass: ", body_b->get_center_of_mass_global());
+            //UtilityFunctions::print("Body B Center of Mass: ", body_b->get_center_of_mass_global());
         }
 
         // 4. Contact points on each body
-        UtilityFunctions::print("Contact Point: ", contact_point);
+        //UtilityFunctions::print("Contact Point: ", contact_point);
 
         // 5. Linear and angular velocities before collision
-        UtilityFunctions::print("Body A Linear Velocity Before Collision: ", body_a->get_velocity());
-        UtilityFunctions::print("Body A Angular Velocity Before Collision: ", body_a->get_angular_velocity());
+        //UtilityFunctions::print("Body A Linear Velocity Before Collision: ", body_a->get_velocity());
+        //UtilityFunctions::print("Body A Angular Velocity Before Collision: ", body_a->get_angular_velocity());
         if (!manifold.body_b_is_static && body_b) {
-            UtilityFunctions::print("Body B Linear Velocity Before Collision: ", body_b->get_velocity());
-            UtilityFunctions::print("Body B Angular Velocity Before Collision: ", body_b->get_angular_velocity());
+            //UtilityFunctions::print("Body B Linear Velocity Before Collision: ", body_b->get_velocity());
+            //UtilityFunctions::print("Body B Angular Velocity Before Collision: ", body_b->get_angular_velocity());
         }
 
         // 6. r1 and r2 values
-        UtilityFunctions::print("r1 (Body A): ", ra);
+        //UtilityFunctions::print("r1 (Body A): ", ra);
         if (!manifold.body_b_is_static && body_b) {
-            UtilityFunctions::print("r2 (Body B): ", rb);
+            //UtilityFunctions::print("r2 (Body B): ", rb);
         }
 
         // 7. Coefficient of restitution used
-        UtilityFunctions::print("Coefficient of Restitution: ", restitution);
+        //UtilityFunctions::print("Coefficient of Restitution: ", restitution);
 
         // (Proceed with impulse calculation)
 
@@ -180,13 +180,13 @@ void CollisionResolver::resolve_collision(Manifold& manifold, double delta) {
         j /= denominator;
 
         // **8. Impulse value (lambda) - momentum transferred**
-        UtilityFunctions::print("Impulse Scalar (j): ", j);
+        //UtilityFunctions::print("Impulse Scalar (j): ", j);
 
         // Apply impulse
         Vector3 impulse = collision_normal * j;
 
         // **Print impulse vector**
-        UtilityFunctions::print("Impulse Vector: ", impulse);
+        //UtilityFunctions::print("Impulse Vector: ", impulse);
 
         // Apply Linear and Angular impulse to body A
         body_a->apply_impulse_off_centre(impulse, ra);
@@ -197,12 +197,12 @@ void CollisionResolver::resolve_collision(Manifold& manifold, double delta) {
         }
 
         // **Values of linear and angular velocity after collision**
-        UtilityFunctions::print("\n=== After Collision ===");
-        UtilityFunctions::print("Body A Linear Velocity After Collision: ", body_a->get_velocity());
-        UtilityFunctions::print("Body A Angular Velocity After Collision: ", body_a->get_angular_velocity());
+        //UtilityFunctions::print("\n=== After Collision ===");
+        //UtilityFunctions::print("Body A Linear Velocity After Collision: ", body_a->get_velocity());
+        //UtilityFunctions::print("Body A Angular Velocity After Collision: ", body_a->get_angular_velocity());
         if (!manifold.body_b_is_static && body_b) {
-            UtilityFunctions::print("Body B Linear Velocity After Collision: ", body_b->get_velocity());
-            UtilityFunctions::print("Body B Angular Velocity After Collision: ", body_b->get_angular_velocity());
+            //UtilityFunctions::print("Body B Linear Velocity After Collision: ", body_b->get_velocity());
+            //UtilityFunctions::print("Body B Angular Velocity After Collision: ", body_b->get_angular_velocity());
         }
     }
 }

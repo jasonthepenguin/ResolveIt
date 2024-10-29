@@ -102,9 +102,7 @@ shadow_mesh = SubResource("ArrayMesh_3d8hh")
 [sub_resource type="BoxShape3D" id="BoxShape3D_eq8fa"]
 size = Vector3(0.03125, 0.0216675, 0.0563965)
 
-[node name="Mouse" type="RigidBody3D"]
-collision_layer = 5
-collision_mask = 7
+[node name="RigidBodyCustom" type="RigidBodyCustom"]
 
 [node name="mouse_001" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.0112485, 0, 0, 0, 0.0112485, 0, 0, 0, 0.0112485, 0, -0.007249, 0)
