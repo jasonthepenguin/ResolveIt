@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://catlrcvan68uy"]
+
+[ext_resource type="Script" path="res://knowledge_based_agents/knowledge_base/TeacherAgent.gd" id="1_jgq7n"]
+[ext_resource type="Script" path="res://knowledge_based_agents/knowledge_base/StudentAgent.gd" id="2_tafyu"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="TeacherAgent" type="Node" parent="."]
+script = ExtResource("1_jgq7n")
+run_test = true
+
+[node name="StudentAgent" type="Node" parent="."]
+script = ExtResource("2_tafyu")
+run_test = true

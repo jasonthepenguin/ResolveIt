@@ -1,0 +1,42 @@
+[gd_scene load_steps=10 format=3 uid="uid://sp42n3dqc33x"]
+
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/AgentControl.gd" id="1_sjrnn"]
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/AgentNavActuator.gd" id="2_sa825"]
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/AgentRandomMovement.gd" id="3_uh1e1"]
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/CharacterImpulseApplicator.gd" id="4_0voi4"]
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/ThrowActuator.gd" id="5_ce6n1"]
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/ObjectCarryActuator.gd" id="6_46q66"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tvlyr"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_47tti"]
+albedo_color = Color(0.161403, 0.437436, 0.811908, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_psd8o"]
+material = SubResource("StandardMaterial3D_47tti")
+
+[node name="Agent" type="CharacterBody3D"]
+script = ExtResource("1_sjrnn")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_tvlyr")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_psd8o")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+
+[node name="AgentNavActuator" type="Node" parent="."]
+script = ExtResource("2_sa825")
+
+[node name="AgentRandomMovement" type="Node" parent="."]
+script = ExtResource("3_uh1e1")
+
+[node name="CharacterImpulseApplicator" type="Node" parent="."]
+script = ExtResource("4_0voi4")
+
+[node name="AgentThrowActuator" type="Node" parent="."]
+script = ExtResource("5_ce6n1")
+
+[node name="ObjectCarryActuator" type="Node" parent="."]
+script = ExtResource("6_46q66")

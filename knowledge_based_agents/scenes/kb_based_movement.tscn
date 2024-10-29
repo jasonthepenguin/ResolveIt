@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://c4guo5vpd0u77"]
+[gd_scene load_steps=13 format=3 uid="uid://c4guo5vpd0u77"]
 
 [ext_resource type="PackedScene" uid="uid://xjsu3jfdi53c" path="res://knowledge_based_agents/scenes/basic_setup.tscn" id="1_228yi"]
 [ext_resource type="PackedScene" uid="uid://c7t4e2qd22gdb" path="res://knowledge_based_agents/AIAgent/Agent.tscn" id="2_u1hm0"]
@@ -24,6 +24,10 @@ material = SubResource("StandardMaterial3D_01oha")
 inner_radius = 0.766
 outer_radius = 0.931
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_c1e57"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_hhhkh"]
+
 [node name="Scene" type="Node3D"]
 
 [node name="Camera3D" type="Camera3D" parent="."]
@@ -48,8 +52,8 @@ mesh = SubResource("PlaneMesh_e8cqd")
 [node name="Agent" parent="." instance=ExtResource("2_u1hm0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
-[node name="Node" type="Node" parent="Agent"]
-script = ExtResource("3_hxy5s")
+[node name="ObjectCarrierAgent" type="Node" parent="Agent"]
+script = ExtResource("3_qmvfd")
 
 [node name="Waypoint" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5115, -4.76837e-07, -6.45468)
@@ -71,4 +75,20 @@ skeleton = NodePath("../../Geometry")
 
 [node name="Affordance" type="Node" parent="Waypoint2"]
 script = ExtResource("4_klpi8")
-affordances = 8
+affordances = 10
+
+[node name="PhysicsHandler" type="PhysicsHandler" parent="."]
+process_priority = 1
+
+[node name="RigidBodyCustom" type="RigidBodyCustom" parent="PhysicsHandler"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.96585, 0.624367, 0)
+
+[node name="Affordance" type="Node" parent="PhysicsHandler/RigidBodyCustom"]
+script = ExtResource("4_klpi8")
+affordances = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsHandler/RigidBodyCustom"]
+shape = SubResource("BoxShape3D_c1e57")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PhysicsHandler/RigidBodyCustom"]
+mesh = SubResource("BoxMesh_hhhkh")
