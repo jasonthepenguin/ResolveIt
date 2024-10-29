@@ -25,11 +25,11 @@ func apply_impulse():
 			var point_relative = collision_point - rb.global_position
 			rb.apply_impulse_off_centre(impulse, point_relative)
 			
-		if collision.get_collider() is RigidBody3D:
-			var rb = collision.get_collider() as RigidBody3D
-			var collision_point = collision.get_position()
-			var impulse = -collision.get_normal() * push_force
-
-			# Convert world collision point to position relative to RigidBody's center
-			var point_relative = collision_point - rb.global_position
-			rb.apply_impulse(impulse, point_relative)
+		#if collision.get_collider() is RigidBody3D:
+			#var rb = collision.get_collider() as RigidBody3D
+			#var collision_point = collision.get_position()
+			#var impulse = -collision.get_normal() * push_force
+#
+			## Convert world collision point to position relative to RigidBody's center
+			#var point_relative = collision_point - rb.global_position
+			#rb.apply_impulse(impulse, point_relative)

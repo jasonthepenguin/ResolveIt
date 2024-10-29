@@ -14,11 +14,11 @@ func _init(character_body: CharacterBody3D, agent_perception: AgentPerception):
 		push_error("ImpulseApplicator requires valid CharacterBody3D and AgentPerception references!")
 
 func _on_collision_detected(object: Node3D, collision_point: Vector3, normal: Vector3):
-	if object is RigidBody3D and not character.is_on_floor_only():
-		var rb = object as RigidBody3D
+	if object is RigidBodyCustom and not character.is_on_floor_only():
+		var rb = object as RigidBodyCustom
 		var impulse = -normal * push_force
 		
 		# Convert world collision point to position relative to RigidBody's center
 		var point_relative = collision_point - rb.global_position
 		
-		rb.apply_impulse(impulse, point_relative)
+		rb.apply_impulse_off_centre(impulse, point_relative)

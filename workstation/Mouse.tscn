@@ -100,12 +100,12 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_3d8hh")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_eq8fa"]
-size = Vector3(0.03125, 0.0216675, 0.0563965)
+size = Vector3(0.104, 0.074, 0.188)
 
 [node name="RigidBodyCustom" type="RigidBodyCustom"]
 
 [node name="mouse_001" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.0112485, 0, 0, 0, 0.0112485, 0, 0, 0, 0.0112485, 0, -0.007249, 0)
+transform = Transform3D(0.036, 0, 0, 0, 0.036, 0, 0, 0, 0.036, 0, -0.007249, 0)
 mesh = SubResource("ArrayMesh_mv4ik")
 skeleton = NodePath("")
 

@@ -70,12 +70,12 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_lg6n2")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_yub1n"]
-size = Vector3(0.358887, 0.0290527, 0.117065)
+size = Vector3(0.593, 0.048, 0.194)
 
 [node name="RigidBodyCustom" type="RigidBodyCustom"]
 
 [node name="keyboard_001" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.0237693, 0, -7.74503e-09, 0, 0.0237693, 0, 7.74503e-09, 0, -0.0237693, 0, 0, 0)
+transform = Transform3D(-0.04, 0, -1.55766e-08, 0, 0.04, 0, 1.55766e-08, 0, -0.04, 0, 0, 0)
 mesh = SubResource("ArrayMesh_1jagy")
 skeleton = NodePath("")
 
