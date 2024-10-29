@@ -26,6 +26,7 @@ material = SubResource("StandardMaterial3D_euf2q")
 [node name="TeacherAgent" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.740571, -6.02141)
 script = ExtResource("1_u022w")
+base_agent_script = ExtResource("3_3y0c6")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_6y4io")
@@ -35,10 +36,6 @@ mesh = SubResource("CapsuleMesh_b4to1")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
 script = ExtResource("2_53kyg")
-
-[node name="TeacherBrain" type="Node" parent="."]
-script = ExtResource("3_3y0c6")
-show_debug = true
 
 [node name="EmojiManager" type="Sprite3D" parent="."]
 transform = Transform3D(0.201984, 0, 0, 0, 0.201984, 0, 0, 0, 0.201984, 0, 0.894445, 0)

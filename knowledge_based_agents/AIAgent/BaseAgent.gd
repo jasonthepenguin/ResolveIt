@@ -1,18 +1,19 @@
-class_name BaseAgent extends Node
+class_name BaseAgent
 
-@export var enabled = true
-@export var update_interval = 1.0
-@export var show_debug: bool = false
+var update_interval = 1.0
+var show_debug = false
 
-@onready var world_state: WorldState = WorldState.find(get_tree())
-@onready var agent_actuator: AgentActuator = get_parent().get_node("NavigationAgent3D")
-@onready var emotion_controller = get_parent().get_node("EmotionController")
+var world_state: WorldState
+var scene_tree: SceneTree
+var actuator: AgentActuator
+var emotion_controller: EmotionController
 
 var kb: AgentKnowledgeBase
 var __action_map: Dictionary = {}
 var __emotional_action_map: Dictionary = {}
 var __accumulator = 0.0
 var busy = false
+var agent_name = "unknown" # to be specified by base
 
 # Dictionary mapping facts to emotional influences
 # Format: { "fact_name": {"id": "influence_id", "position": Vector2} }
@@ -30,11 +31,10 @@ func _ready():
 		emotion_controller.emotion_changed.connect(_on_emotion_changed)
 
 func _process(delta):
-	if enabled:
-		__accumulator += delta
-		if __accumulator >= update_interval:
-			__accumulator = 0.0
-			update_state()
+	__accumulator += delta
+	if __accumulator >= update_interval:
+		__accumulator = 0.0
+		update_state()
 
 func map_action(condition: String, action: Callable):
 	__action_map[condition] = action
@@ -119,7 +119,7 @@ func _handle_state():
 
 func make_decision(conditions: Array):
 	if show_debug: 
-		LogManager.add_message(LogManager.id_format(name), "making decision")
+		LogManager.add_message(LogManager.id_format(agent_name), "making decision")
 	busy = true
 	for condition in conditions:
 		await run_action(condition)
@@ -128,17 +128,17 @@ func make_decision(conditions: Array):
 # Common movement and interaction methods
 func move_to_affordance(affordance_type: Affordance.Type) -> bool:
 	if show_debug:
-		LogManager.add_message(LogManager.id_format(name), 
+		LogManager.add_message(LogManager.id_format(agent_name), 
 			LogManager.seek_affordance_format(affordance_type))
 	
-	var nodes = Affordance.get_affordance_list(get_tree(), affordance_type)
+	var nodes = Affordance.get_affordance_list(scene_tree, affordance_type)
 	if nodes.is_empty():
 		return false
 	
 	if show_debug:
-		LogManager.add_message(LogManager.id_format(name), 
+		LogManager.add_message(LogManager.id_format(agent_name), 
 			LogManager.found_affordance_format())
-		LogManager.add_message(LogManager.id_format(name), "moving to position")
+		LogManager.add_message(LogManager.id_format(agent_name), "moving to position")
 	
 	var position = nodes[0].parent_object.global_position
-	return await agent_actuator.move_to(Vector2(position.x, position.z))
+	return await actuator.move_to(Vector2(position.x, position.z))

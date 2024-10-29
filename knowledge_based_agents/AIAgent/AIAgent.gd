@@ -1,8 +1,11 @@
 class_name AIAgent extends CharacterBody3D
 
-# Basic Settings
-@export_group("General")
-@export var enabled: bool = true
+# Base Agent Script Setting
+@export_group("Agent")
+@export var agent_enabled = true
+@export var agent_script: Script
+@export var agent_update_interval = 1.0
+@export var agent_show_debug = false
 
 # Navigation and Movement Settings
 @export_group("Navigation")
@@ -20,17 +23,18 @@ class_name AIAgent extends CharacterBody3D
 
 # Emotion Settings
 @export_group("Emotions")
+@export var emotions_enabled = true
 @export var emotion_update_interval: float = 0.05
 @export var emotion_lerp_speed: float = 8.0
 @export var strong_emotion_threshold: float = 0.75
 @export var moderate_emotion_threshold: float = 0.4
 
 # Child Node References
-@onready var nav_actuator: AgentActuator = $NavigationAgent3D
+@onready var actuator: AgentActuator = $NavigationAgent3D
 @onready var emoji_manager: Sprite3D = $EmojiManager
-@onready var base_agent: BaseAgent = _get_base_agent()
 
 # Integrated Components
+var base_agent: BaseAgent
 var impulse_controller: ImpulseApplicator
 var emotion_controller: EmotionController
 
@@ -39,18 +43,23 @@ func _init():
 	emotion_controller = EmotionController.new()
 
 func _ready():
-	# Validate required components
-	if not base_agent:
-		push_error("AIAgent requires a child node that extends BaseAgent!")
-		return
-		
+	# Configure Base Agent
+	base_agent = agent_script.new()
+	base_agent.update_interval = agent_update_interval
+	base_agent.show_debug = agent_show_debug
+	
+	base_agent.scene_tree = get_tree()
+	base_agent.world_state = WorldState.find(get_tree())
+	base_agent.actuator = actuator
+	base_agent.emotion_controller = emotion_controller
+	
 	# Configure Navigation
-	nav_actuator.speed = movement_speed
-	nav_actuator.debug_info = debug_navigation
-	nav_actuator.random_movement = random_movement
-	nav_actuator.update_interval = random_movement_interval
-	nav_actuator.distance_threshold = stuck_threshold_distance
-	nav_actuator.max_stuck_time = max_stuck_time
+	actuator.speed = movement_speed
+	actuator.debug_info = debug_navigation
+	actuator.random_movement = random_movement
+	actuator.update_interval = random_movement_interval
+	actuator.distance_threshold = stuck_threshold_distance
+	actuator.max_stuck_time = max_stuck_time
 	
 	# Configure Physics
 	impulse_controller.character = self
@@ -64,33 +73,25 @@ func _ready():
 	emotion_controller.emoji_manager = emoji_manager
 
 func _process(delta):
-	if enabled:
+	if agent_enabled:
+		base_agent._process(delta)
+	if emotions_enabled:
 		emotion_controller._process(delta)
 
 func _physics_process(_delta):
-	if enabled and apply_impulse and not is_on_floor_only():
+	if apply_impulse and not is_on_floor_only():
 		impulse_controller._physics_process()
-
-func _get_base_agent() -> BaseAgent:
-	# Look for any child node that extends BaseAgent
-	for child in get_children():
-		if child is BaseAgent:
-			return child
-			
-	# Log warning in editor if no BaseAgent is found
-	if Engine.is_editor_hint():
-		push_warning("This node requires a child that extends BaseAgent (e.g. TeacherAgent, StudentAgent)")
-	return null
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
 	
-	# Check for required node-based components
+	if not agent_script:
+		warnings.append("No base agent script specified!")
+	elif not (agent_script.new() is BaseAgent):
+		warnings.append("Specified script must extend BaseAgent!")
 	if not has_node("AgentNavActuator"):
 		warnings.append("Missing required AgentNavActuator node")
 	if not has_node("EmojiManager"):
 		warnings.append("Missing required EmojiManager node")
-	if not has_node("BaseAgent"):
-		warnings.append("Missing required BaseAgent node")
 	
 	return warnings

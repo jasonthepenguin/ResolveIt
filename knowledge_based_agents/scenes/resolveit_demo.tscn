@@ -1,4 +1,4 @@
-[gd_scene load_steps=198 format=3 uid="uid://crwldh8o2res2"]
+[gd_scene load_steps=199 format=3 uid="uid://crwldh8o2res2"]
 
 [ext_resource type="Script" path="res://knowledge_based_agents/scripts/WorldState.gd" id="1_7wrub"]
 [ext_resource type="Script" path="res://knowledge_based_agents/scripts/debug_utils.gd" id="2_qxibw"]
@@ -21,6 +21,7 @@
 [ext_resource type="PackedScene" uid="uid://uf5ny732gmq5" path="res://workstation/Workstation.tscn" id="19_bkydj"]
 [ext_resource type="PackedScene" uid="uid://mph0rdr1mlpy" path="res://workstation/Presenters_Workstation.tscn" id="20_1x1y1"]
 [ext_resource type="PackedScene" uid="uid://cvx7s6x5vdo0e" path="res://knowledge_based_agents/AIAgent/TeacherAgent.tscn" id="21_cfg77"]
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/TeacherAgent.gd" id="22_v0mi6"]
 [ext_resource type="Texture2D" uid="uid://dusgatgam4nlf" path="res://assets/ict398_presentation.png" id="25_5xdo1"]
 [ext_resource type="Script" path="res://knowledge_based_agents/scripts/Projector.gd" id="26_tunn7"]
 [ext_resource type="Script" path="res://player.gd" id="27_si2vn"]
@@ -2968,6 +2969,8 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 4.3507
 transform = Transform3D(-3.86846e-08, 0, 0.885, 0, 0.885, 0, -0.885, 0, -3.86846e-08, 0.0565687, 0.00378084, 5.84356)
 
 [node name="TeacherAgent" parent="." instance=ExtResource("21_cfg77")]
+agent_script = ExtResource("22_v0mi6")
+agent_show_debug = true
 
 [node name="Projector" type="MeshInstance3D" parent="."]
 transform = Transform3D(-4.307, 0, -1.02677e-08, 0, 2.723, 0, 6.50339e-07, 0, -0.068, 0.0159473, 2.64128, 8.35915)

@@ -7,6 +7,7 @@ const EQUIPMENT_SADNESS = Vector2(-0.7, 0.3)    # Primary sadness with some tens
 
 func _init():
 	super()
+	self.agent_name = "Teacher"
 	_initialize_knowledge()
 	_initialize_emotional_influences()
 	update_interval = 1.0
@@ -86,7 +87,7 @@ func turn_projector_on():
 	if show_debug:
 		LogManager.add_message(LogManager.id_format("Teacher"), 
 			LogManager.seek_affordance_format(Affordance.Type.PROJECTOR_ON))
-	var nodes = Affordance.get_affordance_list(get_tree(), Affordance.Type.PROJECTOR_ON)
+	var nodes = Affordance.get_affordance_list(scene_tree, Affordance.Type.PROJECTOR_ON)
 	if nodes.is_empty():
 		return
 	
@@ -101,7 +102,7 @@ func turn_projector_on():
 func fix_computer():
 	if show_debug:
 		LogManager.add_message(LogManager.id_format("Teacher"), "fixing computer")
-	await get_tree().create_timer(2.0).timeout
+	await scene_tree.create_timer(2.0).timeout
 	kb.remove_fact("computer_is_broken")
 
 func storm_out():

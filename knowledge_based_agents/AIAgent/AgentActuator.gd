@@ -22,7 +22,7 @@ func _physics_process(_delta):
 	if debug_info and not is_navigation_finished():
 		accumulator += _delta
 		if (accumulator >= 1.0):
-			print("Agent: Location ", current_location)
+			LogManager.add_message("Agent: Location ", current_location)
 			accumulator = 0
 			
 	next_location = get_next_path_position()
@@ -32,7 +32,7 @@ func _physics_process(_delta):
 
 # calling functions need to call await with this
 func move_to(new_position: Vector2) -> bool:
-	if debug_info: print("Agent: Moving to ", new_position)
+	if debug_info: LogManager.add_message("Agent: Moving to ", new_position)
 	
 	# Set the target and wait one frame for the navigation to update
 	set_target_position(Vector3(new_position.x, 0, new_position.y))
@@ -43,10 +43,10 @@ func move_to(new_position: Vector2) -> bool:
 	
 	# Check if target is reachable
 	if not is_target_reachable():
-		if debug_info: print("Agent: Target unreachable")
+		if debug_info: LogManager.add_message("Agent: Target unreachable")
 		return false
 	
 	# Wait for movement to complete
 	await navigation_finished
-	if debug_info: print("Agent: Target reached")
+	if debug_info: LogManager.add_message("Agent: Target reached")
 	return true
