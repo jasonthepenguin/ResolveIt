@@ -1,36 +1,38 @@
-class_name EmotionController extends Node
+# EmotionController.gd
+class_name EmotionController
 
 signal emotion_changed(emotion: int, intensity: float)
 
-@onready var emoji_manager: Sprite3D = get_parent().get_node("EmojiManager")
+var emoji_manager: Sprite3D
+var update_interval: float = 0.05
+var emotion_lerp_speed: float = 8.0
+var strong_emotion_threshold: float = 0.75
+var moderate_emotion_threshold: float = 0.4
 
-var fuzzy_emotions = FuzzyEmotionTriangle.new()
-var current_emotion_position = Vector2.ZERO
+var __accumulator: float = 0.0
+var __current_emotion_position = Vector2.ZERO
+var __fuzzy_emotions: FuzzyEmotionTriangle
+
+# Generic emotional influence tracking
+var __emotional_influences: Dictionary = {}
 
 # Core emotional settings
 const EMOTION_LERP_SPEED = 8.0
 const STRONG_EMOTION_THRESHOLD = 0.75
 const MODERATE_EMOTION_THRESHOLD = 0.4
 
-# Process time configuration
-@export var update_interval: float = 0.05
-var accumulator: float = 0.0
-
-# Generic emotional influence tracking
-var emotional_influences: Dictionary = {}
-
-func _ready():
-	add_child(fuzzy_emotions)
+func _init():
+	__fuzzy_emotions = FuzzyEmotionTriangle.new()
 
 func _process(delta):
-	accumulator += delta
-	if accumulator >= update_interval:
-		accumulator = 0.0
+	__accumulator += delta
+	if __accumulator >= update_interval:
+		__accumulator = 0.0
 		update_emotional_state()
 
 # Add a temporary emotional influence at a given position
 func add_influence(id: String, position: Vector2, duration: float = 0.0):
-	emotional_influences[id] = {
+	__emotional_influences[id] = {
 		"position": position,
 		"duration": duration,
 		"time_remaining": duration if duration > 0 else 0.0
@@ -38,11 +40,11 @@ func add_influence(id: String, position: Vector2, duration: float = 0.0):
 
 # Remove a specific emotional influence
 func remove_influence(id: String):
-	emotional_influences.erase(id)
+	__emotional_influences.erase(id)
 
 # Clear all emotional influences
 func clear_influences():
-	emotional_influences.clear()
+	__emotional_influences.clear()
 
 func update_emotional_state():
 	var target_position = _calculate_target_position()
@@ -53,8 +55,8 @@ func _calculate_target_position() -> Vector2:
 	var expired_influences = []
 	
 	# Process all active influences
-	for id in emotional_influences:
-		var influence = emotional_influences[id]
+	for id in __emotional_influences:
+		var influence = __emotional_influences[id]
 		
 		# Update duration if temporary
 		if influence.duration > 0:
@@ -67,7 +69,7 @@ func _calculate_target_position() -> Vector2:
 	
 	# Clean up expired influences
 	for id in expired_influences:
-		emotional_influences.erase(id)
+		__emotional_influences.erase(id)
 	
 	# Normalize if outside bounds
 	if target.length() > 1.0:
@@ -76,12 +78,12 @@ func _calculate_target_position() -> Vector2:
 	return target
 
 func _update_emotion_position(target_position: Vector2, delta: float):
-	current_emotion_position = current_emotion_position.lerp(
+	__current_emotion_position = __current_emotion_position.lerp(
 		target_position,
 		EMOTION_LERP_SPEED * delta
 	)
 
-	var result = fuzzy_emotions.process_emotion(current_emotion_position)
+	var result = __fuzzy_emotions.process_emotion(__current_emotion_position)
 	_update_emoji(result.crisp_emotion)
 	
 	# Emit emotional state for any intensity above threshold

@@ -1,13 +1,10 @@
-class_name CharacterImpulseApplicator extends Node
+# CharacterImpulseApplicator.gd
+class_name ImpulseApplicator
 
-@export var push_force = 2.0
-@onready var character = get_parent()
+var push_force: float = 2.0
+var character: CharacterBody3D
 
-func _physics_process(_delta):
-	if not character.is_on_floor_only():
-		apply_impulse()
-
-func apply_impulse():
+func _physics_process():
 	for i in character.get_slide_collision_count():
 		var collision = character.get_slide_collision(i)
 		if collision.get_collider() is RigidBody3D:

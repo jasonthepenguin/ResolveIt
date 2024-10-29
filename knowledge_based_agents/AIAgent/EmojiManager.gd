@@ -23,5 +23,4 @@ func display_emotion(emotion: FuzzyEmotionTriangle.Emotion):
 		FuzzyEmotionTriangle.Emotion.HAPPY: selected = happy_Emoji
 		FuzzyEmotionTriangle.Emotion.ANGRY: selected = angry_Emoji
 		FuzzyEmotionTriangle.Emotion.SAD: selected = sad_Emoji
-	
 	self.texture = selected
