@@ -21,6 +21,12 @@ class_name AIAgent extends CharacterBody3D
 @export var apply_impulse: bool = true
 @export var push_force: float = 2.0
 
+# Perception Settings
+@export_group("Perception")
+@export var perception_enabled = true
+@export var perception_radius: float = 10.0
+@export var debug_perception: bool = false
+
 # Emotion Settings
 @export_group("Emotions")
 @export var emotions_enabled = true
@@ -37,23 +43,28 @@ class_name AIAgent extends CharacterBody3D
 var base_agent: AgentBaseBehaviour
 var impulse_controller: ImpulseApplicator
 var emotion_controller: EmotionController
+var perception: AgentPerception
 
 func _init():
-	impulse_controller = ImpulseApplicator.new()
+	# Create components that don't need node references
 	emotion_controller = EmotionController.new()
 
 func _ready():
-	# Configure Base Agent
-	base_agent = agent_script.new()
-	base_agent.update_interval = agent_update_interval
-	base_agent.show_debug = agent_show_debug
+	# Get required world state reference
+	var world_state = WorldState.find(get_tree())
+	if not world_state:
+		push_error("AIAgent requires valid WorldState in scene!")
+		return
 	
-	base_agent.scene_tree = get_tree()
-	base_agent.world_state = WorldState.find(get_tree())
-	base_agent.actuator = actuator
-	base_agent.emotion_controller = emotion_controller
+	# Initialize perception first since others depend on it
+	perception = AgentPerception.new(self, world_state)
+	perception.show_debug = debug_perception
 	
-	# Configure Navigation
+	# Now initialize impulse controller with perception
+	impulse_controller = ImpulseApplicator.new(self, perception)
+	impulse_controller.push_force = push_force
+	
+	# Configure navigation actuator
 	actuator.speed = movement_speed
 	actuator.debug_info = debug_navigation
 	actuator.random_movement = random_movement
@@ -61,26 +72,46 @@ func _ready():
 	actuator.distance_threshold = stuck_threshold_distance
 	actuator.max_stuck_time = max_stuck_time
 	
-	# Configure Physics
-	impulse_controller.character = self
-	impulse_controller.push_force = push_force
+	# Configure emotion system
+	if emotions_enabled:
+		emotion_controller.update_interval = emotion_update_interval
+		emotion_controller.emotion_lerp_speed = emotion_lerp_speed
+		emotion_controller.strong_emotion_threshold = strong_emotion_threshold
+		emotion_controller.moderate_emotion_threshold = moderate_emotion_threshold
+		emotion_controller.emoji_manager = emoji_manager
 	
-	# Configure Emotions
-	emotion_controller.update_interval = emotion_update_interval
-	emotion_controller.emotion_lerp_speed = emotion_lerp_speed
-	emotion_controller.strong_emotion_threshold = strong_emotion_threshold
-	emotion_controller.moderate_emotion_threshold = moderate_emotion_threshold
-	emotion_controller.emoji_manager = emoji_manager
+	# Initialize base agent last since it depends on other systems
+	_initialize_base_agent(world_state)
+
+func _initialize_base_agent(world_state: WorldState):
+	if not agent_script:
+		push_error("AIAgent requires valid agent_script!")
+		return
+		
+	# Instantiate and configure base agent
+	base_agent = agent_script.new()
+	base_agent.update_interval = agent_update_interval
+	base_agent.show_debug = agent_show_debug
+	
+	# Provide required references
+	base_agent.scene_tree = get_tree()
+	base_agent.world_state = world_state
+	base_agent.actuator = actuator
+	base_agent.emotion_controller = emotion_controller if emotions_enabled else null
+	base_agent.perception = perception
+	
+	# Initialize agent systems
+	base_agent._ready()
 
 func _process(delta):
-	if agent_enabled:
+	if agent_enabled and base_agent:
 		base_agent._process(delta)
-	if emotions_enabled:
+	if emotions_enabled and emotion_controller:
 		emotion_controller._process(delta)
 
-func _physics_process(_delta):
-	if apply_impulse and not is_on_floor_only():
-		impulse_controller._physics_process()
+func _physics_process(delta):
+	if perception_enabled:
+		perception.process_collisions()
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []
@@ -89,9 +120,12 @@ func _get_configuration_warnings() -> PackedStringArray:
 		warnings.append("No base agent script specified!")
 	elif not (agent_script.new() is AgentBaseBehaviour):
 		warnings.append("Specified script must extend AgentBaseBehaviour!")
-	if not has_node("AgentNavActuator"):
-		warnings.append("Missing required AgentNavActuator node")
+	if not has_node("NavigationAgent3D"):
+		warnings.append("Missing required NavigationAgent3D node")
 	if not has_node("EmojiManager"):
 		warnings.append("Missing required EmojiManager node")
+		
+	if emotions_enabled and not has_node("EmojiManager"):
+		warnings.append("Emotions enabled but missing EmojiManager node")
 	
 	return warnings

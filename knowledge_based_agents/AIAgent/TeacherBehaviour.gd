@@ -63,16 +63,16 @@ func _handle_state():
 	if not kb.has_fact("is_teaching"):
 		if kb.query_goal("is_disrupted").achieved:
 			if show_debug:
-				LogManager.add_message(LogManager.id_format("Teacher"), "handling disruption")
+				LogManager.add_message(LogManager.id_format(agent_name), "handling disruption")
 			kb.remove_fact("is_teaching")
 		else:
 			var teaching_query = kb.query_goal("can_teach")
 			if teaching_query.achieved:
 				kb.add_fact("is_teaching")
-				LogManager.add_message(LogManager.id_format("Teacher"), "is teaching")
+				LogManager.add_message(LogManager.id_format(agent_name), "is teaching")
 			else:
 				if show_debug:
-					LogManager.add_message(LogManager.id_format("Teacher"), 
+					LogManager.add_message(LogManager.id_format(agent_name), 
 						"Can't teach, missing:", teaching_query.missing_conditions)
 				make_decision(teaching_query.missing_conditions)
 
@@ -81,42 +81,38 @@ func move_to_teaching_position():
 	if await move_to_affordance(Affordance.Type.CAN_PRESENT):
 		kb.add_fact("in_position")
 		if show_debug: 
-			LogManager.add_message(LogManager.id_format("Teacher"), "in position")
+			LogManager.add_message(LogManager.id_format(agent_name), "in position")
 
 func turn_projector_on():
-	if show_debug:
-		LogManager.add_message(LogManager.id_format("Teacher"), 
-			LogManager.seek_affordance_format(Affordance.Type.PROJECTOR_ON))
-	var nodes = Affordance.get_affordance_list(scene_tree, Affordance.Type.PROJECTOR_ON)
-	if nodes.is_empty():
+	var scan_result = perception.scan_for_nearest_affordance(Affordance.Type.PROJECTOR_ON)
+	if not scan_result.found:
 		return
-	
+		
 	if show_debug:
-		LogManager.add_message(LogManager.id_format("Teacher"), 
-			LogManager.found_affordance_format())
-		LogManager.add_message(LogManager.id_format("Teacher"), "turning projector on")
-	var projector = nodes[0].parent_object as Projector
+		LogManager.add_message(LogManager.id_format(agent_name), "turning projector on")
+		
+	var projector = scan_result.affordance.parent_object as Projector
 	projector.set_projector(true)
 	kb.add_fact("projector_is_on")
 
 func fix_computer():
 	if show_debug:
-		LogManager.add_message(LogManager.id_format("Teacher"), "fixing computer")
+		LogManager.add_message(LogManager.id_format(agent_name), "fixing computer")
 	await scene_tree.create_timer(2.0).timeout
 	kb.remove_fact("computer_is_broken")
 
 func storm_out():
 	if show_debug:
-		LogManager.add_message(LogManager.id_format("Teacher"), "storms out of the room")
+		LogManager.add_message(LogManager.id_format(agent_name), "storms out of the room")
 
 func teach_enthusiastically():
 	if show_debug:
-		LogManager.add_message(LogManager.id_format("Teacher"), "teaches with enthusiasm")
+		LogManager.add_message(LogManager.id_format(agent_name), "teaches with enthusiasm")
 
 func show_frustration():
 	if show_debug:
-		LogManager.add_message(LogManager.id_format("Teacher"), "shows frustration")
+		LogManager.add_message(LogManager.id_format(agent_name), "shows frustration")
 
 func consider_canceling_class():
 	if show_debug:
-		LogManager.add_message(LogManager.id_format("Teacher"), "considers canceling class")
+		LogManager.add_message(LogManager.id_format(agent_name), "considers canceling class")

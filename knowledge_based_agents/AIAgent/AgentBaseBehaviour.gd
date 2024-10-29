@@ -7,6 +7,7 @@ var world_state: WorldState
 var scene_tree: SceneTree
 var actuator: AgentActuator
 var emotion_controller: EmotionController
+var perception: AgentPerception
 
 var kb: AgentKnowledgeBase
 var __action_map: Dictionary = {}
@@ -27,8 +28,13 @@ func _init():
 	kb = AgentKnowledgeBase.new()
 	
 func _ready():
+	if not perception:
+		push_error("AgentBaseBehaviour requires valid AgentPerception reference!")
+		
 	if emotion_controller:
 		emotion_controller.emotion_changed.connect(_on_emotion_changed)
+		
+	perception.collision_detected.connect(_on_collision_detected)
 
 func _process(delta):
 	__accumulator += delta
@@ -107,15 +113,9 @@ func _handle_emotional_states():
 		if kb.has_fact(fact):
 			__emotional_action_map[fact].call()
 
-# Virtual methods to be overridden by child classes
-func _initialize_knowledge():
-	push_error("Function '_initialize_knowledge' in AgentBaseBehaviour was not implemented by child class")
-
-func _initialize_emotional_influences():
-	push_error("Function '_initialize_emotional_influences' in AgentBaseBehaviour was not implemented by child class")
-
-func _handle_state():
-	push_error("Function '_handle_state' in AgentBaseBehaviour was not implemented by child class")
+func _on_collision_detected(object: Node3D, point: Vector3, normal: Vector3):
+	"""Handle collision events from AgentPerception"""
+	pass
 
 func make_decision(conditions: Array):
 	if show_debug: 
@@ -125,20 +125,39 @@ func make_decision(conditions: Array):
 		await run_action(condition)
 	busy = false
 
-# Common movement and interaction methods
-func move_to_affordance(affordance_type: Affordance.Type) -> bool:
+# Common affordance helper methods that use perception
+func scan_for_affordance(affordance_type: Affordance.Type) -> Dictionary:
+	"""Scans for nearest affordance using perception system."""
 	if show_debug:
 		LogManager.add_message(LogManager.id_format(agent_name), 
 			LogManager.seek_affordance_format(affordance_type))
+			
+	var result = perception.scan_for_nearest_affordance(affordance_type)
 	
-	var nodes = Affordance.get_affordance_list(scene_tree, affordance_type)
-	if nodes.is_empty():
-		return false
-	
-	if show_debug:
+	if result.found and show_debug:
 		LogManager.add_message(LogManager.id_format(agent_name), 
 			LogManager.found_affordance_format())
+			
+	return result
+
+func move_to_affordance(affordance_type: Affordance.Type) -> bool:
+	"""Attempts to move to nearest affordance of given type."""
+	var scan_result = scan_for_affordance(affordance_type)
+	if not scan_result.found:
+		return false
+		
+	if show_debug:
 		LogManager.add_message(LogManager.id_format(agent_name), "moving to position")
-	
-	var position = nodes[0].parent_object.global_position
+		
+	var position = scan_result.affordance.parent_object.global_position
 	return await actuator.move_to(Vector2(position.x, position.z))
+
+# Virtual methods to be overridden by child classes
+func _initialize_knowledge():
+	push_error("Function '_initialize_knowledge' in AgentBaseBehaviour was not implemented by child class")
+
+func _initialize_emotional_influences():
+	push_error("Function '_initialize_emotional_influences' in AgentBaseBehaviour was not implemented by child class")
+
+func _handle_state():
+	push_error("Function '_handle_state' in AgentBaseBehaviour was not implemented by child class")
