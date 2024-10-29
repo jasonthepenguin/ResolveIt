@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://fg2ywoydsvkc"]
+
+[ext_resource type="PackedScene" uid="uid://qpdvu8vwcnin" path="res://rogue_hoodedNew.tscn" id="1_fx1r0"]
+[ext_resource type="Script" path="res://LayingDown.gd" id="2_wfp8t"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Rogue_Hooded" parent="." instance=ExtResource("1_fx1r0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.32581, 1.19209e-07, 1.41864)
+script = ExtResource("2_wfp8t")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.53858)
