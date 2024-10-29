@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://dbg61kthivd70" path="res://chair.tscn" id="9_5vil0"]
 [ext_resource type="PackedScene" uid="uid://bl3dfk47isg6s" path="res://splash_screen.tscn" id="9_64qiw"]
 
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_54cet"]
 radius = 0.25
 
