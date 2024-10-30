@@ -82,18 +82,22 @@ func _handle_state():
 		if kb.has_fact("is_crying") and kb.has_fact("unable_to_study"):
 			await leave_room()
 
+
 # Student-specific actions
 func start_crying():
 	if show_debug:
 		LogManager.add_message(LogManager.id_format(agent_name), "starts crying")
 
+
 func show_frustration():
 	if show_debug:
 		LogManager.add_message(LogManager.id_format(agent_name), "shows frustration")
 
+
 func express_happiness():
 	if show_debug:
 		LogManager.add_message(LogManager.id_format(agent_name), "expresses happiness")
+
 
 func leave_room():
 	if show_debug:
