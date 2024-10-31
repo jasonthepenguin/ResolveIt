@@ -1,4 +1,4 @@
-class_name StudentAgent extends AgentBaseBehaviour
+class_name StudentBehaviour extends AgentBaseBehaviour
 
 # Student-specific emotional influence positions
 const LEARNING_JOY = Vector2(0, -0.8)        # Strong happiness from learning
