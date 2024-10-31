@@ -62,9 +62,16 @@ PhysicsHandler::PhysicsHandler() {
 }
 
 PhysicsHandler::~PhysicsHandler() {
-    // Cleanup if necessary
+    // Cleanup containers
     rigid_bodies.clear();
     rid_map.clear();
+    static_rid_map.clear();
+
+    collision_detector.reset();
+    collision_resolver.reset();
+
+    // godots physics server singleton just clear its pointer, as it should always exist
+    singleton = nullptr;
 }
 
 void PhysicsHandler::register_rigidbody(RigidBodyCustom* rigid_body) {

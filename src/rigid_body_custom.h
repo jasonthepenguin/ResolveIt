@@ -111,8 +111,6 @@ private:
      */
     void update_world_inertia_tensor();
 
-    
-
 
 
 
@@ -140,6 +138,8 @@ public:
     RigidBodyCustom();
     /** @brief Destructor */
     ~RigidBodyCustom();
+
+    
 
 
     /** @brief Sets the collision layer value for a specific layer
@@ -332,6 +332,8 @@ public:
     /** @brief Checks if force integration is enabled for this rigid body
      *  @return True if force integration is enabled, false otherwise */
     bool is_integrate_forces_enabled() const;
+
+
 };
 
 } // namespace godot

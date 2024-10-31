@@ -133,6 +133,13 @@ godot::RigidBodyCustom::RigidBodyCustom()
 
 godot::RigidBodyCustom::~RigidBodyCustom() {
     // Destructor
+
+    // Free the physics body if it exists
+    if (physics_server && body_rid.is_valid()) {
+        physics_server->free_rid(body_rid);
+    }
+
+    // dont need to clear collision shape and mesh instace here as godots scene tree clears it for us
 }
 
 
