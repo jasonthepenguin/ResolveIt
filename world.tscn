@@ -1,7 +1,7 @@
 [gd_scene load_steps=18 format=3 uid="uid://n62f3tl150r0"]
 
 [ext_resource type="PackedScene" path="res://vr_lab.tscn" id="1_6tnus"]
-[ext_resource type="Script" path="res://player.gd" id="2_iwlwb"]
+[ext_resource type="Script" path="res://player/player.gd" id="2_iwlwb"]
 [ext_resource type="Script" path="res://camholder.gd" id="3_8vfo1"]
 [ext_resource type="PackedScene" uid="uid://bwkhk2iahiriw" path="res://vr_room/beach.tscn" id="3_b8h1r"]
 [ext_resource type="PackedScene" uid="uid://fsvjs14lf13h" path="res://vr_room/cafe.tscn" id="5_qjf3j"]

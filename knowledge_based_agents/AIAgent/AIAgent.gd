@@ -1,5 +1,8 @@
 class_name AIAgent extends CharacterBody3D
 
+signal movement_started
+signal movement_stopped
+
 # Base Agent Script Setting
 @export_group("Agent")
 @export var agent_enabled = true

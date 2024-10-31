@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://dusgatgam4nlf" path="res://assets/ict398_presentation.png" id="5_17opr"]
 [ext_resource type="Script" path="res://knowledge_based_agents/scripts/Projector.gd" id="6_431pm"]
 [ext_resource type="Script" path="res://knowledge_based_agents/scripts/Affordance.gd" id="7_jur1u"]
-[ext_resource type="Script" path="res://player.gd" id="8_cnyso"]
+[ext_resource type="Script" path="res://player/player.gd" id="8_cnyso"]
 [ext_resource type="Script" path="res://camholder.gd" id="9_kqgfh"]
 [ext_resource type="Script" path="res://ui/log manager/LogDisplay.gd" id="10_fi5e7"]
 

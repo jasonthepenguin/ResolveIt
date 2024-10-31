@@ -9,7 +9,7 @@ var update_interval: float = 1.5
 var max_stuck_time: float = 0.5
 var distance_threshold: float = 0.001
 
-@onready var character: CharacterBody3D = get_parent()
+@onready var agent: AIAgent = get_parent()
 var accumulator = 0.0
 var random_move_accumulator = 0.0
 var last_location: Vector3
@@ -20,7 +20,7 @@ var new_velocity: Vector3
 var current_random_target: Vector2
 
 func _physics_process(delta):
-	current_location = character.global_position
+	current_location = agent.global_position
 	
 	# Handle random movement
 	if random_movement:
@@ -41,17 +41,17 @@ func _physics_process(delta):
 	# Handle rotation
 	if new_velocity.length_squared() > 0.01:  # Only rotate if we're moving
 		var target_rotation = atan2(new_velocity.x, new_velocity.z)
-		var current_rotation = character.rotation.y
+		var current_rotation = agent.rotation.y
 		
 		# Find shortest rotation path
 		var rotation_diff = fmod(target_rotation - current_rotation + PI, TAU) - PI
 		
 		# Smoothly interpolate rotation
-		character.rotation.y += rotation_diff * rotation_speed * delta
+		agent.rotation.y += rotation_diff * rotation_speed * delta
 		
 	# Apply movement
-	character.velocity = character.velocity.move_toward(new_velocity, .25)
-	character.move_and_slide()
+	agent.velocity = agent.velocity.move_toward(new_velocity, .25)
+	agent.move_and_slide()
 	
 	# Check if we're stuck
 	if not is_navigation_finished():
@@ -73,7 +73,7 @@ func _set_random_target():
 	var random_z = randf_range(-10, 10)
 	
 	# Get current position
-	var agent_pos = character.global_position
+	var agent_pos = agent.global_position
 	
 	# Set target relative to current position
 	current_random_target = Vector2(
@@ -90,6 +90,7 @@ func _set_random_target():
 # calling functions need to call await with this
 func move_to(new_position: Vector2) -> bool:
 	if debug_info: LogManager.add_message("Agent: Moving to ", new_position)
+	agent.movement_started.emit()
 	
 	# Disable random movement while executing specific move command
 	var was_random = random_movement
@@ -111,6 +112,7 @@ func move_to(new_position: Vector2) -> bool:
 	# Wait for movement to complete
 	await navigation_finished
 	if debug_info: LogManager.add_message("Agent: Target reached")
+	agent.movement_stopped.emit()
 	
 	# Restore random movement state
 	random_movement = was_random
@@ -118,4 +120,4 @@ func move_to(new_position: Vector2) -> bool:
 
 # Optional: Set agent rotation directly (useful for initial orientation)
 func set_rotation(angle: float):
-	character.rotation.y = angle
+	agent.rotation.y = angle

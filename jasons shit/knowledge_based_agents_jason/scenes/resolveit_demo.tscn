@@ -27,7 +27,7 @@
 [ext_resource type="Script" path="res://knowledge_based_agents/knowledge_base/TeacherAgent.gd" id="25_o1muj"]
 [ext_resource type="Texture2D" uid="uid://dusgatgam4nlf" path="res://assets/ict398_presentation.png" id="26_cfivn"]
 [ext_resource type="Script" path="res://knowledge_based_agents/scenes/Projector.gd" id="27_hvk4w"]
-[ext_resource type="Script" path="res://player.gd" id="28_lsdhw"]
+[ext_resource type="Script" path="res://player/player.gd" id="28_lsdhw"]
 [ext_resource type="Script" path="res://camholder.gd" id="29_xew8l"]
 [ext_resource type="Script" path="res://knowledge_based_agents/scripts/Affordance.gd" id="30_stkeo"]
 
