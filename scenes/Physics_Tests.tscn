@@ -1,0 +1,95 @@
+[gd_scene load_steps=15 format=3 uid="uid://cq0jqlj1pu88t"]
+
+[ext_resource type="Script" path="res://scenes/test_player.gd" id="1_i103g"]
+[ext_resource type="Script" path="res://camholder.gd" id="2_unaep"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_glpgg"]
+albedo_color = Color(0.355748, 0.530356, 0.0772348, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hptkr"]
+material = SubResource("StandardMaterial3D_glpgg")
+size = Vector3(20, 1, 20)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_n0npx"]
+size = Vector3(20, 1, 20)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_emyeg"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_52u6b"]
+
+[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_uq4go"]
+ground_color = Color(0.293452, 0.635648, 0.83722, 1)
+
+[sub_resource type="Sky" id="Sky_7mog1"]
+sky_material = SubResource("PhysicalSkyMaterial_uq4go")
+
+[sub_resource type="Environment" id="Environment_oi55r"]
+background_mode = 2
+sky = SubResource("Sky_7mog1")
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_lktvj"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_cqefs"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ja1x6"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_5df16"]
+
+[node name="PhysicsTests" type="Node3D"]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("BoxMesh_hptkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_n0npx")
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.21248, 6.7739)
+script = ExtResource("1_i103g")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+shape = SubResource("CapsuleShape3D_emyeg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D"]
+mesh = SubResource("CapsuleMesh_52u6b")
+
+[node name="camholder" type="Node3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.758108, -0.227613)
+script = ExtResource("2_unaep")
+
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D/camholder"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 2.27096e-13, 0.000139626, -0.000101903, -0.68363, 0.729828, 9.54528e-05, -0.729828, -0.68363, 0, 14.8426, 0)
+light_energy = 2.816
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_oi55r")
+
+[node name="PhysicsHandler" type="PhysicsHandler" parent="."]
+process_priority = 1
+
+[node name="RigidBodyCustom" type="RigidBodyCustom" parent="PhysicsHandler"]
+restitution = 1.0
+gravity_enabled = false
+velocity = Vector3(1, 2.08165e-12, 2.08165e-12)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 8, 2.08165e-12)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsHandler/RigidBodyCustom"]
+shape = SubResource("SphereShape3D_lktvj")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PhysicsHandler/RigidBodyCustom"]
+mesh = SubResource("SphereMesh_cqefs")
+
+[node name="RigidBodyCustom2" type="RigidBodyCustom" parent="PhysicsHandler"]
+restitution = 1.0
+gravity_enabled = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 8, 2.08165e-12)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsHandler/RigidBodyCustom2"]
+shape = SubResource("BoxShape3D_ja1x6")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PhysicsHandler/RigidBodyCustom2"]
+mesh = SubResource("BoxMesh_5df16")

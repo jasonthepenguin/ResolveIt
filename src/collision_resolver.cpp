@@ -114,45 +114,8 @@ void CollisionResolver::resolve_collision(Manifold& manifold, double delta) {
         // Calculate restitution (coefficient of restitution)
         float restitution = MIN(body_a->get_restitution(), body_b_restitution);
 
-        // **Add print statements here**
-
-        // 1. Mass properties of each body (mass and inertia tensor)
-        //UtilityFunctions::print("\n=== Collision Event ===");
-        //UtilityFunctions::print("Body A Mass: ", body_a->get_mass());
-        //UtilityFunctions::print("Body A Inertia Tensor: ", body_a->get_inverse_world_inertia_tensor().inverse());
-        if (!manifold.body_b_is_static && body_b) {
-            //UtilityFunctions::print("Body B Mass: ", body_b->get_mass());
-            //UtilityFunctions::print("Body B Inertia Tensor: ", body_b->get_inverse_world_inertia_tensor().inverse());
-        }
-
-        // 2. Contact normal
-        //UtilityFunctions::print("Contact Normal: ", collision_normal);
-
-        // 3. Center of mass of each body
-        //UtilityFunctions::print("Body A Center of Mass: ", body_a->get_center_of_mass_global());
-        if (!manifold.body_b_is_static && body_b) {
-            //UtilityFunctions::print("Body B Center of Mass: ", body_b->get_center_of_mass_global());
-        }
-
-        // 4. Contact points on each body
-        //UtilityFunctions::print("Contact Point: ", contact_point);
-
-        // 5. Linear and angular velocities before collision
-        //UtilityFunctions::print("Body A Linear Velocity Before Collision: ", body_a->get_velocity());
-        //UtilityFunctions::print("Body A Angular Velocity Before Collision: ", body_a->get_angular_velocity());
-        if (!manifold.body_b_is_static && body_b) {
-            //UtilityFunctions::print("Body B Linear Velocity Before Collision: ", body_b->get_velocity());
-            //UtilityFunctions::print("Body B Angular Velocity Before Collision: ", body_b->get_angular_velocity());
-        }
-
-        // 6. r1 and r2 values
-        //UtilityFunctions::print("r1 (Body A): ", ra);
-        if (!manifold.body_b_is_static && body_b) {
-            //UtilityFunctions::print("r2 (Body B): ", rb);
-        }
-
-        // 7. Coefficient of restitution used
-        //UtilityFunctions::print("Coefficient of Restitution: ", restitution);
+        // log BEFORE state
+        log_collision_state("Pre", manifold, contact_point, collision_normal, restitution, delta);
 
         // (Proceed with impulse calculation)
 
@@ -179,14 +142,11 @@ void CollisionResolver::resolve_collision(Manifold& manifold, double delta) {
 
         j /= denominator;
 
-        // **8. Impulse value (lambda) - momentum transferred**
-        //UtilityFunctions::print("Impulse Scalar (j): ", j);
+
 
         // Apply impulse
         Vector3 impulse = collision_normal * j;
 
-        // **Print impulse vector**
-        //UtilityFunctions::print("Impulse Vector: ", impulse);
 
         // Apply Linear and Angular impulse to body A
         body_a->apply_impulse_off_centre(impulse, ra);
@@ -196,14 +156,119 @@ void CollisionResolver::resolve_collision(Manifold& manifold, double delta) {
             body_b->apply_impulse_off_centre(-impulse, rb);
         }
 
-        // **Values of linear and angular velocity after collision**
-        //UtilityFunctions::print("\n=== After Collision ===");
-        //UtilityFunctions::print("Body A Linear Velocity After Collision: ", body_a->get_velocity());
-        //UtilityFunctions::print("Body A Angular Velocity After Collision: ", body_a->get_angular_velocity());
-        if (!manifold.body_b_is_static && body_b) {
-            //UtilityFunctions::print("Body B Linear Velocity After Collision: ", body_b->get_velocity());
-            //UtilityFunctions::print("Body B Angular Velocity After Collision: ", body_b->get_angular_velocity());
-        }
+        log_collision_state("Post", manifold, contact_point, collision_normal, restitution, delta);
+
+
     }
 }
 
+void CollisionResolver::log_collision_state(const char* phase,
+                                          const Manifold& manifold,
+                                          const Vector3& contact_point,
+                                          const Vector3& collision_normal,
+                                          float restitution,
+                                          double delta) {
+
+    
+    //UtilityFunctions::print("\n=== ", phase, " Collision at Time: ", current_time, "s ===");
+    
+    double current_time = Time::get_singleton()->get_ticks_msec() / 1000.0; // Convert milliseconds to seconds
+    UtilityFunctions::print("\n=== ", phase, " Collision at Time: ", current_time, "s ===");
+    
+
+    // Calculate system momentum and energy
+    Vector3 total_linear_momentum;
+    Vector3 total_angular_momentum;
+    float total_kinetic_energy = 0.0f;
+    
+    // Body A info
+    UtilityFunctions::print("Body A:");
+    auto* body_a = manifold.body_a;
+    UtilityFunctions::print("  - Mass: ", body_a->get_mass());
+    UtilityFunctions::print("  - Position: ", body_a->get_position());
+    UtilityFunctions::print("  - Center of Mass: ", body_a->get_center_of_mass_global());
+    UtilityFunctions::print("  - Linear Velocity: ", body_a->get_velocity());
+    UtilityFunctions::print("  - Angular Velocity: ", body_a->get_angular_velocity());
+    UtilityFunctions::print("  - Local Inertia: ", body_a->get_inverse_inertia_tensor());
+    UtilityFunctions::print("  - World Inertia: ", body_a->get_inverse_world_inertia_tensor().inverse());
+    
+    // Calculate body A contribution to system properties
+    Vector3 linear_momentum_a = body_a->get_velocity() * body_a->get_mass();
+    Vector3 angular_momentum_a = body_a->get_inverse_world_inertia_tensor().inverse().xform(
+        body_a->get_angular_velocity());
+    float kinetic_energy_a = 0.5f * body_a->get_mass() * body_a->get_velocity().length_squared() +
+                            0.5f * body_a->get_angular_velocity().dot(angular_momentum_a);
+    
+    total_linear_momentum += linear_momentum_a;
+    total_angular_momentum += angular_momentum_a;
+    total_kinetic_energy += kinetic_energy_a;
+    
+    UtilityFunctions::print("  - Linear Momentum: ", linear_momentum_a);
+    UtilityFunctions::print("  - Angular Momentum: ", angular_momentum_a);
+    UtilityFunctions::print("  - Kinetic Energy: ", kinetic_energy_a);
+    
+
+//manifold.body_b->get_local_
+    // Body B info
+    UtilityFunctions::print("Body B:");
+    if (manifold.body_b_is_static) {
+        UtilityFunctions::print("  - Static Body");
+    } else if (manifold.body_b) {
+        auto* body_b = manifold.body_b;
+        UtilityFunctions::print("  - Mass: ", body_b->get_mass());
+        UtilityFunctions::print("  - Position: ", body_b->get_position());
+        UtilityFunctions::print("  - Center of Mass: ", body_b->get_center_of_mass_global());
+        UtilityFunctions::print("  - Linear Velocity: ", body_b->get_velocity());
+        UtilityFunctions::print("  - Angular Velocity: ", body_b->get_angular_velocity());
+        UtilityFunctions::print("  - Local inverse Inertia: ", body_b->get_inverse_inertia_tensor());
+        UtilityFunctions::print("  - World inverse Inertia: ", body_b->get_inverse_world_inertia_tensor().inverse());
+        
+        // Calculate body B contribution to system properties
+        Vector3 linear_momentum_b = body_b->get_velocity() * body_b->get_mass();
+        Vector3 angular_momentum_b = body_b->get_inverse_world_inertia_tensor().inverse().xform(
+            body_b->get_angular_velocity());
+        float kinetic_energy_b = 0.5f * body_b->get_mass() * body_b->get_velocity().length_squared() +
+                                0.5f * body_b->get_angular_velocity().dot(angular_momentum_b);
+        
+        total_linear_momentum += linear_momentum_b;
+        total_angular_momentum += angular_momentum_b;
+        total_kinetic_energy += kinetic_energy_b;
+        
+        UtilityFunctions::print("  - Linear Momentum: ", linear_momentum_b);
+        UtilityFunctions::print("  - Angular Momentum: ", angular_momentum_b);
+        UtilityFunctions::print("  - Kinetic Energy: ", kinetic_energy_b);
+    }
+    
+    // Collision specifics
+    UtilityFunctions::print("Collision Data:");
+    UtilityFunctions::print("  - Contact Point: ", contact_point);
+    UtilityFunctions::print("  - Normal: ", collision_normal);
+    UtilityFunctions::print("  - Restitution: ", restitution);
+    
+    // For each contact point
+    UtilityFunctions::print("Contact Points Data:");
+    for (int i = 0; i < manifold.contact_points.size(); ++i) {
+        UtilityFunctions::print("  Contact ", i, ":");
+        UtilityFunctions::print("    - Position: ", manifold.contact_points[i]);
+        UtilityFunctions::print("    - Normal: ", manifold.collision_normals[i]);
+        UtilityFunctions::print("    - Penetration: ", manifold.penetrations[i]);
+    }
+    
+    // System totals
+    UtilityFunctions::print("System Totals:");
+    UtilityFunctions::print("  - Total Linear Momentum: ", total_linear_momentum);
+    UtilityFunctions::print("  - Total Angular Momentum: ", total_angular_momentum);
+    UtilityFunctions::print("  - Total Kinetic Energy: ", total_kinetic_energy);
+    
+    // If this is post-collision and we stored pre-collision values, we could add:
+    if (strcmp(phase, "Post") == 0) {
+        // These would need to be stored as class members from pre-collision
+        // UtilityFunctions::print("Conservation Checks:");
+        // UtilityFunctions::print("  - Linear Momentum Change: ", 
+        //     (total_linear_momentum - pre_collision_linear_momentum).length());
+        // UtilityFunctions::print("  - Angular Momentum Change: ",
+        //     (total_angular_momentum - pre_collision_angular_momentum).length());
+        // UtilityFunctions::print("  - Energy Ratio: ", 
+        //     total_kinetic_energy / pre_collision_energy);
+    }
+}

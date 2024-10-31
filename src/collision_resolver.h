@@ -6,6 +6,10 @@
 #include "rigid_body_custom.h"
 #include <unordered_map>
 
+#include <godot_cpp/classes/engine.hpp>
+#include <godot_cpp/classes/time.hpp>
+
+
 #include "i_collision_resolver.h"
 
 namespace godot {
@@ -47,6 +51,15 @@ public:
      * @param detector Pointer to the collision detector instance
      */
     void set_collision_detector(ICollisionDetector* detector) { collision_detector = detector; }
+
+
+    void log_collision_state(const char* phase, 
+                           const Manifold& manifold,
+                           const Vector3& contact_point,
+                           const Vector3& collision_normal,
+                           float restitution,
+                           double delta);
+
 
 private:
     /**
