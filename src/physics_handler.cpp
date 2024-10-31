@@ -53,8 +53,11 @@ void PhysicsHandler::_bind_methods() {
 
 PhysicsHandler::PhysicsHandler() {
     physics_server = PhysicsServer3D::get_singleton();
+
+    // concrete implementations through interfaces
     collision_detector = std::make_unique<CollisionDetector>(physics_server);
     collision_resolver = std::make_unique<CollisionResolver>();
+
     collision_resolver->set_collision_detector(collision_detector.get());
 }
 

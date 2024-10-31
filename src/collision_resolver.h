@@ -6,6 +6,8 @@
 #include "rigid_body_custom.h"
 #include <unordered_map>
 
+#include "i_collision_resolver.h"
+
 namespace godot {
 
 /**
@@ -15,7 +17,7 @@ namespace godot {
  * by applying impulses and positional corrections. It works in conjunction with the
  * CollisionDetector to handle physics simulation responses.
  */
-class CollisionResolver {
+class CollisionResolver : public ICollisionResolver{
 public:
     /** @brief Default constructor */
     CollisionResolver();
@@ -44,7 +46,7 @@ public:
      * @brief Sets the collision detector to be used for resolution
      * @param detector Pointer to the collision detector instance
      */
-    void set_collision_detector(CollisionDetector* detector) { collision_detector = detector; }
+    void set_collision_detector(ICollisionDetector* detector) { collision_detector = detector; }
 
 private:
     /**
@@ -57,7 +59,8 @@ private:
     float correction_percent = 0.05f;  ///< Percentage of penetration to correct per frame
     float position_slop = 0.01f;      ///< Small overlap allowed before position correction
     float epsilon = 0.0001f;          ///< Small value for floating-point comparisons
-    CollisionDetector* collision_detector = nullptr;  ///< Pointer to the collision detector
+    //CollisionDetector* collision_detector = nullptr;  ///< Pointer to the collision detector
+    ICollisionDetector* collision_detector = nullptr;  ///< Pointer to the collision detector
 };
 
 }

@@ -20,6 +20,9 @@
 
 #include "manifold.h"
 
+#include "i_collision_detector.h"
+#include "i_collision_resolver.h"
+
 #include "collision_detector.h"
 #include "collision_resolver.h"
 
@@ -52,9 +55,9 @@ namespace godot {
             /** @brief Reference to the physics server */
             PhysicsServer3D *physics_server;
             /** @brief Handles collision detection between bodies */
-            std::unique_ptr<CollisionDetector> collision_detector;
+            std::unique_ptr<ICollisionDetector> collision_detector;
             /** @brief Handles resolution of detected collisions */
-            std::unique_ptr<CollisionResolver> collision_resolver;
+            std::unique_ptr<ICollisionResolver> collision_resolver;
 
             // Position correction constants
             /** @brief Percentage of intersection resolution per frame (0-1) */

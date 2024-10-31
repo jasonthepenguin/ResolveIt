@@ -24,6 +24,9 @@
 #include <godot_cpp/classes/engine.hpp>
 #include<godot_cpp/classes/static_body3d.hpp>
 
+
+#include "i_collision_detector.h"
+
 namespace godot{
 
 /**
@@ -33,7 +36,7 @@ namespace godot{
  * between RigidBodyCustom objects. It maintains a collection of collision manifolds
  * that describe the contact points between colliding bodies.
  */
-class CollisionDetector {
+class CollisionDetector : public ICollisionDetector{
 public:
     /**
      * @brief Constructs a CollisionDetector object.
