@@ -2,14 +2,14 @@
 
 [ext_resource type="Script" path="res://knowledge_based_agents/scripts/WorldState.gd" id="1_mr0c2"]
 [ext_resource type="Script" path="res://knowledge_based_agents/scripts/debug_utils.gd" id="2_13orv"]
-[ext_resource type="PackedScene" uid="uid://bdaq6bfixbty2" path="res://knowledge_based_agents/scenes/vr_lab2.tscn" id="3_v7gbd"]
+[ext_resource type="PackedScene" uid="uid://bdaq6bfixbty2" path="res://vr_room/lab.tscn" id="3_v7gbd"]
 [ext_resource type="PackedScene" uid="uid://cvx7s6x5vdo0e" path="res://knowledge_based_agents/AIAgent/TeacherAgent.tscn" id="4_yw58n"]
 [ext_resource type="Texture2D" uid="uid://dusgatgam4nlf" path="res://assets/ict398_presentation.png" id="5_17opr"]
 [ext_resource type="Script" path="res://knowledge_based_agents/scripts/Projector.gd" id="6_431pm"]
 [ext_resource type="Script" path="res://knowledge_based_agents/scripts/Affordance.gd" id="7_jur1u"]
 [ext_resource type="Script" path="res://player.gd" id="8_cnyso"]
 [ext_resource type="Script" path="res://camholder.gd" id="9_kqgfh"]
-[ext_resource type="Script" path="res://log manager/LogDisplay.gd" id="10_fi5e7"]
+[ext_resource type="Script" path="res://ui/log manager/LogDisplay.gd" id="10_fi5e7"]
 
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_v2glv"]

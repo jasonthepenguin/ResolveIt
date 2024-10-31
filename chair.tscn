@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://dbg61kthivd70"]
-
-[ext_resource type="PackedScene" uid="uid://dt7u4dx6ubmwc" path="res://assets/beach chair.glb" id="1_mfxkl"]
-
-[node name="Node3D" type="Node3D"]
-
-[node name="beach chair" parent="." instance=ExtResource("1_mfxkl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.316671, 0, -0.415846)
