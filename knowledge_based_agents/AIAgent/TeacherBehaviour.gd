@@ -25,9 +25,6 @@ func _initialize_knowledge():
 		"equipment_failure"
 	])
 	kb.add_rule("equipment_failure", [
-		"computer_is_broken"
-	])
-	kb.add_rule("equipment_failure", [
 		"projector_is_off"
 	])
 	
