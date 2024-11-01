@@ -115,7 +115,7 @@ void CollisionResolver::resolve_collision(Manifold& manifold, double delta) {
         float restitution = MIN(body_a->get_restitution(), body_b_restitution);
 
         // log BEFORE state
-        log_collision_state("Pre", manifold, contact_point, collision_normal, restitution, delta);
+        //log_collision_state("Pre", manifold, contact_point, collision_normal, restitution, delta);
 
         // (Proceed with impulse calculation)
 
@@ -147,6 +147,10 @@ void CollisionResolver::resolve_collision(Manifold& manifold, double delta) {
         // Apply impulse
         Vector3 impulse = collision_normal * j;
 
+         // Print impulse value
+        //UtilityFunctions::print("Applied impulse magnitude: ", impulse.length());
+        //UtilityFunctions::print("Applied impulse vector: ", impulse);
+
 
         // Apply Linear and Angular impulse to body A
         body_a->apply_impulse_off_centre(impulse, ra);
@@ -156,7 +160,7 @@ void CollisionResolver::resolve_collision(Manifold& manifold, double delta) {
             body_b->apply_impulse_off_centre(-impulse, rb);
         }
 
-        log_collision_state("Post", manifold, contact_point, collision_normal, restitution, delta);
+        //log_collision_state("Post", manifold, contact_point, collision_normal, restitution, delta);
 
 
     }
@@ -189,8 +193,8 @@ void CollisionResolver::log_collision_state(const char* phase,
     UtilityFunctions::print("  - Center of Mass: ", body_a->get_center_of_mass_global());
     UtilityFunctions::print("  - Linear Velocity: ", body_a->get_velocity());
     UtilityFunctions::print("  - Angular Velocity: ", body_a->get_angular_velocity());
-    UtilityFunctions::print("  - Local Inertia: ", body_a->get_inverse_inertia_tensor());
-    UtilityFunctions::print("  - World Inertia: ", body_a->get_inverse_world_inertia_tensor().inverse());
+    UtilityFunctions::print("  - Local inverse Inertia: ", body_a->get_inverse_inertia_tensor());
+    UtilityFunctions::print("  - World inverse Inertia: ", body_a->get_inverse_world_inertia_tensor().inverse());
     
     // Calculate body A contribution to system properties
     Vector3 linear_momentum_a = body_a->get_velocity() * body_a->get_mass();

@@ -52,6 +52,7 @@ void godot::RigidBodyCustom::_bind_methods()
     // Inertia tensor methods
     ClassDB::bind_method(D_METHOD("get_inverse_inertia_tensor"), &RigidBodyCustom::get_inverse_inertia_tensor);
     ClassDB::bind_method(D_METHOD("update_inertia_tensor"), &RigidBodyCustom::update_inertia_tensor);
+    ClassDB::bind_method(D_METHOD("get_world_inertia_tensor"), &RigidBodyCustom::get_world_inertia_tensor);
     
     // Integration control methods
     ClassDB::bind_method(D_METHOD("set_integrate_forces_enabled", "enabled"), &RigidBodyCustom::set_integrate_forces_enabled);
@@ -109,7 +110,7 @@ godot::RigidBodyCustom::RigidBodyCustom()
       forces(Vector3(0, 0, 0)),
       mass(1.0f),
       inverse_mass(1.0f),
-      restitution(0.80f),
+      restitution(1.0f),
       gravity(Vector3(0, -9.8, 0)),
       old_position(),
       center_of_mass_local(Vector3(0,0,0)),
@@ -180,6 +181,7 @@ void godot::RigidBodyCustom::_ready() {
     body_trans = get_global_transform();
     position = body_trans.origin;
     old_position = position;
+    previous_basis = body_trans.basis;
 
     // print position
     //UtilityFunctions::print("Position: ");
@@ -550,9 +552,21 @@ void godot::RigidBodyCustom::apply_impulse_off_centre(const Vector3& impulse, co
 void godot::RigidBodyCustom::update_world_inertia_tensor()
 {
     Transform3D current_transform = get_trans();
-    // get rotation basis
     Basis rotation = current_transform.basis;
+    
+    // Get Euler angles in degrees
+    Vector3 euler_angles = rotation.get_euler(EULER_ORDER_XYZ);
+    Vector3 degrees = euler_angles * (180.0f / Math_PI);  // Convert radians to degrees
+    
+    //UtilityFunctions::print("=== Orientation Debug ===");
+    //UtilityFunctions::print("Rotation (degrees) - X: ", degrees.x, " Y: ", degrees.y, " Z: ", degrees.z);
+    //UtilityFunctions::print("Local inverse inertia tensor: ", inverse_inertia_tensor);
+    
+    world_inertia_tensor = rotation * inertia_tensor * rotation.transposed(); // for testing purposes have both
+
     inverse_world_inertia_tensor = rotation * inverse_inertia_tensor * rotation.transposed();
+    //UtilityFunctions::print("World inverse inertia tensor: ", inverse_world_inertia_tensor);
+    //UtilityFunctions::print("======");
 }
 
 void godot::RigidBodyCustom::set_integrate_forces_enabled(bool p_enabled) {

@@ -105,6 +105,7 @@ private:
 
     /** @brief Inverse of the inertia tensor in world coordinates */
     Basis inverse_world_inertia_tensor;
+    Basis world_inertia_tensor;
 
     /**
      * @brief Updates the world space inertia tensor
@@ -312,6 +313,11 @@ public:
     /** @brief Gets the inverse inertia tensor in world coordinates
      *  @return Reference to the world space inverse inertia tensor matrix */
     const Basis& get_inverse_world_inertia_tensor() const { return inverse_world_inertia_tensor; }
+
+    /** @brief Gets the inertia tensor in world coordinates
+     *  @return Reference to the world space inertia tensor matrix */
+    const Basis& get_world_inertia_tensor() const { return world_inertia_tensor; }
+    
 
     /** @brief Enables or disables gravity for this rigid body
      *  @param p_enabled True to enable gravity, false to disable */
