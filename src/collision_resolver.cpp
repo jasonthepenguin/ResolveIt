@@ -37,7 +37,6 @@ void CollisionResolver::apply_positional_corrections() {
         float body_b_mass = INFINITY;
 
         if (!manifold.body_b_is_static) {
-            //body_b = Object::cast_to<RigidBodyCustom>(manifold.body_b);
             body_b = manifold.body_b;
             if (body_b) {
                 body_b_mass = body_b->get_mass();
@@ -73,96 +72,87 @@ void CollisionResolver::apply_positional_corrections() {
 
 
 void CollisionResolver::resolve_collision(Manifold& manifold, double delta) {
-    RigidBodyCustom* body_a = manifold.body_a;
-    RigidBodyCustom* body_b = manifold.body_b;
+    // Get the two colliding bodies
+    RigidBodyCustom* body_a = manifold.body_a;     // Body 1 in equation
+    RigidBodyCustom* body_b = manifold.body_b;     // Body 2 in equation
 
-    Vector3 body_b_velocity = Vector3();
-    Vector3 body_b_angular_velocity = Vector3();
-    float body_b_inv_mass = 0.0f;
-    float body_b_restitution = 1.0f;
+    // Initialize body B properties (handling static case)
+    Vector3 body_b_velocity = Vector3();           // V₂ if static
+    Vector3 body_b_angular_velocity = Vector3();   // ω₂ if static
+    float body_b_inv_mass = 0.0f;                 // 1/m₂ if static
+    float body_b_restitution = 1.0f;              // ε for body 2
 
-    if (!manifold.body_b_is_static && body_b){
-        body_b_velocity = body_b->get_velocity();
-        body_b_angular_velocity = body_b->get_angular_velocity();
-        body_b_inv_mass = body_b->get_inv_mass();
-        body_b_restitution = body_b->get_restitution();
+    // Get body B properties if it's not static
+    if (!manifold.body_b_is_static && body_b) {
+        body_b_velocity = body_b->get_velocity();           // V₂
+        body_b_angular_velocity = body_b->get_angular_velocity(); // ω₂
+        body_b_inv_mass = body_b->get_inv_mass();          // 1/m₂
+        body_b_restitution = body_b->get_restitution();    // ε
     }
 
-    // Process each contact point independently
     for (size_t i = 0; i < manifold.contact_points.size(); ++i) {
-        Vector3 collision_normal = manifold.collision_normals[i];
+        Vector3 collision_normal = manifold.collision_normals[i];    // n̂ (unit normal)
         Vector3 contact_point = manifold.contact_points[i];
 
-        // Calculate relative contact points
-        Vector3 ra = contact_point - body_a->get_center_of_mass_global();
-        Vector3 rb = manifold.body_b_is_static ? Vector3() : contact_point - body_b->get_center_of_mass_global();
+        // r₁ and r₂ vectors (from center of mass to contact point)
+        Vector3 ra = contact_point - body_a->get_center_of_mass_global();  // r₁
+        Vector3 rb = manifold.body_b_is_static ? Vector3() 
+                    : contact_point - body_b->get_center_of_mass_global(); // r₂
 
-        // Compute velocities at contact points
+        // Calculate V₁ + ω₁×r₁ and V₂ + ω₂×r₂ (velocities at contact points)
         Vector3 vel_a = body_a->get_velocity() + body_a->get_angular_velocity().cross(ra);
-        Vector3 vel_b = manifold.body_b_is_static ? Vector3() : body_b->get_velocity() + body_b->get_angular_velocity().cross(rb);
+        Vector3 vel_b = manifold.body_b_is_static ? Vector3() 
+                       : body_b->get_velocity() + body_b->get_angular_velocity().cross(rb);
 
-        // Compute relative velocity at contact point
+        // Calculate (V₁ - V₂) (relative velocity)
         Vector3 relative_velocity = vel_a - vel_b;
 
+        // Calculate n̂·(V₁ - V₂) (velocity along normal)
         float velocity_along_normal = relative_velocity.dot(collision_normal);
 
-        // Skip if objects are separating
+        // Skip if separating (positive relative velocity)
         if (velocity_along_normal > 0) {
             continue;
         }
 
-        // Calculate restitution (coefficient of restitution)
+        // Get ε (coefficient of restitution)
         float restitution = MIN(body_a->get_restitution(), body_b_restitution);
 
-        // log BEFORE state
-        //log_collision_state("Pre", manifold, contact_point, collision_normal, restitution, delta);
-
-        // (Proceed with impulse calculation)
-
-        // Calculate angular contribution terms
-        Vector3 raxn = ra.cross(collision_normal);
+        // Calculate r₁×n̂ and r₂×n̂ terms
+        Vector3 raxn = ra.cross(collision_normal);    // r₁×n̂
+        // Calculate (r₁×n̂)ᵀJ₁⁻¹(r₁×n̂) term
         Vector3 angular_term_a = body_a->get_inverse_world_inertia_tensor().xform(raxn).cross(ra);
 
+        // Calculate (r₂×n̂)ᵀJ₂⁻¹(r₂×n̂) term for non-static body
         Vector3 angular_term_b = Vector3();
         if (!manifold.body_b_is_static) {
-            Vector3 rbxn = rb.cross(collision_normal);
+            Vector3 rbxn = rb.cross(collision_normal);    // r₂×n̂
             angular_term_b = body_b->get_inverse_world_inertia_tensor().xform(rbxn).cross(rb);
         }
 
-        // Compute impulse scalar
+        // Calculate numerator: -(1 + ε)(n̂·(V₁-V₂))
         float j = -(1.0f + restitution) * velocity_along_normal;
-        float denominator = body_a->get_inv_mass() + body_b_inv_mass + collision_normal.dot(angular_term_a + angular_term_b);
 
-        if (std::abs(denominator) < epsilon){
+        // Calculate denominator: 1/m₁ + 1/m₂ + (r₁×n̂)ᵀJ₁⁻¹(r₁×n̂) + (r₂×n̂)ᵀJ₂⁻¹(r₂×n̂)
+        float denominator = body_a->get_inv_mass() + body_b_inv_mass + 
+                          collision_normal.dot(angular_term_a + angular_term_b);
+
+        // Skip if denominator is too small
+        if (std::abs(denominator) < epsilon || denominator == 0.0f) {
             continue;
         }
-        if (denominator == 0.0f) {
-            continue;
-        }
 
+        // Final impulse magnitude calculation: j = numerator/denominator
         j /= denominator;
 
-
-
-        // Apply impulse
+        // Convert to vector by multiplying with n̂: Λ = jn̂
         Vector3 impulse = collision_normal * j;
 
-         // Print impulse value
-        //UtilityFunctions::print("Applied impulse magnitude: ", impulse.length());
-        //UtilityFunctions::print("Applied impulse vector: ", impulse);
-
-
-        // Apply Linear and Angular impulse to body A
+        // Apply the impulses to both bodies
         body_a->apply_impulse_off_centre(impulse, ra);
-
-        // Apply impulse to body B if it's not static and not null
         if (!manifold.body_b_is_static && body_b) {
             body_b->apply_impulse_off_centre(-impulse, rb);
         }
-
-        //log_collision_state("Post", manifold, contact_point, collision_normal, restitution, delta);
-
-
     }
 }
 
@@ -174,7 +164,6 @@ void CollisionResolver::log_collision_state(const char* phase,
                                           double delta) {
 
     
-    //UtilityFunctions::print("\n=== ", phase, " Collision at Time: ", current_time, "s ===");
     
     double current_time = Time::get_singleton()->get_ticks_msec() / 1000.0; // Convert milliseconds to seconds
     UtilityFunctions::print("\n=== ", phase, " Collision at Time: ", current_time, "s ===");
@@ -264,15 +253,5 @@ void CollisionResolver::log_collision_state(const char* phase,
     UtilityFunctions::print("  - Total Angular Momentum: ", total_angular_momentum);
     UtilityFunctions::print("  - Total Kinetic Energy: ", total_kinetic_energy);
     
-    // If this is post-collision and we stored pre-collision values, we could add:
-    if (strcmp(phase, "Post") == 0) {
-        // These would need to be stored as class members from pre-collision
-        // UtilityFunctions::print("Conservation Checks:");
-        // UtilityFunctions::print("  - Linear Momentum Change: ", 
-        //     (total_linear_momentum - pre_collision_linear_momentum).length());
-        // UtilityFunctions::print("  - Angular Momentum Change: ",
-        //     (total_angular_momentum - pre_collision_angular_momentum).length());
-        // UtilityFunctions::print("  - Energy Ratio: ", 
-        //     total_kinetic_energy / pre_collision_energy);
-    }
+
 }

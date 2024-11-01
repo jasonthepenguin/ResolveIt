@@ -104,9 +104,9 @@ void PhysicsHandler::_ready() {
 
     singleton = this;
     // print my current process priority
-    //UtilityFunctions::print("my process priority is : ");
+    
     set_process_priority(1); // im testing this to see if updates to my rigid bodies are done before physics handler
-    //UtilityFunctions::print(get_process_priority());
+    
 
     if(Engine::get_singleton()->is_editor_hint()){
         set_physics_process(false);
@@ -141,7 +141,6 @@ void PhysicsHandler::_physics_process(double delta) {
     update_server_transforms();
 
    // positional correction
-   //apply_positional_corrections(manifold_map);
     collision_resolver->apply_positional_corrections();
     update_server_transforms();
 
@@ -152,7 +151,7 @@ void PhysicsHandler::gather_bodies() {
     for (int i = 0; i < get_child_count(); ++i) {
         Node *child = get_child(i);
         if (RigidBodyCustom *rigid_body = Object::cast_to<RigidBodyCustom>(child)) {
-            //UtilityFunctions::print("gathered a body!");
+            
             rigid_bodies.push_back(rigid_body);
             rid_map[rigid_body->get_body_rid()] = rigid_body;
         }

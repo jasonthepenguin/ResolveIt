@@ -183,10 +183,6 @@ void godot::RigidBodyCustom::_ready() {
     old_position = position;
     previous_basis = body_trans.basis;
 
-    // print position
-    //UtilityFunctions::print("Position: ");
-    //UtilityFunctions::print(body_trans.origin);
-
     // Get the physics server
     physics_server = PhysicsServer3D::get_singleton();
 
@@ -196,10 +192,10 @@ void godot::RigidBodyCustom::_ready() {
 
         if (child->is_class("CollisionShape3D")) {
             collision_shape = Object::cast_to<CollisionShape3D>(child);
-           // UtilityFunctions::print("Found a collision shape.");
+           
         } else if (child->is_class("MeshInstance3D")) {
             mesh_instance = Object::cast_to<MeshInstance3D>(child);
-           // UtilityFunctions::print("Found a mesh instance.");
+           
         }
     }
 
@@ -222,7 +218,7 @@ void godot::RigidBodyCustom::_ready() {
         physics_server->body_set_omit_force_integration(body_rid, true);
         physics_server->body_set_mode(body_rid, PhysicsServer3D::BODY_MODE_RIGID);
 
-        //UtilityFunctions::print("Added collision shape to body in the physics server.");
+        
         
 
         // Update global center of mass based on where ever the user has placed RigidBodyCustom in their scene
@@ -234,12 +230,6 @@ void godot::RigidBodyCustom::_ready() {
 
     }
 
-    //UtilityFunctions::print("Initialization complete.");
-
-
-    // Test impulse application
-    //apply_torque(Vector3(10,0,0));
-    //apply_impulse_off_centre(Vector3(60, 0, 0), Vector3(0, 1, 0));  // Force applied away from center
 }
 
 void godot::RigidBodyCustom::update_inertia_tensor()
@@ -255,11 +245,8 @@ void godot::RigidBodyCustom::update_inertia_tensor()
     Vector3 size;
 
     if(shape_class == "SphereShape3D"){
-        //UtilityFunctions::print("we have a SphereShape3D");
         Ref<SphereShape3D> sphere = Object::cast_to<SphereShape3D>(collision_shape->get_shape().ptr());
         float radius = sphere->get_radius();
-        //UtilityFunctions::print("our radius from calling ref of sphere : ");
-        //UtilityFunctions::print(sphere->get_radius());
         // Inertia calculation for a sphere I = 2/5 * m * r^2 for solid sphere
         float i = (2.0f/5.0f) * mass * radius * radius;
         inertia = Vector3(i,i,i);
@@ -279,27 +266,6 @@ void godot::RigidBodyCustom::update_inertia_tensor()
     
     inverse_inertia_tensor = inertia_tensor.inverse();
 
-
-     // For debugging ( print calculated inertia values to be certain )
-     
-    //UtilityFunctions::print("Calculated inertia tensor for shape: ", shape_class);
-    //UtilityFunctions::print("Inertia values: ", inertia);
-
-    
-    //UtilityFunctions::print("Inertia tensor values : ");
-    //UtilityFunctions::print(inertia_tensor);
-    
-
-    // Debug prints
-    //UtilityFunctions::print("Box size: ", size);
-    //UtilityFunctions::print("Mass: ", mass);
-    
-    
-    //UtilityFunctions::print("the shape class is : ");
-    //UtilityFunctions::print(collision_shape->get_shape()->get_class());
-    
-
-    // determine shape to use correct primitive shape inertia alogirthm calc
 
 }
 
@@ -358,18 +324,14 @@ Vector3 godot::RigidBodyCustom::get_gravity() const {
 
 
 void godot::RigidBodyCustom::apply_impulse(const Vector3& impulse){
-    // attempting method different from cookbook as that seemed to just add velocity directly
-    // this way at least we are taking the mass of the object into account
-
+   
     // LINEAR VELOCITY
     velocity = velocity + (impulse * inverse_mass); // scale the impulse based on objects mass
     
-    // TODO : ANGULAR VERSION OF THIS FUNCTION SO WE CAN APPLY IMPULSE OFF CENTRE ( eg rotational velocity  + linear velocity)
-    // point of application and angular component later etc
 
 }
 
-//  (Improved Euler/Heun's Method) decided to implement this when reading chapter Chapter 7, real time simulations (better methods section)
+//  (Explicit Euler integration) decided to implement this when reading chapter Chapter 7, real time simulations (better methods section)
 void godot::RigidBodyCustom::integrate_forces(double delta_time) {
     // Add check at the start of the method
     if (!integrate_forces_enabled) {
@@ -383,9 +345,7 @@ void godot::RigidBodyCustom::integrate_forces(double delta_time) {
     old_position = position;
     old_velocity = velocity;
 
-    //update_world_inertia_tensor();
-
-
+    
 
     //Vector3 acceleration = (forces) * inverse_mass + gravity;
     
@@ -443,18 +403,7 @@ void godot::RigidBodyCustom::integrate_forces(double delta_time) {
     // Update transform
     set_trans(new_trans);
 
-    // Debug output if needed
-    /*
-    UtilityFunctions::print("\n=== Physics Update ===");
-    UtilityFunctions::print("Position: ", position);
-    UtilityFunctions::print("Velocity: ", velocity);
-    UtilityFunctions::print("Acceleration: ", acceleration);
-    UtilityFunctions::print("Angular Velocity: ", angular_velocity);
-    UtilityFunctions::print("Linear KE: ", linear_kinetic_energy);
-    UtilityFunctions::print("Angular KE: ", angular_kinetic_energy);
-    UtilityFunctions::print("Forces: ", forces);
-    UtilityFunctions::print("Torque: ", torque);
-    */
+
 
     // Clear forces and torque for next frame
     forces = Vector3();
@@ -542,10 +491,6 @@ void godot::RigidBodyCustom::apply_impulse_off_centre(const Vector3& impulse, co
 
 
     
-   // UtilityFunctions::print("Applied impulse: ", impulse);
-   // UtilityFunctions::print("At relative position: ", rel_pos);
-   // UtilityFunctions::print("Resulting angular impulse: ", rel_pos.cross(impulse));
-    
     
 }
 
@@ -558,15 +503,11 @@ void godot::RigidBodyCustom::update_world_inertia_tensor()
     Vector3 euler_angles = rotation.get_euler(EULER_ORDER_XYZ);
     Vector3 degrees = euler_angles * (180.0f / Math_PI);  // Convert radians to degrees
     
-    //UtilityFunctions::print("=== Orientation Debug ===");
-    //UtilityFunctions::print("Rotation (degrees) - X: ", degrees.x, " Y: ", degrees.y, " Z: ", degrees.z);
-    //UtilityFunctions::print("Local inverse inertia tensor: ", inverse_inertia_tensor);
     
     world_inertia_tensor = rotation * inertia_tensor * rotation.transposed(); // for testing purposes have both
 
     inverse_world_inertia_tensor = rotation * inverse_inertia_tensor * rotation.transposed();
-    //UtilityFunctions::print("World inverse inertia tensor: ", inverse_world_inertia_tensor);
-    //UtilityFunctions::print("======");
+
 }
 
 void godot::RigidBodyCustom::set_integrate_forces_enabled(bool p_enabled) {
@@ -633,3 +574,4 @@ void godot::RigidBodyCustom::set_collision_mask(uint32_t p_mask) {
 uint32_t RigidBodyCustom::get_collision_mask() const {
     return collision_mask;
 }
+
