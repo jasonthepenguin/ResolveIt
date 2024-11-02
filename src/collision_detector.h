@@ -49,7 +49,7 @@ public:
      * @param bodies Vector of RigidBodyCustom pointers to check for collisions.
      * @param rid_map Map of RIDs to their corresponding RigidBodyCustom pointers.
      */
-    void detect_collisions(
+    void DetectCollisions(
         const std::vector<RigidBodyCustom*>& bodies,
         const std::map<RID, RigidBodyCustom*>& rid_map
     );
@@ -57,7 +57,7 @@ public:
     /**
      * @brief Clears all stored collision manifolds.
      */
-    void clear_manifolds();
+    void ClearManifolds();
 
     /**
      * @brief Gets the map of collision manifolds.
@@ -66,8 +66,8 @@ public:
     std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash>& get_manifold_map();
 
 private:
-    PhysicsServer3D* physics_server; ///< Pointer to the physics server instance
-    std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash> manifold_map; ///< Map storing collision manifolds
+    PhysicsServer3D* physics_server_; ///< Added trailing underscore
+    std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash> manifold_map_; ///< Added trailing underscore
 };
 
 

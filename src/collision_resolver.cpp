@@ -5,30 +5,30 @@ using namespace godot;
 
 CollisionResolver::CollisionResolver() {}
 
-void CollisionResolver::set_parameters(float p_correction_percent, float p_position_slop, float p_epsilon) {
-    correction_percent = p_correction_percent;
-    position_slop = p_position_slop;
-    epsilon = p_epsilon;
+void CollisionResolver::set_parameters(float correction_percent, float position_slop, float epsilon) {
+    correction_percent_ = correction_percent;
+    position_slop_ = position_slop;
+    epsilon_ = epsilon;
 }
 
-void CollisionResolver::resolve_collisions(double delta, int impulse_iterations) {
-    if (!collision_detector) return;
+void CollisionResolver::ResolveCollisions(double delta, int impulse_iterations) {
+    if (!collision_detector_) return;
     
-    auto& manifold_map = collision_detector->get_manifold_map();
+    auto& manifold_map = collision_detector_->get_manifold_map();
     for(int i = 0; i < impulse_iterations; ++i) {
         for (auto& pair : manifold_map) {
             // Use reference to modify the original manifold
             Manifold& manifold = pair.second;
-            resolve_collision(manifold, delta);
+            ResolveCollision(manifold, delta);
         }
     }
 }
 
-void CollisionResolver::apply_positional_corrections() {
+void CollisionResolver::ApplyPositionalCorrections() {
     
-    if(!collision_detector) return;
+    if(!collision_detector_) return;
 
-    auto& manifold_map = collision_detector->get_manifold_map();
+    auto& manifold_map = collision_detector_->get_manifold_map();
     
     for (const auto& pair : manifold_map) {
         const Manifold& manifold = pair.second;
@@ -46,8 +46,8 @@ void CollisionResolver::apply_positional_corrections() {
         for (size_t i = 0; i < manifold.contact_points.size(); ++i) {
             float penetration = manifold.penetrations[i];
             ////UtilityFunctions::print(penetration);
-            if (std::abs(penetration) > position_slop ) {
-                Vector3 correction = manifold.collision_normals[i] * (penetration - position_slop) * correction_percent;
+            if (std::abs(penetration) > position_slop_ ) {
+                Vector3 correction = manifold.collision_normals[i] * (penetration - position_slop_) * correction_percent_;
 
                 if (body_b_mass == INFINITY)
                 {
@@ -71,7 +71,7 @@ void CollisionResolver::apply_positional_corrections() {
 
 
 
-void CollisionResolver::resolve_collision(Manifold& manifold, double delta) {
+void CollisionResolver::ResolveCollision(Manifold& manifold, double delta) {
     // Get the two colliding bodies
     RigidBodyCustom* body_a = manifold.body_a;     // Body 1 in equation
     RigidBodyCustom* body_b = manifold.body_b;     // Body 2 in equation
@@ -94,69 +94,63 @@ void CollisionResolver::resolve_collision(Manifold& manifold, double delta) {
         Vector3 collision_normal = manifold.collision_normals[i];    // n̂ (unit normal)
         Vector3 contact_point = manifold.contact_points[i];
 
+        // NUMERATOR 
+        // first doing most inner bracket calculations
+        Vector3 linear_rel_vel = body_a->get_velocity() - body_b_velocity;
+
         // r₁ and r₂ vectors (from center of mass to contact point)
-        Vector3 ra = contact_point - body_a->get_center_of_mass_global();  // r₁
-        Vector3 rb = manifold.body_b_is_static ? Vector3() 
+        Vector3 r1 = contact_point - body_a->get_center_of_mass_global();  // r₁
+        Vector3 r2 = manifold.body_b_is_static ? Vector3() 
                     : contact_point - body_b->get_center_of_mass_global(); // r₂
+        
+        Vector3 r1_x_n = r1.cross(collision_normal);
+        Vector3 r2_x_n = r2.cross(collision_normal);
 
-        // Calculate V₁ + ω₁×r₁ and V₂ + ω₂×r₂ (velocities at contact points)
-        Vector3 vel_a = body_a->get_velocity() + body_a->get_angular_velocity().cross(ra);
-        Vector3 vel_b = manifold.body_b_is_static ? Vector3() 
-                       : body_b->get_velocity() + body_b->get_angular_velocity().cross(rb);
+        double minus_one_plus_e = -(1 + MIN(body_a->get_restitution(), body_b_restitution) );
+        // *
+        double n_x_linear_rel_vel = linear_rel_vel.dot(collision_normal);
+        // + 
+        double w1_dot_r1_x_n = body_a->get_angular_velocity().dot(r1_x_n);
+        // - 
+        double w2_dot_r2_x_n = body_b_angular_velocity.dot(r2_x_n);
 
-        // Calculate (V₁ - V₂) (relative velocity)
-        Vector3 relative_velocity = vel_a - vel_b;
+        double numerator = minus_one_plus_e * n_x_linear_rel_vel + w1_dot_r1_x_n - w2_dot_r2_x_n;
 
-        // Calculate n̂·(V₁ - V₂) (velocity along normal)
-        float velocity_along_normal = relative_velocity.dot(collision_normal);
+        // DENOMINATOR
+        // 1/m1 + 1/m2
+        double inv_mass_sum = body_a->get_inv_mass() + body_b_inv_mass;
 
-        // Skip if separating (positive relative velocity)
-        if (velocity_along_normal > 0) {
+        // rotational contribution from body A
+        Vector3 j1_inv_r1_x_n = body_a->get_inverse_world_inertia_tensor().xform(r1_x_n);
+
+        double rotational_a = r1_x_n.dot(j1_inv_r1_x_n); // (r₁×n̂)ᵀ J₁⁻¹ (r₁×n̂)
+
+        double rotational_b = 0.0;
+        if(!manifold.body_b_is_static)
+        {
+            Vector3 j2_inv_r2_x_n = body_b->get_inverse_world_inertia_tensor().xform(r2_x_n);
+            rotational_b = r2_x_n.dot(j2_inv_r2_x_n);
+        }
+        
+        double denominator = inv_mass_sum + rotational_a + rotational_b;
+
+        // Avoid division by zero
+        if (fabs(denominator) < epsilon_) {
             continue;
         }
 
-        // Get ε (coefficient of restitution)
-        float restitution = MIN(body_a->get_restitution(), body_b_restitution);
-
-        // Calculate r₁×n̂ and r₂×n̂ terms
-        Vector3 raxn = ra.cross(collision_normal);    // r₁×n̂
-        // Calculate (r₁×n̂)ᵀJ₁⁻¹(r₁×n̂) term
-        Vector3 angular_term_a = body_a->get_inverse_world_inertia_tensor().xform(raxn).cross(ra);
-
-        // Calculate (r₂×n̂)ᵀJ₂⁻¹(r₂×n̂) term for non-static body
-        Vector3 angular_term_b = Vector3();
-        if (!manifold.body_b_is_static) {
-            Vector3 rbxn = rb.cross(collision_normal);    // r₂×n̂
-            angular_term_b = body_b->get_inverse_world_inertia_tensor().xform(rbxn).cross(rb);
-        }
-
-        // Calculate numerator: -(1 + ε)(n̂·(V₁-V₂))
-        float j = -(1.0f + restitution) * velocity_along_normal;
-
-        // Calculate denominator: 1/m₁ + 1/m₂ + (r₁×n̂)ᵀJ₁⁻¹(r₁×n̂) + (r₂×n̂)ᵀJ₂⁻¹(r₂×n̂)
-        float denominator = body_a->get_inv_mass() + body_b_inv_mass + 
-                          collision_normal.dot(angular_term_a + angular_term_b);
-
-        // Skip if denominator is too small
-        if (std::abs(denominator) < epsilon || denominator == 0.0f) {
-            continue;
-        }
-
-        // Final impulse magnitude calculation: j = numerator/denominator
-        j /= denominator;
-
-        // Convert to vector by multiplying with n̂: Λ = jn̂
-        Vector3 impulse = collision_normal * j;
+        double lambda = numerator / denominator;
+        Vector3 impulse = collision_normal * lambda; // Final impulse vector
 
         // Apply the impulses to both bodies
-        body_a->apply_impulse_off_centre(impulse, ra);
+        body_a->ApplyImpulseOffCentre(impulse, r1);
         if (!manifold.body_b_is_static && body_b) {
-            body_b->apply_impulse_off_centre(-impulse, rb);
+            body_b->ApplyImpulseOffCentre(-impulse, r2);
         }
     }
 }
 
-void CollisionResolver::log_collision_state(const char* phase,
+void CollisionResolver::LogCollisionState(const char* phase,
                                           const Manifold& manifold,
                                           const Vector3& contact_point,
                                           const Vector3& collision_normal,

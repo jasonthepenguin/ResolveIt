@@ -19,12 +19,12 @@ class ICollisionDetector {
 public:
     virtual ~ICollisionDetector() = default;
     
-    virtual void detect_collisions(
+    virtual void DetectCollisions(
         const std::vector<RigidBodyCustom*>& bodies,
         const std::map<RID, RigidBodyCustom*>& rid_map
     ) = 0;
     
-    virtual void clear_manifolds() = 0;
+    virtual void ClearManifolds() = 0;
     
     virtual std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash>& get_manifold_map() = 0;
 };

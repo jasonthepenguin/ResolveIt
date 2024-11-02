@@ -12,12 +12,11 @@ class ICollisionResolver {
 public:
     virtual ~ICollisionResolver() = default;
     
-    virtual void set_parameters(float p_correction_percent, float p_position_slop, float p_epsilon) = 0;
-    virtual void resolve_collisions(double delta, int impulse_iterations) = 0;
-    virtual void apply_positional_corrections() = 0;
+    virtual void set_parameters(float correction_percent, float position_slop, float epsilon) = 0;
+    virtual void ResolveCollisions(double delta, int impulse_iterations) = 0;
+    virtual void ApplyPositionalCorrections() = 0;
     virtual void set_collision_detector(ICollisionDetector* detector) = 0;
 };
-
 
 }
 

@@ -18,9 +18,9 @@ PhysicsHandler* PhysicsHandler::singleton = nullptr;
 
 
 void PhysicsHandler::_bind_methods() {
-    ClassDB::bind_method(D_METHOD("gather_bodies"), &PhysicsHandler::gather_bodies);
-    ClassDB::bind_method(D_METHOD("integrate_all_body_forces", "delta"), &PhysicsHandler::integrate_all_body_forces);
-    ClassDB::bind_method(D_METHOD("update_server_transforms"), &PhysicsHandler::update_server_transforms);
+    ClassDB::bind_method(D_METHOD("GatherBodies"), &PhysicsHandler::GatherBodies);
+    ClassDB::bind_method(D_METHOD("IntegrateAllBodyForces", "delta"), &PhysicsHandler::IntegrateAllBodyForces);
+    ClassDB::bind_method(D_METHOD("UpdateServerTransforms"), &PhysicsHandler::UpdateServerTransforms);
     ClassDB::bind_method(D_METHOD("get_rigid_bodies"), &PhysicsHandler::get_rigid_bodies);
     
     
@@ -52,47 +52,42 @@ void PhysicsHandler::_bind_methods() {
 
 
 PhysicsHandler::PhysicsHandler() {
-    physics_server = PhysicsServer3D::get_singleton();
+    physics_server_ = PhysicsServer3D::get_singleton();
 
-    // concrete implementations through interfaces
-    collision_detector = std::make_unique<CollisionDetector>(physics_server);
-    collision_resolver = std::make_unique<CollisionResolver>();
+    collision_detector_ = std::make_unique<CollisionDetector>(physics_server_);
+    collision_resolver_ = std::make_unique<CollisionResolver>();
 
-    collision_resolver->set_collision_detector(collision_detector.get());
+    collision_resolver_->set_collision_detector(collision_detector_.get());
 }
 
 PhysicsHandler::~PhysicsHandler() {
-    // Cleanup containers
-    rigid_bodies.clear();
-    rid_map.clear();
-    static_rid_map.clear();
+    rigid_bodies_.clear();
+    rid_map_.clear();
+    static_rid_map_.clear();
 
-    collision_detector.reset();
-    collision_resolver.reset();
-
-    // godots physics server singleton just clear its pointer, as it should always exist
+    collision_detector_.reset();
+    collision_resolver_.reset();
     singleton = nullptr;
 }
 
-void PhysicsHandler::register_rigidbody(RigidBodyCustom* rigid_body) {
-
+void PhysicsHandler::RegisterRigidbody(RigidBodyCustom* rigid_body) {
     if(!rigid_body) return;
 
-    if (std::find(rigid_bodies.begin(), rigid_bodies.end(), rigid_body) == rigid_bodies.end()) {
-        rigid_bodies.push_back(rigid_body);
-        rid_map[rigid_body->get_body_rid()] = rigid_body;
+    if (std::find(rigid_bodies_.begin(), rigid_bodies_.end(), rigid_body) == rigid_bodies_.end()) {
+        rigid_bodies_.push_back(rigid_body);
+        rid_map_[rigid_body->get_body_rid()] = rigid_body;
     }
 }
 
-void PhysicsHandler::deregister_rigidbody(RigidBodyCustom* rigid_body) {
-    rigid_bodies.erase(std::remove(rigid_bodies.begin(), rigid_bodies.end(), rigid_body), rigid_bodies.end());
-    rid_map.erase(rigid_body->get_body_rid());
+void PhysicsHandler::DeregisterRigidbody(RigidBodyCustom* rigid_body) {
+    rigid_bodies_.erase(std::remove(rigid_bodies_.begin(), rigid_bodies_.end(), rigid_body), rigid_bodies_.end());
+    rid_map_.erase(rigid_body->get_body_rid());
 }
 
 
 Array PhysicsHandler::get_rigid_bodies() const {
     Array result;
-    for (const auto* body : rigid_bodies) {
+    for (const auto* body : rigid_bodies_) {
         result.push_back(body);
     }
     return result;
@@ -103,7 +98,6 @@ Array PhysicsHandler::get_rigid_bodies() const {
 void PhysicsHandler::_ready() {
 
     singleton = this;
-    // print my current process priority
     
     set_process_priority(1); // im testing this to see if updates to my rigid bodies are done before physics handler
     
@@ -112,7 +106,7 @@ void PhysicsHandler::_ready() {
         set_physics_process(false);
         return;
     }
-    call_deferred("gather_bodies");
+    call_deferred("GatherBodies");
 }
 
 void PhysicsHandler::_physics_process(double delta) {
@@ -122,52 +116,52 @@ void PhysicsHandler::_physics_process(double delta) {
         return;
     }
     // begining next update, clear previous manifolds
-    collision_detector->clear_manifolds();
+    collision_detector_->ClearManifolds();
 
     // Apply gravity force ( to be accumulated then integrated appropriately in rigidbody integrate forces )
-    apply_gravity_forces();
+    ApplyGravityForces();
 
 
-    collision_detector->detect_collisions(rigid_bodies, rid_map);
+    collision_detector_->DetectCollisions(rigid_bodies_, rid_map_);
 
-    collision_resolver->set_parameters(correction_percent, position_slop, epsilon);
+    collision_resolver_->set_parameters(correction_percent, position_slop, epsilon);
     
     // impulse iteration solving 
-    collision_resolver->resolve_collisions(delta, impulse_iterations);
+    collision_resolver_->ResolveCollisions(delta, impulse_iterations);
 
 
    // integrate all body forces ( integrate velocity, position, orientation etc )
-    integrate_all_body_forces(delta);
-    update_server_transforms();
+    IntegrateAllBodyForces(delta);
+    UpdateServerTransforms();
 
    // positional correction
-    collision_resolver->apply_positional_corrections();
-    update_server_transforms();
+    collision_resolver_->ApplyPositionalCorrections();
+    UpdateServerTransforms();
 
 
 }
 
-void PhysicsHandler::gather_bodies() {
+void PhysicsHandler::GatherBodies() {
     for (int i = 0; i < get_child_count(); ++i) {
         Node *child = get_child(i);
         if (RigidBodyCustom *rigid_body = Object::cast_to<RigidBodyCustom>(child)) {
             
-            rigid_bodies.push_back(rigid_body);
-            rid_map[rigid_body->get_body_rid()] = rigid_body;
+            rigid_bodies_.push_back(rigid_body);
+            rid_map_[rigid_body->get_body_rid()] = rigid_body;
         }
     }
 }
 
-void PhysicsHandler::integrate_all_body_forces(double delta) {
-    for (auto &rigid_body : rigid_bodies) {
-        rigid_body->integrate_forces(delta);
+void PhysicsHandler::IntegrateAllBodyForces(double delta) {
+    for (auto &rigid_body : rigid_bodies_) {
+        rigid_body->IntegrateForces(delta);
     }
 }
 
 
-void PhysicsHandler::update_server_transforms() {
-    for (auto *rigid_body : rigid_bodies) {
-        rigid_body->update_server_transforms();
+void PhysicsHandler::UpdateServerTransforms() {
+    for (auto *rigid_body : rigid_bodies_) {
+        rigid_body->UpdateServerTransforms();
     }
 }
 
@@ -205,11 +199,11 @@ int PhysicsHandler::get_impulse_iterations() const {
     return impulse_iterations;
 }
 
-void PhysicsHandler::apply_gravity_forces() {
-    for(auto &rigid_body : rigid_bodies) {
+void PhysicsHandler::ApplyGravityForces() {
+    for(auto &rigid_body : rigid_bodies_) {
         if(rigid_body->is_gravity_enabled()) {
             Vector3 gravity_force = rigid_body->get_gravity() * rigid_body->get_mass();
-            rigid_body->apply_force(gravity_force);
+            rigid_body->ApplyForce(gravity_force);
         }
     }
 }

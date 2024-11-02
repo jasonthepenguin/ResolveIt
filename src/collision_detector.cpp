@@ -1,22 +1,19 @@
-
-
 #include "collision_detector.h"
 #include <godot_cpp/classes/physics_direct_body_state3d.hpp>
 #include <godot_cpp/classes/node.hpp>
 
 using namespace godot;
 
-
 CollisionDetector::CollisionDetector(PhysicsServer3D* p_physics_server)
-    : physics_server(p_physics_server) {
+    : physics_server_(p_physics_server) {
 }
 
-void CollisionDetector::detect_collisions(
+void CollisionDetector::DetectCollisions(
     const std::vector<RigidBodyCustom*>& bodies,
     const std::map<RID, RigidBodyCustom*>& rid_map
 ) {
     for (auto* rigid_body : bodies) {
-        PhysicsDirectBodyState3D* state = physics_server->body_get_direct_state(rigid_body->get_body_rid());
+        PhysicsDirectBodyState3D* state = physics_server_->body_get_direct_state(rigid_body->get_body_rid());
         if (!state) continue;
 
         int contact_count = state->get_contact_count();
@@ -49,8 +46,8 @@ void CollisionDetector::detect_collisions(
             Vector3 penetration_vector = state->get_contact_local_position(i) - state->get_contact_collider_position(i);
             float penetration_depth = penetration_vector.dot(collision_normal);
 
-            auto manifold_it = manifold_map.find(key);
-            if (manifold_it == manifold_map.end()) {
+            auto manifold_it = manifold_map_.find(key);
+            if (manifold_it == manifold_map_.end()) {
                 Manifold manifold;
                 manifold.body_a = rigid_body;
                 manifold.body_b = other_body;
@@ -58,7 +55,7 @@ void CollisionDetector::detect_collisions(
                 manifold.contact_points.push_back(collision_point);
                 manifold.collision_normals.push_back(collision_normal);
                 manifold.penetrations.push_back(penetration_depth);
-                manifold_map[key] = manifold;
+                manifold_map_[key] = manifold;
             } else {
                 Manifold& manifold = manifold_it->second;
                 manifold.contact_points.push_back(collision_point);
@@ -70,10 +67,9 @@ void CollisionDetector::detect_collisions(
 }
 
 std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash>& CollisionDetector::get_manifold_map() {
-    return manifold_map;
+    return manifold_map_;
 }
 
-
-void CollisionDetector::clear_manifolds() {
-    manifold_map.clear();
+void CollisionDetector::ClearManifolds() {
+    manifold_map_.clear();
 }

@@ -45,81 +45,81 @@ class RigidBodyCustom : public Node3D {
 
 private:
     /** @brief Pointer to the physics server instance */
-    PhysicsServer3D *physics_server;
+    PhysicsServer3D *physics_server_;
     /** @brief Unique identifier for the physics body */
-    RID body_rid;
+    RID body_rid_;
     /** @brief Unique identifier for the mesh */
-    RID mesh_rid;
+    RID mesh_rid_;
 
     /** @brief Collision layer this body belongs to */
-    uint32_t collision_layer = 1;
+    uint32_t collision_layer_;
     /** @brief Layers this body will collide with */
-    uint32_t collision_mask = 1; 
+    uint32_t collision_mask_;
 
     /** @brief Collision shape component */
-    CollisionShape3D *collision_shape;
+    CollisionShape3D *collision_shape_;
     /** @brief Visual mesh component */
-    MeshInstance3D *mesh_instance;
+    MeshInstance3D *mesh_instance_;
 
     /** @brief Current transform of the body */
-    Transform3D body_trans;
+    Transform3D body_trans_;
 
     /** @brief Current linear velocity */
-    Vector3 velocity;
+    Vector3 velocity_;
 
     /** @brief Whether gravity affects this body */
-    bool gravity_enabled;
+    bool gravity_enabled_;
     
     /** @brief Accumulated forces acting on the body */
-    Vector3 forces;
+    Vector3 forces_;
 
     /** @brief Center of mass in local coordinates */
-    Vector3 center_of_mass_local;
+    Vector3 center_of_mass_local_;
     /** @brief Center of mass in world coordinates */
-    Vector3 center_of_mass_global;
+    Vector3 center_of_mass_global_;
 
     // get and set center of mass
     void set_center_of_mass_local(const Vector3& p_center_of_mass);
 
 
     /** @brief Mass of the rigid body */
-    float mass;
+    float mass_;
     /** @brief Inverse mass (1/mass) for calculations */
-    float inverse_mass;
+    float inverse_mass_;
     /** @brief Coefficient of restitution (bounciness) */
-    float restitution;
+    float restitution_;
     /** @brief Gravity vector affecting this body */
-    Vector3 gravity;
+    Vector3 gravity_;
 
     /** @brief Current angular velocity */
-    Vector3 angular_velocity;
+    Vector3 angular_velocity_;
     /** @brief Accumulated torque acting on the body */
-    Vector3 torque;
+    Vector3 torque_;
 
    /** @brief Inertia tensor in local coordinates */
-    Basis inertia_tensor;
+    Basis inertia_tensor_;
     /** @brief Inverse of the inertia tensor */
-    Basis inverse_inertia_tensor;
+    Basis inverse_inertia_tensor_;
 
     /** @brief Inverse of the inertia tensor in world coordinates */
-    Basis inverse_world_inertia_tensor;
-    Basis world_inertia_tensor;
+    Basis inverse_world_inertia_tensor_;
+    Basis world_inertia_tensor_;
 
     /**
      * @brief Updates the world space inertia tensor
      */
-    void update_world_inertia_tensor();
+    void UpdateWorldInertiaTensor();
 
 
 
 
     /** @brief Current position */
-    Vector3 position;
+    Vector3 position_;
     /** @brief Position from previous frame */
-    Vector3 old_position;
+    Vector3 old_position_;
 
     /** @brief Previous frame's orientation */
-    Basis previous_basis;
+    Basis previous_basis_;
 
     
 
@@ -190,7 +190,7 @@ public:
     Vector3 get_center_of_mass_global() const; 
 
     /** @brief Velocity from the previous physics frame */
-    Vector3 old_velocity;
+    Vector3 old_velocity_;
 
     /** @brief Called every frame for non-physics updates
      *  @param delta Time elapsed since the previous frame */
@@ -219,42 +219,42 @@ public:
 
     /** @brief Applies a torque to the rigid body
      *  @param p_torque The torque vector to apply */
-    void apply_torque(const Vector3& p_torque);
+    void ApplyTorque(const Vector3& p_torque);
 
     /** @brief Applies an impulse at a point offset from the center of mass
      *  @param impulse The impulse vector to apply
      *  @param rel_pos The position relative to center of mass where impulse is applied */
-    void apply_impulse_off_centre(const Vector3& impulse, const Vector3& rel_pos);
+    void ApplyImpulseOffCentre(const Vector3& impulse, const Vector3& rel_pos);
 
     /** @brief Corrects the position of the rigid body (used in collision resolution)
      *  @param correction The position correction vector */
-    void correct_position(const Vector3& correction);
+    void CorrectPosition(const Vector3& correction);
 
     /** @brief Corrects the orientation of the rigid body (used in collision resolution)
      *  @param correction The orientation correction matrix */
-    void correct_orientation(const Basis& correction);
+    void CorrectOrientation(const Basis& correction);
 
     /** @brief Updates the inertia tensor based on current mass and shape */
-    void update_inertia_tensor();
+    void UpdateInertiaTensor();
 
     /** @brief Gets the RID (Resource ID) of the physics body
      *  @return The body's RID */
     RID get_body_rid() const;
 
     /** @brief Updates the physics server with current transforms */
-    void update_server_transforms();
+    void UpdateServerTransforms();
 
     /** @brief Integrates accumulated forces over the given time step
      *  @param delta_time The time step for integration */
-    void integrate_forces(double delta_time);
+    void IntegrateForces(double delta_time);
 
     /** @brief Applies a force to the rigid body (accumulated over time)
      *  @param force The force vector to apply */
-    void apply_force(const Vector3 &force);
+    void ApplyForce(const Vector3& force);
 
     /** @brief Applies an instantaneous impulse to the rigid body
      *  @param impulse The impulse vector to apply */
-    void apply_impulse(const Vector3& impulse);
+    void ApplyImpulse(const Vector3& impulse);
 
     /** @brief Gets the current linear velocity
      *  @return The current velocity vector */
@@ -306,15 +306,15 @@ public:
 
     /** @brief Gets the inverse inertia tensor in local coordinates
      *  @return Reference to the inverse inertia tensor matrix */
-    const Basis& get_inverse_inertia_tensor() const { return inverse_inertia_tensor; }
+    const Basis& get_inverse_inertia_tensor() const { return inverse_inertia_tensor_; }
 
     /** @brief Gets the inverse inertia tensor in world coordinates
      *  @return Reference to the world space inverse inertia tensor matrix */
-    const Basis& get_inverse_world_inertia_tensor() const { return inverse_world_inertia_tensor; }
+    const Basis& get_inverse_world_inertia_tensor() const { return inverse_world_inertia_tensor_; }
 
     /** @brief Gets the inertia tensor in world coordinates
      *  @return Reference to the world space inertia tensor matrix */
-    const Basis& get_world_inertia_tensor() const { return world_inertia_tensor; }
+    const Basis& get_world_inertia_tensor() const { return world_inertia_tensor_; }
     
 
     /** @brief Enables or disables gravity for this rigid body
@@ -327,7 +327,7 @@ public:
 
     /** @brief Flag controlling whether forces should be integrated
      *  When true, accumulated forces will be integrated during physics updates */
-    bool integrate_forces_enabled;
+    bool integrate_forces_enabled_;
 
     /** @brief Enables or disables force integration for this rigid body
      *  @param p_enabled True to enable force integration, false to disable */

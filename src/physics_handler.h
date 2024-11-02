@@ -46,18 +46,18 @@ namespace godot {
 
         private:
             /** @brief List of all registered rigid bodies in the simulation */
-            std::vector<RigidBodyCustom*> rigid_bodies;
+            std::vector<RigidBodyCustom*> rigid_bodies_;
             /** @brief Mapping of RIDs to static bodies */
-            std::map<RID, StaticBody3D*> static_rid_map;
+            std::map<RID, StaticBody3D*> static_rid_map_;
             /** @brief Mapping of RIDs to rigid bodies */
-            std::map<RID, RigidBodyCustom*> rid_map;
+            std::map<RID, RigidBodyCustom*> rid_map_;
 
             /** @brief Reference to the physics server */
-            PhysicsServer3D *physics_server;
+            PhysicsServer3D *physics_server_;
             /** @brief Handles collision detection between bodies */
-            std::unique_ptr<ICollisionDetector> collision_detector;
+            std::unique_ptr<ICollisionDetector> collision_detector_;
             /** @brief Handles resolution of detected collisions */
-            std::unique_ptr<ICollisionResolver> collision_resolver;
+            std::unique_ptr<ICollisionResolver> collision_resolver_;
 
             // Position correction constants
             /** @brief Percentage of intersection resolution per frame (0-1) */
@@ -80,13 +80,13 @@ namespace godot {
              * @brief Registers a rigid body with the physics handler
              * @param rigid_body The rigid body to register
              */
-            void register_rigidbody(RigidBodyCustom* rigid_body);
+            void RegisterRigidbody(RigidBodyCustom* rigid_body);
 
             /**
              * @brief Removes a rigid body from the physics handler
              * @param rigid_body The rigid body to deregister
              */
-            void deregister_rigidbody(RigidBodyCustom* rigid_body);
+            void DeregisterRigidbody(RigidBodyCustom* rigid_body);
 
             PhysicsHandler();
             ~PhysicsHandler();
@@ -111,23 +111,23 @@ namespace godot {
             /**
              * @brief Updates internal list of physics bodies
              */
-            void gather_bodies();
+            void GatherBodies();
 
             /**
              * @brief Integrates forces for all registered bodies
              * @param delta Time step for integration
              */
-            void integrate_all_body_forces(double delta);
+            void IntegrateAllBodyForces(double delta);
 
             /**
              * @brief Applies gravity to all bodies
              */
-            void apply_gravity_forces();
+            void ApplyGravityForces();
 
             /**
              * @brief Updates transforms in the physics server
              */
-            void update_server_transforms();
+            void UpdateServerTransforms();
 
             // Getters and setters for physics parameters
             /**
