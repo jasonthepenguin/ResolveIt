@@ -142,7 +142,7 @@ void CollisionResolver::ResolveCollision(Manifold& manifold, double delta) {
         double lambda = numerator / denominator;
         
 
-        if(lambda < 0.0){
+        if(lambda > 0.0){
             Vector3 impulse = collision_normal * lambda; // final impulse vector
             // Apply the impulses to both bodies
             body_a->ApplyImpulseOffCentre(impulse, r1);

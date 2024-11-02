@@ -239,7 +239,7 @@ void godot::RigidBodyCustom::UpdateInertiaTensor()
     // get shapes
     // so far just work with the primitives SphereShape3D and BoxShape3D
 
-    Vector3 inertia;
+    Vector3 inertia(1, 1, 1);
     String shape_class = collision_shape_->get_shape()->get_class();
 
     Vector3 size;
