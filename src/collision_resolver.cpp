@@ -114,7 +114,7 @@ void CollisionResolver::ResolveCollision(Manifold& manifold, double delta) {
         // - 
         double w2_dot_r2_x_n = body_b_angular_velocity.dot(r2_x_n);
 
-        double numerator = minus_one_plus_e * n_x_linear_rel_vel + w1_dot_r1_x_n - w2_dot_r2_x_n;
+        double numerator = minus_one_plus_e * (n_x_linear_rel_vel + w1_dot_r1_x_n - w2_dot_r2_x_n);
 
         // DENOMINATOR
         // 1/m1 + 1/m2
@@ -140,13 +140,17 @@ void CollisionResolver::ResolveCollision(Manifold& manifold, double delta) {
         }
 
         double lambda = numerator / denominator;
-        Vector3 impulse = collision_normal * lambda; // Final impulse vector
+        
 
-        // Apply the impulses to both bodies
-        body_a->ApplyImpulseOffCentre(impulse, r1);
-        if (!manifold.body_b_is_static && body_b) {
-            body_b->ApplyImpulseOffCentre(-impulse, r2);
+        if(lambda < 0.0){
+            Vector3 impulse = collision_normal * lambda; // final impulse vector
+            // Apply the impulses to both bodies
+            body_a->ApplyImpulseOffCentre(impulse, r1);
+            if (!manifold.body_b_is_static && body_b) {
+                body_b->ApplyImpulseOffCentre(-impulse, r2);
+            }
         }
+
     }
 }
 
