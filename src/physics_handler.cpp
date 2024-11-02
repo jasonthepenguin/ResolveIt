@@ -122,6 +122,8 @@ void PhysicsHandler::_physics_process(double delta) {
     ApplyGravityForces();
 
 
+
+
     collision_detector_->DetectCollisions(rigid_bodies_, rid_map_);
 
     collision_resolver_->set_parameters(correction_percent, position_slop, epsilon);
@@ -129,8 +131,7 @@ void PhysicsHandler::_physics_process(double delta) {
     // impulse iteration solving 
     collision_resolver_->ResolveCollisions(delta, impulse_iterations);
 
-
-   // integrate all body forces ( integrate velocity, position, orientation etc )
+        // integrate all body forces ( integrate velocity, position, orientation etc )
     IntegrateAllBodyForces(delta);
     UpdateServerTransforms();
 
