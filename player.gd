@@ -76,7 +76,6 @@ func grab_object(object):
 	looked_object = object
 	holding_object = true
 	
-<<<<<<< HEAD
 	if looked_object is RigidBodyCustom:
 		# Handle RigidBodyCustom specific behavior
 		looked_object.set_integrate_forces_enabled(false)  # Disable physics integration
@@ -85,13 +84,6 @@ func grab_object(object):
 		# Regular RigidBody3D behavior
 		looked_object.freeze = true
 	
-=======
-	# set freeze mode to kinematic so grabbing stuff is ruined by forces of rigid
-	looked_object.freeze_mode = RigidBody3D.FREEZE_MODE_KINEMATIC
-	looked_object.freeze = true
-	#------
-
->>>>>>> dev
 func release_object():
 	holding_object = false
 	if looked_object:
