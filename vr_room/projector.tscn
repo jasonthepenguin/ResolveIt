@@ -1,0 +1,22 @@
+[gd_scene load_steps=6 format=3 uid="uid://oha7aqq6cjim"]
+
+[ext_resource type="Texture2D" uid="uid://dusgatgam4nlf" path="res://assets/ict398_presentation.png" id="1_2qkgw"]
+[ext_resource type="Script" path="res://knowledge_based_agents/scripts/Projector.gd" id="2_8o0py"]
+[ext_resource type="Script" path="res://knowledge_based_agents/scripts/Affordance.gd" id="3_vceeh"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8box1"]
+emission_enabled = true
+emission_texture = ExtResource("1_2qkgw")
+texture_repeat = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_pk77h"]
+material = SubResource("StandardMaterial3D_8box1")
+
+[node name="Projector" type="MeshInstance3D"]
+transform = Transform3D(1.65664, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("QuadMesh_pk77h")
+script = ExtResource("2_8o0py")
+
+[node name="Affordance" type="Node" parent="."]
+script = ExtResource("3_vceeh")
+affordances = 256

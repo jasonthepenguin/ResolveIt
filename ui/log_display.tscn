@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://2gs23lqcy5jr"]
+
+[ext_resource type="Script" path="res://ui/log manager/LogDisplay.gd" id="1_n7psa"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l5xyt"]
+bg_color = Color(0, 0, 0, 0.5)
+
+[node name="LogDisplay" type="CanvasLayer"]
+script = ExtResource("1_n7psa")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+custom_minimum_size = Vector2(500, 150)
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -150.0
+offset_right = 500.0
+grow_vertical = 0
+size_flags_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_l5xyt")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+alignment = 2

@@ -5,6 +5,7 @@
 [ext_resource type="Script" path="res://knowledge_based_agents/scripts/SeekerAgent.gd" id="3_hxy5s"]
 [ext_resource type="Script" path="res://knowledge_based_agents/scripts/Affordance.gd" id="4_klpi8"]
 
+
 [sub_resource type="NavigationMesh" id="NavigationMesh_jybs6"]
 vertices = PackedVector3Array(-9.5, 0.5, -9.5, -9.5, 0.5, 9.5, 9.5, 0.5, 9.5, 9.5, 0.5, -9.5)
 polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
