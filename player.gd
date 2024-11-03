@@ -112,10 +112,6 @@ func throw_grabbed_box():
 			looked_object.angular_velocity = Vector3.ZERO
 			looked_object.apply_central_impulse(throw_direction * throw_force)
 		
-<<<<<<< HEAD
-=======
-		looked_object.apply_central_impulse(throw_direction * throw_force)
->>>>>>> dev
 		looked_object = null
 
 func _physics_process(delta):
