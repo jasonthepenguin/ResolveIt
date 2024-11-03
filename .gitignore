@@ -39,3 +39,6 @@ godot-cpp/*.dylib
 
 # If Godot cache or build-related files exist
 .cache/
+
+# Doxygen output
+docs/

@@ -18,6 +18,31 @@
  * @date 2024
  */
 
+
+/** @mainpage ResolveIt Physics Engine
+ *  A custom physics simulation engine integrated with Godot
+ *
+ *  @section overview System Overview
+ *  This physics engine provides custom rigid body dynamics simulation with:
+ *  - Custom collision detection and resolution
+ *  - Force integration system
+ *  - Godot engine integration
+ *  
+ *  @section structure Core Architecture
+ *  @dot
+ *  digraph CoreStructure {
+ *      node [shape=box];
+ *      PhysicsHandler -> RigidBodyCustom;
+ *      PhysicsHandler -> ICollisionDetector;
+ *      PhysicsHandler -> ICollisionResolver;
+ *  }
+ *  @enddot
+ *
+ *  Detailed class relationships can be found in the Class Hierarchy and 
+ *  Class Collaboration sections under the Classes tab.
+ */
+
+
 #ifndef PHYSICS_HANDLER_H
 #define PHYSICS_HANDLER_H
 
