@@ -85,16 +85,12 @@ func _set_random_target():
 		LogManager.add_message("Agent: New random target ", current_random_target)
 	
 	# Set the navigation target
-	set_target_position(Vector3(current_random_target.x, 0, current_random_target.y))
+	move_to(current_random_target)
 
 # calling functions need to call await with this
 func move_to(new_position: Vector2) -> bool:
 	if debug_info: LogManager.add_message("Agent: Moving to ", new_position)
 	agent.movement_started.emit()
-	
-	# Disable random movement while executing specific move command
-	var was_random = random_movement
-	random_movement = false
 	
 	# Set the target and wait one frame for the navigation to update
 	set_target_position(Vector3(new_position.x, 0, new_position.y))
@@ -106,7 +102,6 @@ func move_to(new_position: Vector2) -> bool:
 	# Check if target is reachable
 	if not is_target_reachable():
 		if debug_info: LogManager.add_message("Agent: Target unreachable")
-		random_movement = was_random  # Restore random movement state
 		return false
 	
 	# Wait for movement to complete
@@ -114,8 +109,6 @@ func move_to(new_position: Vector2) -> bool:
 	if debug_info: LogManager.add_message("Agent: Target reached")
 	agent.movement_stopped.emit()
 	
-	# Restore random movement state
-	random_movement = was_random
 	return true
 
 # Optional: Set agent rotation directly (useful for initial orientation)
