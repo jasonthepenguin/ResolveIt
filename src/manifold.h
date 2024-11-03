@@ -1,3 +1,13 @@
+/**
+ * @file manifold.h
+ * @author Jason Botterill
+ * @brief Defines collision manifold structures for physics simulation
+ * 
+ * This file contains the Manifold structure which stores collision information
+ * between two rigid bodies, and supporting structures ManifoldKey and 
+ * ManifoldKeyHash for managing collision pair lookups.
+ */
+
 #ifndef MANIFOLD_H
 #define MANIFOLD_H
 
@@ -60,7 +70,7 @@ struct ManifoldKeyHash {
         if (key.body_b == nullptr) {
             return std::hash<RigidBodyCustom*>()(key.body_a);
         }
-        // Otherwise, hash both bodies using XOR (^)
+        
         return std::hash<RigidBodyCustom*>()(key.body_a) ^ 
                std::hash<RigidBodyCustom*>()(key.body_b);
     }

@@ -1,3 +1,23 @@
+/**
+ * @file physics_handler.h
+ * @brief Custom physics simulation handler for rigid body dynamics
+ * 
+ * @details
+ * This file contains the PhysicsHandler class definition, which manages the core
+ * physics simulation pipeline in the custom physics system. It handles:
+ * - Registration and management of rigid and static bodies
+ * - Collision detection and resolution
+ * - Force integration and position updates
+ * - Synchronization with Godot's physics server
+ * 
+ * The implementation follows a modular design with separate collision detection
+ * and resolution systems, allowing for easy extension and modification of the
+ * physics behavior.
+ * 
+ * @author Jason Botterill
+ * @date 2024
+ */
+
 #ifndef PHYSICS_HANDLER_H
 #define PHYSICS_HANDLER_H
 
@@ -37,9 +57,26 @@ namespace godot {
     /**
      * @brief Physics simulation handler for custom rigid body physics
      * 
-     * PhysicsHandler manages the physics simulation for custom rigid bodies in a 3D space.
-     * It handles collision detection, resolution, and physics integration for both dynamic
-     * and static bodies.
+     * @details
+     * PhysicsHandler is responsible for managing the complete physics simulation pipeline:
+     * - Maintains a registry of dynamic (RigidBodyCustom) and static bodies
+     * - Performs collision detection between bodies using ICollisionDetector
+     * - Resolves detected collisions using ICollisionResolver
+     * - Handles physics integration and force application
+     * - Manages position correction and impulse resolution
+     * - Synchronizes physics state with Godot's PhysicsServer3D
+     * 
+     * The handler operates on a fixed timestep during physics processing and provides
+     * configurable parameters for fine-tuning collision response and position correction.
+     * 
+     * Implementation structure inspired by "Game Physics Cookbook" by Gabor Szauer, with
+     * significant modifications for Godot integration and custom requirements.
+     * 
+     * @author Jason Botterill
+     * 
+     * @see RigidBodyCustom
+     * @see ICollisionDetector
+     * @see ICollisionResolver
      */
     class PhysicsHandler : public Node3D {
         GDCLASS(PhysicsHandler, Node3D)
@@ -88,7 +125,14 @@ namespace godot {
              */
             void DeregisterRigidbody(RigidBodyCustom* rigid_body);
 
+            /**
+             * @brief Constructs a new Physics Handler instance
+             */
             PhysicsHandler();
+
+            /**
+             * @brief Destroys the Physics Handler instance and cleans up resources
+             */
             ~PhysicsHandler();
 
             /**
@@ -120,12 +164,14 @@ namespace godot {
             void IntegrateAllBodyForces(double delta);
 
             /**
-             * @brief Applies gravity to all bodies
+             * @brief Applies gravity forces to all bodies
+             * @details Adds gravitational acceleration to all dynamic bodies in the simulation
              */
             void ApplyGravityForces();
 
             /**
              * @brief Updates transforms in the physics server
+             * @details Synchronizes the physics state with Godot's PhysicsServer3D by updating body transforms
              */
             void UpdateServerTransforms();
 

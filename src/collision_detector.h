@@ -1,3 +1,9 @@
+/**
+ * @file collision_detector.h
+ * @brief Defines the CollisionDetector class for handling 3D physics collision detection
+ * @author Jason Botterill
+ */
+
 #ifndef COLLISION_DETECTOR_H
 #define COLLISION_DETECTOR_H
 
@@ -30,11 +36,19 @@
 namespace godot{
 
 /**
+ * @class CollisionDetector
  * @brief A class that handles collision detection between rigid bodies in a 3D physics environment.
  * 
- * CollisionDetector works with Godot's PhysicsServer3D to detect and manage collisions
- * between RigidBodyCustom objects. It maintains a collection of collision manifolds
- * that describe the contact points between colliding bodies.
+ * @details CollisionDetector implements the ICollisionDetector interface and works with 
+ * Godot's PhysicsServer3D to detect and manage collisions between RigidBodyCustom objects. 
+ * It maintains a collection of collision manifolds that describe the contact points between 
+ * colliding bodies.
+ * 
+ * The detector uses Godot's built-in physics engine collision detection information 
+ * to store the contact results in manifolds for use in collision 
+ * resolution.
+ * 
+ * @implements ICollisionDetector
  */
 class CollisionDetector : public ICollisionDetector{
 public:
@@ -66,8 +80,8 @@ public:
     std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash>& get_manifold_map();
 
 private:
-    PhysicsServer3D* physics_server_; ///< Added trailing underscore
-    std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash> manifold_map_; ///< Added trailing underscore
+    PhysicsServer3D* physics_server_; 
+    std::unordered_map<ManifoldKey, Manifold, ManifoldKeyHash> manifold_map_; 
 };
 
 
