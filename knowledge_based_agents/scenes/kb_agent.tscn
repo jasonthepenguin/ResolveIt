@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://caexqsrol5okt"]
+
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/TeacherBehaviour.gd" id="1_fyqeu"]
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/StudentBehaviour.gd" id="2_ti3d7"]
+
+
+
+[node name="Node3D" type="Node3D"]
+
+[node name="TeacherAgent" type="Node" parent="."]
+script = ExtResource("1_fyqeu")
+run_test = true
+
+[node name="StudentAgent" type="Node" parent="."]
+script = ExtResource("2_ti3d7")
+run_test = true

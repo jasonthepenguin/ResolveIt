@@ -11,17 +11,25 @@ config_version=5
 [application]
 
 config/name="ResolveIt"
-run/main_scene="res://world.tscn"
+run/main_scene="res://Milestone2/resolveit_demo.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+NpcManager="*res://NPC_Manager.gd"
+LogManager="*res://log manager/LogManager.gd"
 
 [display]
 
 window/size/viewport_width=1400
 window/size/viewport_height=900
-window/size/mode=3
 window/stretch/mode="viewport"
 window/vsync/vsync_mode=0
+
+[dotnet]
+
+project/assembly_name="ResolveIt"
 
 [input]
 

@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://xjsu3jfdi53c"]
+
+[ext_resource type="Script" path="res://knowledge_based_agents/scripts/debug_utils.gd" id="1_f4d5a"]
+[ext_resource type="Script" path="res://knowledge_based_agents/scripts/debug_utils.gd" id="1_f4d5a"]
+
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_4p2q7"]
+
+[sub_resource type="Sky" id="Sky_6c1ok"]
+sky_material = SubResource("ProceduralSkyMaterial_4p2q7")
+
+[sub_resource type="Environment" id="Environment_7aovd"]
+background_mode = 2
+sky = SubResource("Sky_6c1ok")
+
+[node name="Basic Setup" type="Node"]
+
+[node name="Debug" type="Node" parent="."]
+script = ExtResource("1_f4d5a")
+
+[node name="Environment" type="Node" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
+environment = SubResource("Environment_7aovd")

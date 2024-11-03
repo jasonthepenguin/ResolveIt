@@ -1,0 +1,94 @@
+[gd_scene load_steps=13 format=3 uid="uid://c4guo5vpd0u77"]
+
+[ext_resource type="PackedScene" uid="uid://xjsu3jfdi53c" path="res://knowledge_based_agents/scenes/basic_setup.tscn" id="1_228yi"]
+[ext_resource type="PackedScene" uid="uid://c7t4e2qd22gdb" path="res://knowledge_based_agents/AIAgent/Agent.tscn" id="2_u1hm0"]
+[ext_resource type="Script" path="res://knowledge_based_agents/scripts/SeekerAgent.gd" id="3_hxy5s"]
+[ext_resource type="Script" path="res://knowledge_based_agents/scripts/Affordance.gd" id="4_klpi8"]
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_jybs6"]
+vertices = PackedVector3Array(-9.5, 0.5, -9.5, -9.5, 0.5, 9.5, 9.5, 0.5, 9.5, 9.5, 0.5, -9.5)
+polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_qga40"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vkc12"]
+albedo_color = Color(0.111441, 0.393184, 0.162915, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_e8cqd"]
+material = SubResource("StandardMaterial3D_vkc12")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_01oha"]
+
+[sub_resource type="TorusMesh" id="TorusMesh_d1oji"]
+material = SubResource("StandardMaterial3D_01oha")
+inner_radius = 0.766
+outer_radius = 0.931
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_c1e57"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_hhhkh"]
+
+[node name="Scene" type="Node3D"]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.489961, 0.871745, 0, -0.871745, 0.489961, 0, 11.0236, 9.03458)
+
+[node name="Basic Setup" parent="." instance=ExtResource("1_228yi")]
+
+[node name="Geometry" type="Node3D" parent="."]
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Geometry"]
+navigation_mesh = SubResource("NavigationMesh_jybs6")
+
+[node name="Floor" type="StaticBody3D" parent="Geometry/NavigationRegion3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Geometry/NavigationRegion3D/Floor"]
+shape = SubResource("WorldBoundaryShape3D_qga40")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Geometry/NavigationRegion3D/Floor"]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
+mesh = SubResource("PlaneMesh_e8cqd")
+
+[node name="Agent" parent="." instance=ExtResource("2_u1hm0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="ObjectCarrierAgent" type="Node" parent="Agent"]
+script = ExtResource("3_qmvfd")
+
+[node name="Waypoint" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5115, -4.76837e-07, -6.45468)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Waypoint"]
+mesh = SubResource("TorusMesh_d1oji")
+skeleton = NodePath("../../Geometry")
+
+[node name="Affordance" type="Node" parent="Waypoint"]
+script = ExtResource("4_klpi8")
+affordances = 4
+
+[node name="Waypoint2" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.02487, -4.76837e-07, 6.17839)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Waypoint2"]
+mesh = SubResource("TorusMesh_d1oji")
+skeleton = NodePath("../../Geometry")
+
+[node name="Affordance" type="Node" parent="Waypoint2"]
+script = ExtResource("4_klpi8")
+affordances = 10
+
+[node name="PhysicsHandler" type="PhysicsHandler" parent="."]
+process_priority = 1
+
+[node name="RigidBodyCustom" type="RigidBodyCustom" parent="PhysicsHandler"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.96585, 0.624367, 0)
+
+[node name="Affordance" type="Node" parent="PhysicsHandler/RigidBodyCustom"]
+script = ExtResource("4_klpi8")
+affordances = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsHandler/RigidBodyCustom"]
+shape = SubResource("BoxShape3D_c1e57")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PhysicsHandler/RigidBodyCustom"]
+mesh = SubResource("BoxMesh_hhhkh")

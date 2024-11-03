@@ -1,0 +1,52 @@
+[gd_scene load_steps=9 format=3 uid="uid://c7t4e2qd22gdb"]
+
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/AIAgent.gd" id="1_5vpc8"]
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/AgentActuator.gd" id="1_srmw5"]
+[ext_resource type="Script" path="res://knowledge_based_agents/AIAgent/EmojiManager.gd" id="3_6oal1"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tvlyr"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_47tti"]
+albedo_color = Color(0.161403, 0.437436, 0.811908, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_psd8o"]
+material = SubResource("StandardMaterial3D_47tti")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aw10k"]
+albedo_color = Color(1, 0, 1, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_bitn2"]
+material = SubResource("StandardMaterial3D_aw10k")
+
+[node name="Agent" type="CharacterBody3D"]
+script = ExtResource("1_5vpc8")
+movement_speed = null
+debug_navigation = null
+random_movement = null
+random_movement_interval = null
+stuck_threshold_distance = null
+max_stuck_time = null
+apply_impulse = null
+push_force = null
+emotion_update_interval = null
+emotion_lerp_speed = null
+strong_emotion_threshold = null
+moderate_emotion_threshold = null
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_tvlyr")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_psd8o")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+script = ExtResource("1_srmw5")
+
+[node name="EmojiManager" type="Sprite3D" parent="."]
+transform = Transform3D(0.201984, 0, 0, 0, 0.201984, 0, 0, 0, 0.201984, 0, 0.894445, 0)
+script = ExtResource("3_6oal1")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="EmojiManager"]
+transform = Transform3D(1.25793, 0, 0, 0, 1.25793, 0, 0, 0, 1.25793, 0, 0, 0)
+visible = false
+mesh = SubResource("QuadMesh_bitn2")
