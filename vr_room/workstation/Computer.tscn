@@ -163,6 +163,8 @@ shadow_mesh = SubResource("ArrayMesh_4c1hc")
 size = Vector3(0.316223, 0.649147, 0.642788)
 
 [node name="RigidBodyCustom" type="RigidBodyCustom"]
+mass = 6.0
+restitution = 0.4
 
 [node name="pc_001" type="MeshInstance3D" parent="."]
 transform = Transform3D(2.53119e-08, 0, 0.13, 0, 0.13, 0, -0.13, 0, 2.53119e-08, 0, 0, 0)
@@ -170,7 +172,6 @@ mesh = SubResource("ArrayMesh_m62gg")
 skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00125126, 0.00973892, -0.011114)
 shape = SubResource("BoxShape3D_hx1tt")
 
 [node name="Node3D" type="Node3D" parent="."]
