@@ -89,6 +89,12 @@ func move_to_teaching_position():
 			LogManager.add_message(LogManager.id_format(agent_name), "in position")
 
 func turn_projector_on():
+	# check project is already on
+	if (world_state.get_state("projector_on")):
+		kb.add_fact("projector_is_on")
+		return
+	
+	# check for where agent can turn projector on
 	var scan_result = perception.scan_for_nearest_affordance(Affordance.Type.PROJECTOR_ON)
 	if not scan_result.found:
 		return
