@@ -1,3 +1,13 @@
+/**
+ * @file collision_resolver.h
+ * @author Jason Botterill
+ * @brief Header file for the CollisionResolver class that handles physics collision resolution
+ * @details This file contains the declaration of the CollisionResolver class, which is responsible
+ *          for resolving physical collisions between rigid bodies in the physics simulation.
+ *          It works in conjunction with the collision detection system to apply appropriate
+ *          impulses and position corrections.
+ */
+
 #ifndef COLLISION_RESOLVER_H
 #define COLLISION_RESOLVER_H
 
@@ -52,7 +62,15 @@ public:
      */
     void set_collision_detector(ICollisionDetector* detector) { collision_detector_ = detector; }
 
-
+    /**
+     * @brief Logs the current state of a collision for debugging purposes
+     * @param phase Current phase of collision resolution being logged
+     * @param manifold Collision manifold containing contact information
+     * @param contact_point Point of contact between colliding bodies
+     * @param collision_normal Normal vector at the point of collision
+     * @param restitution Coefficient of restitution for the collision
+     * @param delta Time step for the physics update
+     */
     void LogCollisionState(const char* phase, 
                            const Manifold& manifold,
                            const Vector3& contact_point,

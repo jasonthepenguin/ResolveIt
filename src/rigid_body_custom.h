@@ -1,3 +1,11 @@
+/**
+ * @file rigid_body_custom.h
+ * @author Jason Botterill
+ * @brief Custom implementation of a rigid body physics object
+ * @details Provides the body wrapper class to enable physics simulation functionality within Godot including collision detection,
+ *          force application, and both linear and angular motion to the custom rigidbody.
+ */
+
 #ifndef RIGID_BODY_CUSTOM_H
 #define RIGID_BODY_CUSTOM_H
 
@@ -103,6 +111,13 @@ private:
 
     /** @brief Inverse of the inertia tensor in world coordinates */
     Basis inverse_world_inertia_tensor_;
+
+    
+    /** @brief Inertia tensor in world coordinates
+     *  @details 3x3 matrix representing the body's resistance to rotational acceleration
+     *           in world space. Updated whenever the body's orientation changes.
+     *  @see inertia_tensor_ for the local space equivalent
+     */
     Basis world_inertia_tensor_;
 
     /**
@@ -326,7 +341,8 @@ public:
     bool is_gravity_enabled() const;
 
     /** @brief Flag controlling whether forces should be integrated
-     *  When true, accumulated forces will be integrated during physics updates */
+     *  @details When true, accumulated forces will be integrated during physics updates
+     */
     bool integrate_forces_enabled_;
 
     /** @brief Enables or disables force integration for this rigid body
